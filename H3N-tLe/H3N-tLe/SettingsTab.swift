@@ -10,10 +10,25 @@ import SwiftUI
 struct SettingsTab: View {
     var body: some View {
         VStack {
-            Spacer()
             
-            Text("SETTINGS TAB")
-                .font(.largeTitle)
+            NavigationView {
+                
+                Form {
+                    
+                    Section(header: Text("Appearance")) {
+                        
+                        Toggle(isOn: .constant(true), label: {
+                            Text("Automatic")
+                        })
+                    }
+                    Section() {
+                        
+                        
+                        
+                    }
+                }
+                .navigationTitle("Settings")
+            }
             
             Spacer()
             
