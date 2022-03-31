@@ -11,6 +11,9 @@
 		172DE72227F4B30D00882059 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DE72127F4B30D00882059 /* ContentView.swift */; };
 		172DE72427F4B31000882059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 172DE72327F4B31000882059 /* Assets.xcassets */; };
 		172DE72727F4B31000882059 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 172DE72627F4B31000882059 /* Preview Assets.xcassets */; };
+		17361EA527F5AC85000D70CF /* AddTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17361EA427F5AC85000D70CF /* AddTab.swift */; };
+		17361EA727F5ACD0000D70CF /* HomeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17361EA627F5ACD0000D70CF /* HomeTab.swift */; };
+		17361EA927F5AD05000D70CF /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17361EA827F5AD05000D70CF /* SettingsTab.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +22,9 @@
 		172DE72127F4B30D00882059 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; tabWidth = 4; };
 		172DE72327F4B31000882059 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		172DE72627F4B31000882059 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		17361EA427F5AC85000D70CF /* AddTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTab.swift; sourceTree = "<group>"; };
+		17361EA627F5ACD0000D70CF /* HomeTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTab.swift; sourceTree = "<group>"; };
+		17361EA827F5AD05000D70CF /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +61,9 @@
 				172DE72127F4B30D00882059 /* ContentView.swift */,
 				172DE72327F4B31000882059 /* Assets.xcassets */,
 				172DE72527F4B31000882059 /* Preview Content */,
+				17361EA427F5AC85000D70CF /* AddTab.swift */,
+				17361EA627F5ACD0000D70CF /* HomeTab.swift */,
+				17361EA827F5AD05000D70CF /* SettingsTab.swift */,
 			);
 			path = "H3N-tLe";
 			sourceTree = "<group>";
@@ -137,8 +146,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17361EA727F5ACD0000D70CF /* HomeTab.swift in Sources */,
 				172DE72227F4B30D00882059 /* ContentView.swift in Sources */,
+				17361EA927F5AD05000D70CF /* SettingsTab.swift in Sources */,
 				172DE72027F4B30D00882059 /* H3N_tLeApp.swift in Sources */,
+				17361EA527F5AC85000D70CF /* AddTab.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
