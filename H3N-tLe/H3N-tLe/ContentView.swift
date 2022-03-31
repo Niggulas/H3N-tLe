@@ -29,15 +29,6 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-            .preferredColorScheme(.dark)
-            .previewDevice("iPhone 11")
-            .previewLayout(.sizeThatFits)
-            
-    }
-}
 
 struct AddTab: View {
     var body: some View {
@@ -78,5 +69,15 @@ struct SettingsTab: View {
             Text("Settings")
         }
         .tag(2)
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .preferredColorScheme(.dark)
+            .previewDevice("iPhone 11")
+            .previewLayout(.sizeThatFits)
+            
     }
 }
