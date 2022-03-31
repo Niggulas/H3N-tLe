@@ -17,13 +17,20 @@ struct SettingsTab: View {
                     
                     Section(header: Text("Appearance")) {
                         
-                        Toggle(isOn: .constant(true), label: {
-                            Text("Automatic")
-                        })
+                        
+                        
                     }
-                    Section() {
+                    Section(header: Text("Help")) {
                         
+                        Link(destination: URL(string: "https://google.com")!,
+                            label:{
+                                Label("How to use", systemImage: "link")
+                            })
                         
+                        Link(destination: URL(string: "https://github.com/Niggulas/H3N-tLe#how-to-install-plugins")!,
+                             label: {
+                                Label("How to install Plugins", systemImage: "link")
+                            })
                         
                     }
                 }
