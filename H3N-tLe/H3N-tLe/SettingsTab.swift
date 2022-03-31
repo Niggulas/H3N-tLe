@@ -10,8 +10,16 @@ import SwiftUI
 struct SettingsTab: View {
     var body: some View {
         VStack {
+            Spacer()
+            
             Text("SETTINGS TAB")
                 .font(.largeTitle)
+            
+            Spacer()
+            
+            Rectangle()
+                .frame(height: 0)
+                .background(.thinMaterial)
         }
         .tabItem {
             Image(systemName: "gear")

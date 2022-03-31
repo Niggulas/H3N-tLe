@@ -9,11 +9,22 @@ import SwiftUI
 
 struct AddTab: View {
     var body: some View {
-        VStack {
-            Text("ADD TAB")
-                .font(.largeTitle)
+        ZStack {
+            Color.red.ignoresSafeArea()
+            VStack {
+                Spacer()
+                
+                Text("ADD TAB")
+                    .font(.largeTitle)
+                
+                Spacer()
+                
+                Rectangle()
+                    .frame(height: 0)
+                    .background(.thinMaterial)
+            }
         }
-        .tabItem {
+            .tabItem {
             Image(systemName: "plus")
             Text("Add")
         }
