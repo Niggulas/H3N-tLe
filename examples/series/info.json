@@ -1,0 +1,10 @@
+{
+	"title": "Example Title",
+	"description": "Example Description",
+	"author": "Example Author",
+	"url": "http://example.com/title/",
+	"cover": "cover.jpg",
+	"status": "ongoing|dropped|completed",
+	"tags": ["tag1", "tag2", "tag3"],
+	"last_read_chapter": "1"
+}
