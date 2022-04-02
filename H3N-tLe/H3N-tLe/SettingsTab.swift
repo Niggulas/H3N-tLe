@@ -15,14 +15,9 @@ struct SettingsTab: View {
                 
                 Form {
                     
-                    Section(header: Text("Appearance")) {
-                        
-                        
-                        
-                    }
                     Section(header: Text("Help")) {
                         
-                        Link(destination: URL(string: "https://google.com")!,
+                        Link(destination: URL(string: "https://github.com/Niggulas/H3N-tLe#how-to-use-h3n-tle")!,
                             label:{
                                 Label("How to use", systemImage: "link")
                             })
@@ -33,6 +28,32 @@ struct SettingsTab: View {
                             })
                         
                     }
+                    
+                    // TODO: TAG SYSTEM
+                    
+                    Section(header: Text("Plugins")) {
+                        
+                        NavigationLink(destination: PluginList(), label: {
+                            Label("Plugin list", systemImage: "list.bullet")
+                                .foregroundColor(.red)
+                        })
+                        
+                        Button {
+                            // TODO: Check for updates
+                        } label: {
+                            Label("Check for updates", systemImage: "magnifyingglass")
+                        }
+                        
+                        // TODO: if update is available show a button element to update plugins
+                        
+                        Button {
+                            // TODO: Install base Plugin
+                        } label: {
+                            Label("Install base plugin", systemImage: "puzzlepiece.extension")
+                        }
+
+                    }
+                    
                 }
                 .navigationTitle("Settings")
             }
