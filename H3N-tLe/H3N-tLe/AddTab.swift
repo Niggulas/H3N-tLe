@@ -8,22 +8,42 @@
 import SwiftUI
 
 struct AddTab: View {
+    
+    @State var searchBarContent: String = ""
+    
     var body: some View {
-        ZStack {
-            Color.red.ignoresSafeArea()
-            VStack {
-                Spacer()
+        
+        VStack {
+            
+            Form {
                 
-                Text("ADD TAB")
-                    .font(.largeTitle)
+                // TODO: TextField with go button
                 
-                Spacer()
+                HStack {
+                    TextField("URL to series", text: $searchBarContent, onCommit: {
+                        // TODO: call a funnction to add entered URL
+                    })
+                    
+                    Button {
+                        // TODO: call a funnction to add entered URL
+                                                
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            
+                    }
+
+                }
                 
-                Rectangle()
-                    .frame(height: 0)
-                    .background(.thinMaterial)
             }
-        }
+                
+            
+            Spacer()
+            
+            Rectangle()
+                .frame(height: 0)
+                .background(.thinMaterial)
+            }
+        
             .tabItem {
             Image(systemName: "plus")
             Text("Add")
