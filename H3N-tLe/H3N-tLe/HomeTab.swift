@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeTab: View {
     var body: some View {
         VStack {
+            
             Spacer()
             
             Text("HOME TAB")
