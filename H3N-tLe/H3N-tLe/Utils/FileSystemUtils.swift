@@ -7,15 +7,10 @@
 
 import Foundation
 
-func getUrlForFileInDocuments(name: String) -> URL {
-    let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let fileUrl = documentsUrl.appendingPathComponent(name)
-    return fileUrl
-}
+let fileManager = FileManager.default
 
 // Check if a URL is a directory and not a file
 func isDirectory(url: URL) -> Bool {
-    let fileManager = FileManager.default
     var isDir: ObjCBool = false
     fileManager.fileExists(atPath: url.path, isDirectory: &isDir)
     return isDir.boolValue
@@ -23,7 +18,6 @@ func isDirectory(url: URL) -> Bool {
 
 // List all directories in a directory
 func listDirectories(url: URL) -> [URL] {
-    let fileManager = FileManager.default
     let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
     return directoryContents.filter { isDirectory(url: $0) }
 }
