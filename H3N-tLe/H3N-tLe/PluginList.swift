@@ -11,10 +11,10 @@ struct PluginList: View {
     
     var body: some View {
         List {
-            ForEach(0..<20) { index in
+            ForEach(0..<20) { plugin in
                 Link(destination: URL(string: "https://google.com")!,
                      label: {
-                        Label("Plugin \(index)", systemImage: "link")
+                        Label("Plugin \(plugin)", systemImage: "link")
                     
                 })
                 
