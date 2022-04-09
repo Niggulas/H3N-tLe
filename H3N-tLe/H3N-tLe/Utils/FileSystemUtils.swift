@@ -22,6 +22,12 @@ func listDirectories(url: URL) -> [URL] {
     return directoryContents.filter { isDirectory(url: $0) }
 }
 
+// List all files in a directory
+func listFiles(url: URL) -> [URL] {
+    let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
+    return directoryContents.filter { !isDirectory(url: $0) }
+}
+
 // Read a json file and return the json object
 func readJsonFromFile(url: URL) -> Any? {
     do {
