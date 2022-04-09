@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct SeriesInfo {
+struct SeriesInfo: Identifiable {
     var id = UUID()
     var title: String
     var description: String?
     var author: String?
     var url: String?
-    var cover: String?
+    var imageName: String?
     var status: String?
     var lastReadChapter: String?
     var tags: [String]?
@@ -33,7 +33,7 @@ func getSeriesInfo(name: String) -> SeriesInfo? {
     let json = readJsonFromFile(url: infoURL) as? [String: Any]
     if let dict = json {
         if let title = dict["title"] as? String {
-            return SeriesInfo(title: title, description: dict["description"] as? String, author: dict["author"] as? String, url: dict["url"] as? String, cover: dict["cover"] as? String, status: dict["status"] as? String, lastReadChapter: dict["last_read_chapter"] as? String, tags: dict["tags"] as? [String])
+            return SeriesInfo(title: title, description: dict["description"] as? String, author: dict["author"] as? String, url: dict["url"] as? String, imageName: dict["cover"] as? String, status: dict["status"] as? String, lastReadChapter: dict["last_read_chapter"] as? String, tags: dict["tags"] as? [String])
         }
     }
     return nil
