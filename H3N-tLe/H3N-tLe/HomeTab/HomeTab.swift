@@ -12,75 +12,77 @@ struct HomeTab: View {
     var series: [SeriesModel] = dummySeriesModel
     @State var firstTime: Bool = true
     @State var isSeriesViewOpen: Bool = false
-    @State var selectedSeries:  SeriesModel = SeriesModel(title: "Error",
-                                                                 description: "Ërror",
+    @State var selectedSeries:  SeriesModel = SeriesModel(title: "Welcome",
+                                                                 description: "Sorry this is a crappy fix :(",
                                                                  imageName: "Error")
     @State var counter: Int = 0
     
     var body: some View {
         VStack {
-            
-            ForEach(series) { Series in
-                VStack {
-                    HStack {
-                        Spacer()
-                        
-                        Button {
-                            ButtonClick(Series: Series)
-                        } label: {
-                            Image(Series.imageName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 85)
-                                .cornerRadius(5)
-                        }
-
-                        // plsHelp()
-                        
-                        Spacer()
-                        
-                        VStack(alignment: .leading){
+            ScrollView {
+                ForEach(series) { Series in
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
                             Button {
                                 ButtonClick(Series: Series)
                             } label: {
-                                VStack (alignment: .leading){
-                                    Text(Series.title)
-                                        .font(.headline)
-                                        .lineLimit(1)
-                                    
-                                    HStack {
-                                        Text(Series.description)
-                                            .foregroundColor(Color.secondary)
-                                            .font(.body)
-                                            .lineLimit(2)
-                                        // TODO: check if the text is always aligned to the left
-                                    
-                                        Spacer()
+                                Image(Series.imageName)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 85)
+                                    .cornerRadius(5)
+                            }
+                            
+                            // plsHelp()
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .leading){
+                                Button {
+                                    ButtonClick(Series: Series)
+                                } label: {
+                                    VStack (alignment: .leading){
+                                        Text(Series.title)
+                                            .font(.headline)
+                                            .lineLimit(1)
                                         
+                                        HStack {
+                                            Text(Series.description)
+                                                .foregroundColor(Color.secondary)
+                                                .font(.body)
+                                                .lineLimit(2)
+                                            // TODO: check if the text is always aligned to the left
+                                            
+                                            Spacer()
+                                            
+                                        }
                                     }
                                 }
+                                .foregroundColor(Color.primary)
+                                
+                                Button {
+                                    counter += 1
+                                    // TODO: set popup variable to true and write index of item to a variable
+                                } label: {
+                                    Text("Continue")
+                                        .font(.headline)
+                                        .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                                        .padding()
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(15)
+                                }
+                                //.frame(.minWidth: 0, .maxWidth: .infinity)
+                                
+                                
                             }
-                            .foregroundColor(Color.primary)
-                            
-                            Button {
-                                counter += 1
-                                // TODO: set popup variable to true and write index of item to a variable
-                            } label: {
-                                Text("Continue")
-                                    .font(.headline)
-                                    .frame(minWidth: 100, maxWidth: .infinity, minHeight: 30)
-                            }
-                            //.frame(.minWidth: 0, .maxWidth: .infinity)
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(15)
-                            
                         }
+                        Divider()
                     }
-                    Divider()
                 }
+                //.listRowBackground(Color.init(white:0, opacity:0))
             }
-            .listRowBackground(Color.init(white:0, opacity:0))
             
             
             Spacer()
@@ -93,6 +95,10 @@ struct HomeTab: View {
             SeriesSheet(Series: selectedSeries)
                 .onAppear(perform: {
                     print(selectedSeries)
+                    if firstTime {
+                        firstTime = false
+                        isSeriesViewOpen = false
+                    }
                 })
         })
         .tabItem {
@@ -105,17 +111,18 @@ struct HomeTab: View {
     
     func ButtonClick(Series: SeriesModel) {
         print("ButtonClick called succesfully")
+        if firstTime {
+            print("Firt Time")
+            isSeriesViewOpen = true
+            selectedSeries = SeriesModel(title: "", description: "", imageName: "")
+            //isSeriesViewOpen = false
+            //firstTime.toggle()
+        } else {
         selectedSeries = Series
         print("written 'Series' to 'SelectedSeries'")
         print("content is now \(selectedSeries)")
-        isSeriesViewOpen.toggle()
+        isSeriesViewOpen = true
         print("toggled SeriesView")
-        if firstTime {
-            print("Firt Time")
-            isSeriesViewOpen.toggle()
-            selectedSeries = Series
-            isSeriesViewOpen.toggle()
-            firstTime.toggle()
         }
         
     }
