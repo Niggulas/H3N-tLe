@@ -11,7 +11,7 @@ import Foundation
 let libraryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Library")
 
 // Reads the info.json file of the Series at the given URL
-func getSeriesInfo(at url: URL) -> [String: String] {
-    let infoURL = url.appendingPathComponent("info.json")
+func getSeriesInfo(name: String) -> [String: String] {
+    let infoURL = libraryURL.appendingPathComponent(name).appendingPathComponent("info.json")
     return readJsonFromFile(url: infoURL) as! [String : String]
 }
