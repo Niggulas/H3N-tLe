@@ -14,7 +14,7 @@ struct PluginList: View {
             ForEach(0..<20) { plugin in
                 Link(destination: URL(string: "https://google.com")!,
                      label: {
-                        Label("Plugin \(plugin)", systemImage: "link")
+                    Label("Plugin \(plugin)", systemImage: "link")
                     
                 })
                 
