@@ -12,76 +12,138 @@ struct SeriesSheet: View {
     var Series: SeriesModel
     
     var body: some View {
-        VStack {
-            HStack {
-                Image(Series.imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 130)
-                    .cornerRadius(5)
+        ScrollView (.vertical, showsIndicators: false, content: {
+            VStack {
+                
+                // Series information
+                HStack {
+                    Image(Series.imageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 130)
+                        .cornerRadius(5)
+                        .padding()
+                    
+                    Spacer()
+                    
+                    
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button {
+                                //hideSheet()
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .padding()
+                                    .frame(width: 30)
+                                    .foregroundColor(Color.secondary)
+                            }
+                            
+                        }
+                        
+                        Text(Series.title)
+                            .font(.title)
+                            .bold()
+                        
+                        Spacer()
+                        
+                        Text(Series.description)
+                            .font(.body)
+                        
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                    
+                }
+                
+                // End of series information
+                
+                Divider()
                     .padding()
                 
-                Spacer()
-                
+                // Buttons
                 
                 VStack {
                     HStack {
-                        Spacer()
                         Button {
-                            //hideSheet()
+                            // Code
                         } label: {
-                            Image(systemName: "xmark")
-                                .padding()
-                                .frame(width: 30)
-                                .foregroundColor(Color.secondary)
+                            Text("Continue")
+                                .font(.headline)
+                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                        }
+                        .padding()
+                        .background(Color(.systemGray5))
+                        .foregroundColor(Color.red)
+                        .cornerRadius(15)
+                        
+                        Button {
+                            // Code
+                        } label: {
+                            Text("Update")
+                                .font(.headline)
+                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                        }
+                        .padding()
+                        .background(Color(.systemGray5))
+                        .foregroundColor(Color.red)
+                        .cornerRadius(15)
+                    }
+                    HStack {
+                        Button {
+                            // Code
+                        } label: {
+                            Text("Mark as read")
+                                .font(.headline)
+                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                        }
+                        .padding()
+                        .background(Color(.systemGray5))
+                        .foregroundColor(Color.red)
+                        .cornerRadius(15)
+                        
+                        Button {
+                            // Code
+                        } label: {
+                            Text("Delete")
+                                .font(.headline)
+                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                        }
+                        .padding()
+                        .background(Color.red)
+                        .foregroundColor(Color.primary)
+                        .cornerRadius(15)
+                    }
+                }
+                
+                // End of buttons
+                
+                Divider()
+                    .padding()
+                
+                Divider()
+                
+                // Chapter list
+                
+                Form {
+                    Section(header: Text("Chapters")) {
+                        Button {
+                            // Code
+                        } label: {
+                            Text("")
                         }
 
-                    }
-                    Spacer()
-                    
-                    Text(Series.title)
-                        .font(.title)
-                        .bold()
-                    
-                    Spacer()
-                    
-                    Text(Series.description)
-                        .font(.body)
-                    
-                    Spacer()
-                }
-                
-                Spacer()
-                
-            }
-            
-            Divider()
-            
-            Button {
-                debugPrint(Series: Series)
-            } label: {
-                Text("DEBUG")
-            }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(15)
-            
-            
-            Divider()
-            
-            ScrollView(.vertical, showsIndicators: false, content: {
-                List {
-                    ForEach(0..<20) { plugin in
-                        Link(destination: URL(string: "https://google.com")!,
-                             label: {
-                                Label("Plugin \(plugin)", systemImage: "link")
-                            
-                        })
-                        
+                        //ForEach(0..<20) { index in
+                        //   Text("Chapter \(index)")
+                        //}
                     }
                 }
-            })
-        }
+                
+                // End of chapter list
+                
+            }
+        })
     }
     
     func debugPrint(Series: SeriesModel) {
