@@ -9,10 +9,10 @@ import SwiftUI
 
 struct HomeTab: View {
     
-    var series: [SeriesModel] = dummySeriesModel
+    var series: [SeriesInfo] = getAllSeriesInfo()//dummySeriesInfo
     @State var firstTime: Bool = true
     @State var isSeriesViewOpen: Bool = false
-    @State var selectedSeries:  SeriesModel = SeriesModel(title: "Welcome",
+    @State var selectedSeries:  SeriesInfo = SeriesInfo(title: "Welcome",
                                                                  description: "Sorry this is a crappy fix :(",
                                                                  imageName: "Error")
     @State var counter: Int = 0
@@ -28,7 +28,7 @@ struct HomeTab: View {
                             Button {
                                 ButtonClick(Series: Series)
                             } label: {
-                                Image(Series.imageName)
+                                Image(Series.imageName ?? "Error")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 85)
@@ -49,7 +49,7 @@ struct HomeTab: View {
                                             .lineLimit(1)
                                         
                                         HStack {
-                                            Text(Series.description)
+                                            Text(Series.description ?? "")
                                                 .foregroundColor(Color.secondary)
                                                 .font(.body)
                                                 .lineLimit(2)
@@ -109,12 +109,12 @@ struct HomeTab: View {
         
     }
     
-    func ButtonClick(Series: SeriesModel) {
+    func ButtonClick(Series: SeriesInfo) {
         print("ButtonClick called succesfully")
         if firstTime {
             print("Firt Time")
             isSeriesViewOpen = true
-            selectedSeries = SeriesModel(title: "", description: "", imageName: "")
+            //selectedSeries = SeriesInfo(title: "", description: "", imageName: "")
             //isSeriesViewOpen = false
             //firstTime.toggle()
         } else {
@@ -131,23 +131,6 @@ struct HomeTab: View {
     }
     
 }
-
-struct SeriesModel: Identifiable {
-    var id = UUID()
-    
-    var title: String
-    var description: String
-    var imageName: String
-}
-
-let dummySeriesModel = [
-    SeriesModel(title:"A beautiful title",
-                description: "A very well thought out description which describes the series in a very correct and inviting manner",
-                imageName: "aNiceThumbNail"),
-    SeriesModel(title: "Short title",
-                description: "A short desctiption",
-                imageName: "aSquareThumbNail")
-]
 
 struct HomeTab_Previews: PreviewProvider {
     static var previews: some View {

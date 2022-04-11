@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SeriesSheet: View {
     
-    var Series: SeriesModel
+    var Series: SeriesInfo
     
     var body: some View {
         ScrollView (.vertical, showsIndicators: false, content: {
@@ -17,7 +17,7 @@ struct SeriesSheet: View {
                 
                 // Series information
                 HStack {
-                    Image(Series.imageName)
+                    Image(Series.imageName ?? "Error")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 130)
@@ -47,7 +47,7 @@ struct SeriesSheet: View {
                         
                         Spacer()
                         
-                        Text(Series.description)
+                        Text(Series.description ?? "")
                             .font(.body)
                         
                         Spacer()
@@ -122,23 +122,9 @@ struct SeriesSheet: View {
                 Divider()
                     .padding()
                 
-                Divider()
-                
                 // Chapter list
                 
-                Form {
-                    Section(header: Text("Chapters")) {
-                        Button {
-                            // Code
-                        } label: {
-                            Text("")
-                        }
-
-                        //ForEach(0..<20) { index in
-                        //   Text("Chapter \(index)")
-                        //}
-                    }
-                }
+                PluginList()
                 
                 // End of chapter list
                 
@@ -146,7 +132,7 @@ struct SeriesSheet: View {
         })
     }
     
-    func debugPrint(Series: SeriesModel) {
+    func debugPrint(Series: SeriesInfo) {
         print("content of 'Series' is \(Series)")
     }
 }
