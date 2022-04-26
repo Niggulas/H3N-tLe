@@ -12,9 +12,12 @@ struct HomeTab: View {
     var series: [SeriesInfo] = getAllSeriesInfo()//dummySeriesInfo
     @State var firstTime: Bool = true
     @State var isSeriesViewOpen: Bool = false
-    @State var selectedSeries:  SeriesInfo = SeriesInfo(title: "Welcome",
-                                                                 description: "Sorry this is a crappy fix :(",
-                                                                 imageName: "Error")
+    @State var selectedSeries: SeriesInfo? = nil /*= SeriesInfo(
+        localUrl: URL(fileURLWithPath: "file:///"),
+        title: "Welcome",
+        description: "Sorry this is a crappy fix :(",
+        imageName: "Error"
+    )*/
     @State var counter: Int = 0
     
     var body: some View {
@@ -28,11 +31,31 @@ struct HomeTab: View {
                             Button {
                                 ButtonClick(Series: Series)
                             } label: {
-                                Image(Series.imageName ?? "Error")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 85)
-                                    .cornerRadius(5)
+                                if let imageName = Series.imageName {
+                                    AsyncImage(url: Series.localUrl.appendingPathComponent(imageName)) { phase in
+                                        if let image = phase.image {
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(width: 85)
+                                                .cornerRadius(5)
+                                        } else if phase.error != nil {
+                                            Image("Cover")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(width: 85)
+                                                .cornerRadius(5)
+                                        } else {
+                                            Color(.systemGray6)
+                                        }
+                                    }
+                                } else {
+                                    Image("Cover")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 85)
+                                        .cornerRadius(5)
+                                }
                             }
                             
                             // plsHelp()
@@ -92,14 +115,15 @@ struct HomeTab: View {
                 .background(.thinMaterial)
         }
         .sheet(isPresented: $isSeriesViewOpen, content: {
-            SeriesSheet(Series: selectedSeries)
-                .onAppear(perform: {
-                    print(selectedSeries)
-                    if firstTime {
-                        firstTime = false
-                        isSeriesViewOpen = false
-                    }
-                })
+            if let toView = selectedSeries {
+                SeriesSheet(Series: toView)/*
+                    .onAppear(perform: {
+                        if firstTime {
+                            firstTime = false
+                            isSeriesViewOpen = false
+                        }
+                    })*/
+            }
         })
         .tabItem {
             Image(systemName: "books.vertical")
@@ -111,18 +135,15 @@ struct HomeTab: View {
     
     func ButtonClick(Series: SeriesInfo) {
         print("ButtonClick called succesfully")
-        if firstTime {
+        if false && firstTime {
             print("Firt Time")
             isSeriesViewOpen = true
             //selectedSeries = SeriesInfo(title: "", description: "", imageName: "")
             //isSeriesViewOpen = false
             //firstTime.toggle()
         } else {
-        selectedSeries = Series
-        print("written 'Series' to 'SelectedSeries'")
-        print("content is now \(selectedSeries)")
-        isSeriesViewOpen = true
-        print("toggled SeriesView")
+            selectedSeries = Series
+            isSeriesViewOpen = true
         }
         
     }

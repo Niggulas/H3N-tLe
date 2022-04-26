@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SeriesSheet: View {
-    
+
     var Series: SeriesInfo
     
     var body: some View {
@@ -17,13 +17,21 @@ struct SeriesSheet: View {
                 
                 // Series information
                 HStack {
-                    Image(Series.imageName ?? "Error")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 130)
-                        .cornerRadius(5)
-                        .padding()
-                    
+                    if let imageName = Series.imageName {
+                        AsyncImage(url: Series.localUrl.appendingPathComponent(imageName)) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 130)
+                                    .cornerRadius(5)
+                                    .padding()
+                            } else if phase.error != nil {
+                            } else {
+                                Color(.systemGray6)
+                            }
+                        }
+                    }
                     Spacer()
                     
                     
