@@ -9,10 +9,11 @@ import Foundation
 
 struct SeriesInfo: Identifiable {
     var id = UUID()
+    var localUrl: URL
     var title: String
     var description: String?
     var author: String?
-    var url: String?
+    var remoteUrl: String?
     var imageName: String?
     var status: String?
     var lastReadChapter: String?
@@ -44,15 +45,17 @@ func getSeriesList() -> [String] {
 // Reads the info.json file of the Series at the given URL
 func getSeriesInfo(name: String) -> SeriesInfo? {
     makeSureLibraryExists()
-    let infoURL = libraryURL.appendingPathComponent(name).appendingPathComponent("info.json")
+    let seriesUrl = libraryURL.appendingPathComponent(name)
+    let infoURL = seriesUrl.appendingPathComponent("info.json")
     let json = readJsonFromFile(url: infoURL) as? [String: Any]
     if let dict = json {
         if let title = dict["title"] as? String {
             return SeriesInfo(
+                localUrl: seriesUrl,
                 title: title,
                 description: dict["description"] as? String,
                 author: dict["author"] as? String,
-                url: dict["url"] as? String,
+                remoteUrl: dict["url"] as? String,
                 imageName: dict["cover"] as? String,
                 status: dict["status"] as? String,
                 lastReadChapter: dict["last_read_chapter"] as? String,
