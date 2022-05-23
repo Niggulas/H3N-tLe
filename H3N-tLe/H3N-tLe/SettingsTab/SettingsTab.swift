@@ -54,6 +54,13 @@ struct SettingsTab: View {
 
                     }
                     
+                    Section(header: Text("Debug")) {
+                        NavigationLink(destination: Reader(), label: {
+                            Label("Reader", systemImage: "eyeglasses")
+                                .foregroundColor(.red)
+                        })
+                    }
+                    
                 }
                 .navigationTitle("Settings")
             }

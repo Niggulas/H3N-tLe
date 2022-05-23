@@ -20,6 +20,8 @@ struct ContentView: View {
             
             HomeTab()
             
+            Reader() // only temp
+            
             SettingsTab()
             
         }

@@ -9,7 +9,97 @@ import SwiftUI
 
 struct Reader: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView (.vertical, showsIndicators: false, content: {
+            HStack {
+                Button {
+                    // Code
+                } label: {
+                    Text("Previous Chapter")
+                        .font(.headline)
+                        .frame(minWidth: 10, maxWidth: .infinity, minHeight: 20)
+                }
+                .padding()
+                .background(Color(.systemGray5))
+                .foregroundColor(Color.red)
+                .cornerRadius(15)
+                
+                Button {
+                    // Code
+                } label: {
+                    Text("Next Chapter")
+                        .font(.headline)
+                        .frame(minWidth: 10, maxWidth: .infinity, minHeight: 20)
+                }
+                .padding()
+                .background(Color(.systemGray5))
+                .foregroundColor(Color.red)
+                .cornerRadius(15)
+            }
+            
+            ForEach(0..<20) { index in
+                Image("aNiceThumbNail")
+                    .frame(minWidth: 10, idealWidth: .infinity, maxWidth: .infinity, minHeight: 10, idealHeight: .infinity, maxHeight: .infinity) //Komische dinge passieren
+                    // Image wird breiter geladen, als der screen weit ist
+                    // muss schauen wie man das auf den screen begrenzt bekommt
+            }
+            
+            VStack {
+                HStack {
+                    Button {
+                        // Code
+                    } label: {
+                        Text("Previous Chapter")
+                            .font(.headline)
+                            .frame(minWidth: 10, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
+                    
+                    Button {
+                        // Code
+                    } label: {
+                        Text("Next Chapter")
+                            .font(.headline)
+                            .frame(minWidth: 10, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
+                }
+                HStack{
+                    Button {
+                        // Code
+                    } label: {
+                        Text("Foo")
+                            .font(.headline)
+                            .frame(minWidth: 10, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
+                    
+                    Button {
+                        // Code
+                    } label: {
+                        Text("Bar")
+                            .font(.headline)
+                            .frame(minWidth: 10, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
+                }
+            }
+        })
+        .tabItem {
+            Image(systemName: "eyeglasses")
+            Text("Reader")
+        }
     }
 }
 
