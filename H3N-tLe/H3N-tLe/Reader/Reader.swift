@@ -38,7 +38,7 @@ struct Reader: View {
             
             ForEach(0..<20) { index in
                 Image("aNiceThumbNail")
-                    .frame(minWidth: 10, idealWidth: .infinity, maxWidth: .infinity, minHeight: 10, idealHeight: .infinity, maxHeight: .infinity) //Komische dinge passieren
+                    //.frame(minWidth: 10, idealWidth: .infinity, maxWidth: .infinity, minHeight: 10, idealHeight: .infinity, maxHeight: .infinity) //Komische dinge passieren
                     // Image wird breiter geladen, als der screen weit ist
                     // muss schauen wie man das auf den screen begrenzt bekommt
             }
