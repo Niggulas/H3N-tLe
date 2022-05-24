@@ -18,6 +18,7 @@
 		17361EA727F5ACD0000D70CF /* HomeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17361EA627F5ACD0000D70CF /* HomeTab.swift */; };
 		17361EA927F5AD05000D70CF /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17361EA827F5AD05000D70CF /* SettingsTab.swift */; };
 		17361EB227F72937000D70CF /* PluginList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17361EB127F72937000D70CF /* PluginList.swift */; };
+		410CF2E8283CA8ED00AF661B /* PlugInUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410CF2E7283CA8ED00AF661B /* PlugInUtils.swift */; };
 		DCD0EE7A27FA3A9A00AFDCB7 /* FileSystemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD0EE7927FA3A9A00AFDCB7 /* FileSystemUtils.swift */; };
 		DCD0EE7D27FA3B8500AFDCB7 /* LibraryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD0EE7C27FA3B8500AFDCB7 /* LibraryUtils.swift */; };
 /* End PBXBuildFile section */
@@ -36,6 +37,7 @@
 		17361EA827F5AD05000D70CF /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
 		17361EAA27F5C7C3000D70CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		17361EB127F72937000D70CF /* PluginList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginList.swift; sourceTree = "<group>"; };
+		410CF2E7283CA8ED00AF661B /* PlugInUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugInUtils.swift; sourceTree = "<group>"; };
 		DCD0EE7927FA3A9A00AFDCB7 /* FileSystemUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemUtils.swift; sourceTree = "<group>"; };
 		DCD0EE7C27FA3B8500AFDCB7 /* LibraryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -132,6 +134,7 @@
 			children = (
 				DCD0EE7927FA3A9A00AFDCB7 /* FileSystemUtils.swift */,
 				DCD0EE7C27FA3B8500AFDCB7 /* LibraryUtils.swift */,
+				410CF2E7283CA8ED00AF661B /* PlugInUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 				172DE72227F4B30D00882059 /* ContentView.swift in Sources */,
 				17361EA927F5AD05000D70CF /* SettingsTab.swift in Sources */,
 				DCD0EE7D27FA3B8500AFDCB7 /* LibraryUtils.swift in Sources */,
+				410CF2E8283CA8ED00AF661B /* PlugInUtils.swift in Sources */,
 				172DE72027F4B30D00882059 /* H3N_tLeApp.swift in Sources */,
 				171630DC282BD3B8001F799E /* Reader.swift in Sources */,
 				1718C86F2802241A00D048DC /* ChapterList.swift in Sources */,
