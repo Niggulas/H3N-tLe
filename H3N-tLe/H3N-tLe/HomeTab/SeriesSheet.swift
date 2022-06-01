@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SeriesSheet: View {
 
-    var Series: SeriesInfo
+    var series: Series
     
     var body: some View {
         ScrollView (.vertical, showsIndicators: false, content: {
@@ -17,8 +17,8 @@ struct SeriesSheet: View {
                 
                 // Series information
                 HStack {
-                    if let imageName = Series.imageName {
-                        AsyncImage(url: Series.localUrl.appendingPathComponent(imageName)) { phase in
+					if series.coverUrl != nil {
+						AsyncImage(url: series.coverUrl) { phase in
                             if let image = phase.image {
                                 image
                                     .resizable()
@@ -49,13 +49,13 @@ struct SeriesSheet: View {
                             
                         }
                         
-                        Text(Series.title)
+                        Text(series.title)
                             .font(.title)
                             .bold()
                         
                         Spacer()
                         
-                        Text(Series.description ?? "")
+                        Text(series.description ?? "")
                             .font(.body)
                         
                         Spacer()
@@ -154,7 +154,7 @@ struct SeriesSheet: View {
         })
     }
     
-    func debugPrint(Series: SeriesInfo) {
-        print("content of 'Series' is \(Series)")
+    func debugPrint(series: Series) {
+        print("content of 'Series' is \(series)")
     }
 }
