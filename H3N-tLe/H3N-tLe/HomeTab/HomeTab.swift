@@ -9,30 +9,25 @@ import SwiftUI
 
 struct HomeTab: View {
     
-    var series: [SeriesInfo] = getAllSeriesInfo()//dummySeriesInfo
+    var seriesList: [Series] = getAllSeriesInfo()
     @State var firstTime: Bool = true
     @State var isSeriesViewOpen: Bool = false
-    @State var selectedSeries: SeriesInfo? = nil /*= SeriesInfo(
-        localUrl: URL(fileURLWithPath: "file:///"),
-        title: "Welcome",
-        description: "Sorry this is a crappy fix :(",
-        imageName: "Error"
-    )*/
+    @State var selectedSeries: Series? = nil
     @State var counter: Int = 0
     
     var body: some View {
         VStack {
             ScrollView {
-                ForEach(series) { Series in
+                ForEach(seriesList) { series in
                     VStack {
                         HStack {
                             Spacer()
                             
                             Button {
-                                ButtonClick(Series: Series)
+                                ButtonClick(series: series)
                             } label: {
-                                if let imageName = Series.imageName {
-                                    AsyncImage(url: Series.localUrl.appendingPathComponent(imageName)) { phase in
+								if series.coverUrl != nil {
+									AsyncImage(url: series.coverUrl) { phase in
                                         if let image = phase.image {
                                             image
                                                 .resizable()
@@ -64,15 +59,15 @@ struct HomeTab: View {
                             
                             VStack(alignment: .leading){
                                 Button {
-                                    ButtonClick(Series: Series)
+									ButtonClick(series: series)
                                 } label: {
                                     VStack (alignment: .leading){
-                                        Text(Series.title)
+                                        Text(series.title)
                                             .font(.headline)
                                             .lineLimit(1)
                                         
                                         HStack {
-                                            Text(Series.description ?? "")
+                                            Text(series.description ?? "")
                                                 .foregroundColor(Color.secondary)
                                                 .font(.body)
                                                 .lineLimit(2)
@@ -133,7 +128,7 @@ struct HomeTab: View {
         
     }
     
-    func ButtonClick(Series: SeriesInfo) {
+    func ButtonClick(series: Series) {
         print("ButtonClick called succesfully")
         if false && firstTime {
             print("Firt Time")
@@ -142,7 +137,7 @@ struct HomeTab: View {
             //isSeriesViewOpen = false
             //firstTime.toggle()
         } else {
-            selectedSeries = Series
+            selectedSeries = series
             isSeriesViewOpen = true
         }
         
