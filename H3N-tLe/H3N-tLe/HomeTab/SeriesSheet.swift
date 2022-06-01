@@ -131,9 +131,23 @@ struct SeriesSheet: View {
                     .padding()
                 
                 // Chapter list
-                
-                PluginList()
-                
+                List {
+                    ForEach(0..<20) { chapter in
+                        NavigationLink(destination: PluginList(), label: {
+                            Label("Plugin list", systemImage: "list.bullet")
+                                .foregroundColor(.red)
+                        })
+                    }
+                }
+                /*ForEach(0..<20) { plugin in
+                    NavigationLink(destination: Reader(),
+                                   label: {
+                        Label("Plugin \(plugin)", systemImage: "link")
+                        
+                    })
+                    
+                }*/
+                    
                 // End of chapter list
                 
             }

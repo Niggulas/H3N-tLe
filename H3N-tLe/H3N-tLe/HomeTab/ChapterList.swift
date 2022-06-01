@@ -14,7 +14,7 @@ struct ChapterList: View {
                 Section(header: Text("Chapter")) {
                     
                         ForEach(0..<20) { plugin in
-                            Link(destination: URL(string: "https://google.com")!,
+                            NavigationLink(destination: URL(string: "https://google.com")!,
                                  label: {
                                 Label("Plugin \(plugin)", systemImage: "link")
                                 
@@ -33,6 +33,10 @@ struct ChapterList: View {
                     
                 }
             }
+        }
+        .tabItem {
+            Image(systemName: "books.vertical")
+            Text("Chapter")
         }
     }
 }
