@@ -7,8 +7,27 @@
 
 import Foundation
 
+var libraryExists = false
+
+// URL to the library directory inside the documents directory
+let libraryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Library")
+
 class Series: Identifiable {
+	static func makeSureLibraryExists() {
+		if libraryExists || isDirectory(url: libraryURL) {
+			return
+		}
+		if fileManager.fileExists(atPath: libraryURL.path) {
+			try! fileManager.removeItem(at: libraryURL)
+		}
+		try! fileManager.createDirectory(at: libraryURL, withIntermediateDirectories: true, attributes: nil)
+		libraryExists = true
+	}
+
+
 	init(name: String) throws {
+		Series.makeSureLibraryExists()
+		
 		self.name = name
 		self.localUrl = libraryURL.appendingPathComponent(name)
 		
@@ -57,41 +76,17 @@ class Series: Identifiable {
 	let tags: [String]?
 }
 
-var libraryExists = false
-
-// URL to the library directory inside the documents directory
-let libraryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Library")
-
-func makeSureLibraryExists() {
-	if libraryExists || isDirectory(url: libraryURL) {
-		return
-	}
-	if fileManager.fileExists(atPath: libraryURL.path) {
-		try! fileManager.removeItem(at: libraryURL)
-	}
-	try! fileManager.createDirectory(at: libraryURL, withIntermediateDirectories: true, attributes: nil)
-	libraryExists = true
-}
-
 // Returns the list of all Series in the library
 func getSeriesList() -> [String] {
-	makeSureLibraryExists()
 	return listDirectories(url: libraryURL).map { $0.lastPathComponent }
-}
-
-// Reads the info.json file of the Series at the given URL
-func getSeriesInfo(name: String) -> Series? {
-	makeSureLibraryExists()
-	return try? Series(name: name)
 }
 
 // Returns an array with the info.json files of all Series in the library
 func getAllSeriesInfo() -> [Series] {
-	makeSureLibraryExists()
 	var list = [Series]()
 	
 	for name in getSeriesList() {
-		if let info = getSeriesInfo(name: name) {
+		if let info = try? Series(name: name) {
 			list.append(info)
 		}
 	}
