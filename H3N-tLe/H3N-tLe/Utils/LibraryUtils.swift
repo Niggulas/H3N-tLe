@@ -15,6 +15,7 @@ let libraryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).
 class Series: Identifiable {
 	static func makeSureLibraryExists() {
 		if libraryExists || isDirectory(url: libraryURL) {
+			libraryExists = true
 			return
 		}
 		if fileManager.fileExists(atPath: libraryURL.path) {
