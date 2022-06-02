@@ -9,31 +9,23 @@ import SwiftUI
 
 struct ChapterList: View {
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Chapter")) {
-                    
-                        ForEach(0..<20) { plugin in
-                            NavigationLink(destination: URL(string: "https://google.com")!,
-                                 label: {
-                                Label("Plugin \(plugin)", systemImage: "link")
-                                
-                            })
-                            
-                        }
-                        .onDelete(perform: {
-                            indexSet in
-                            
-                            if let i = indexSet.first {
-                                // TODO: remove plugin
-                                // e.g. plugins.remove(at:i)
-                            }
-                        })
-                        
-                    
-                }
-            }
+        
+        ForEach(0..<20) { plugin in
+            NavigationLink(destination: Reader(),
+                           label: {
+                Label("Plugin \(plugin)", systemImage: "link")
+                
+            })
+            
         }
+        .onDelete(perform: {
+            indexSet in
+            
+            if let i = indexSet.first {
+                // TODO: remove plugin
+                // e.g. plugins.remove(at:i)
+            }
+        })
         .tabItem {
             Image(systemName: "books.vertical")
             Text("Chapter")

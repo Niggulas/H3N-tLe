@@ -37,12 +37,13 @@ struct AddTab: View {
             }
                 
             
-            Spacer()
-            
-            Rectangle()
+            /*
+             Spacer()
+             Rectangle()
                 .frame(height: 0)
                 .background(.thinMaterial)
-            }
+             */
+             }
         
             .tabItem {
             Image(systemName: "plus")

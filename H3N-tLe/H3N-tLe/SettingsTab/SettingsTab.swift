@@ -65,11 +65,6 @@ struct SettingsTab: View {
                 .navigationTitle("Settings")
             }
             
-            Spacer()
-            
-            Rectangle()
-                .frame(height: 0)
-                .background(.thinMaterial)
         }
         .tabItem {
             Image(systemName: "gear")

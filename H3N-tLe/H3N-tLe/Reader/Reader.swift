@@ -83,6 +83,7 @@ struct Reader: View {
             
             
         })
+        //.ignoresSafeArea()
         .tabItem {
             Image(systemName: "eyeglasses")
             Text("Reader")
