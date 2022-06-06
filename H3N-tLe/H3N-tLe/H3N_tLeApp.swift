@@ -11,7 +11,9 @@ import SwiftUI
 struct H3N_tLeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
-        }
-    }
+			ContentView().onAppear {
+				print()
+			}
+		}
+	}
 }

@@ -77,16 +77,12 @@ class Series: Identifiable {
 	let tags: [String]?
 }
 
-// Returns the list of all Series in the library
-func getSeriesList() -> [String] {
-	return listDirectories(url: libraryURL).map { $0.lastPathComponent }
-}
-
 // Returns an array with the info.json files of all Series in the library
 func getAllSeriesInfo() -> [Series] {
+	let directories = listDirectories(url: libraryURL).map { $0.lastPathComponent }
 	var list = [Series]()
 	
-	for name in getSeriesList() {
+	for name in directories {
 		if let info = try? Series(name: name) {
 			list.append(info)
 		}
