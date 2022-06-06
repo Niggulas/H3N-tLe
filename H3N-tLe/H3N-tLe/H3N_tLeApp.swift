@@ -18,7 +18,7 @@ struct H3N_tLeApp: App {
 				
 				let seriesList = getAllSeriesInfo()
 				print("Series List:")
-				print(seriesList)
+				print(seriesList.map { $0.name })
 				
 				let series = seriesList.first
 				if series == nil {
