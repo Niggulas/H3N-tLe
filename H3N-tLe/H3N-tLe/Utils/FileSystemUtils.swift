@@ -16,16 +16,23 @@ func isDirectory(url: URL) -> Bool {
     return isDir.boolValue
 }
 
+// Sort URLs by the name od the file they're pointing to - ["2.txt", "3.txt", "1.txt"] -> ["1.txt", "2.txt", "3.txt"]
+func sortFileUrlsByFileName(urls: [URL]) -> [URL] {
+	return urls.sorted { $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending }
+}
+
 // List all directories in a directory
 func listDirectories(url: URL) -> [URL] {
     let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
-    return directoryContents.filter { isDirectory(url: $0) }
+	let directories = directoryContents.filter { isDirectory(url: $0) }
+	return sortFileUrlsByFileName(urls: directories)
 }
 
 // List all files in a directory
 func listFiles(url: URL) -> [URL] {
     let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
-    return directoryContents.filter { !isDirectory(url: $0) }
+	let files = directoryContents.filter { !isDirectory(url: $0) }
+    return sortFileUrlsByFileName(urls: files)
 }
 
 // Read a json file and return the json object
