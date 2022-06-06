@@ -75,6 +75,14 @@ class Series: Identifiable {
 	let remoteUrl: String?
 	let coverUrl: URL?
 	let tags: [String]?
+
+    func getCapterList() -> [String] {
+        return listDirectories(url: self.localUrl).map { $0.lastPathComponent }
+    }
+
+    func getChapterImageUrls(name: String) -> [URL] {
+		return listFiles(url: self.localUrl.appendingPathComponent(name))
+    }
 }
 
 // Returns an array with the info.json files of all Series in the library
