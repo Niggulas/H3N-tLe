@@ -79,6 +79,7 @@ class Series: Identifiable {
 
 // Returns an array with the info.json files of all Series in the library
 func getAllSeriesInfo() -> [Series] {
+	Series.makeSureLibraryExists()
 	let directories = listDirectories(url: libraryURL).map { $0.lastPathComponent }
 	var list = [Series]()
 	
