@@ -7,42 +7,14 @@
 
 import SwiftUI
 
+let fileManager = FileManager.default
+let library = Library()
+
 @main
 struct H3N_tLeApp: App {
     var body: some Scene {
         WindowGroup {
-			ContentView().onAppear {
-				print()
-				print()
-				print()
-				
-				let seriesList = getAllSeriesInfo()
-				print("Series List:")
-				print(seriesList.map { $0.name })
-				
-				let series = seriesList.first
-				if series == nil {
-					return
-				}
-				print("Series:")
-				print(series!)
-				
-				let chapterList = series!.getCapterList()
-				print("Chapter List:")
-				print(chapterList)
-				
-				let chapter = chapterList.first
-				if chapter == nil {
-					return
-				}
-				print("Chapter: \(chapter!)")
-				print("Chapter Image URLs:")
-				print(series!.getChapterImageUrls(name: chapter!))
-				
-				print()
-				print()
-				print()
-			}
+			ContentView()
 		}
 	}
 }

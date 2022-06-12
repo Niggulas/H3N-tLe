@@ -7,8 +7,6 @@
 
 import Foundation
 
-let fileManager = FileManager.default
-
 // Check if a URL is a directory and not a file
 func isDirectory(url: URL) -> Bool {
     var isDir: ObjCBool = false
@@ -44,15 +42,5 @@ func readJsonFromFile(url: URL) -> Any? {
     } catch {
         print("Failed to read file: \(error)")
         return nil
-    }
-}
-
-// write a json object to a file
-func writeJsonToFile(url: URL, json: Any) {
-    do {
-        let data = try JSONSerialization.data(withJSONObject: json, options: [])
-        try data.write(to: url, options: [])
-    } catch {
-        print("Failed to write file: \(error)")
     }
 }

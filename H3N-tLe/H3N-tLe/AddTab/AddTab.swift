@@ -8,47 +8,77 @@
 import SwiftUI
 
 struct AddTab: View {
-    
-    @State var searchBarContent: String = ""
-    
-    var body: some View {
-        
-        VStack {
-            
-            Form {
-                
-                // TODO: TextField with go button
-                
-                HStack {
-                    TextField("URL to series", text: $searchBarContent, onCommit: {
-                        // TODO: call a funnction to add entered URL
-                    })
-                    
-                    Button {
-                        // TODO: call a funnction to add entered URL
-                                                
-                    } label: {
-                        Image(systemName: "magnifyingglass")
-                            
-                    }
-
-                }
-                
-            }
-                
-            
-            /*
-             Spacer()
-             Rectangle()
-                .frame(height: 0)
-                .background(.thinMaterial)
-             */
-             }
-        
-            .tabItem {
-            Image(systemName: "plus")
-            Text("Add")
-        }
-        .tag(0)
-    }
+	
+	@State var searchBarContent: String = ""
+	@State var isWebViewSheetVisible = false
+	
+	var body: some View {
+		
+		VStack {
+			
+			Form {
+				
+				// TODO: TextField with go button
+				
+				HStack {
+					TextField("URL to series", text: $searchBarContent, onCommit: {
+						// TODO: call a funnction to add entered URL
+					})
+					
+					Button {
+						// TODO: call a funnction to add entered URL
+						
+					} label: {
+						Image(systemName: "magnifyingglass").onTapGesture {
+							library.runner.addMessageHandler({print($0)}, name: "print")
+							library.runner.view.disallowJS()
+							library.runner.view.disallowContent()
+							
+							let js = """
+								let i = 0;
+								setInterval(() => {
+									i++;
+									postWebKitMessage(['print', ''+i]);
+								}, 2000);
+							"""
+							
+							library.runner.run(source: js, on: URL(string: searchBarContent))
+							library.runner.showPage()
+						}
+					}
+				}
+			}
+			.sheet(isPresented: $isWebViewSheetVisible) {
+				// TODO: Warning not to get your passwords stolen here
+				library.runner.view
+			}
+			
+			/*
+			 Spacer()
+			 Rectangle()
+			 .frame(height: 0)
+			 .background(.thinMaterial)
+			 */
+		}
+		
+		.tabItem {
+			Image(systemName: "plus")
+			Text("Add")
+		}
+		.tag(0)
+		.onAppear {
+			library.setRunner(JSRunner(
+				showView: {
+					isWebViewSheetVisible = true
+				},
+				hideView: {
+					isWebViewSheetVisible = false
+				},
+				isViewVisible: {
+					return isWebViewSheetVisible
+				},
+				contentWorld: .world(name: "PlugIns")
+			))
+		}
+	}
 }

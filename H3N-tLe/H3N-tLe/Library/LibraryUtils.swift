@@ -13,6 +13,11 @@ var libraryExists = false
 let libraryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Library")
 
 class Series: Identifiable {
+	enum SeriesErrors: Error {
+		case InvalidFileName
+		case InvalidSeriesInfoFile
+	}
+	
 	static func makeSureLibraryExists() {
 		if libraryExists || isDirectory(url: libraryURL) {
 			libraryExists = true
@@ -47,7 +52,7 @@ class Series: Identifiable {
 				if let coverName = dict["cover"] as? String {
 					// Make sure the name doesn't point to anything outside the Series directory
 					if coverName.contains("..") {
-						throw InvalidFileNameError()
+						throw SeriesErrors.InvalidFileName
 					}
 					self.coverUrl = self.localUrl.appendingPathComponent(coverName)
 				} else {
@@ -57,10 +62,10 @@ class Series: Identifiable {
 				
 				return
 			} else {
-				throw InvalidSeriesInfoFile()
+				throw SeriesErrors.InvalidSeriesInfoFile
 			}
 		} else {
-			throw InvalidSeriesInfoFile()
+			throw SeriesErrors.InvalidSeriesInfoFile
 		}
 	}
 	
