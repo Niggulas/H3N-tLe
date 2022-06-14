@@ -44,3 +44,13 @@ func readJsonFromFile(url: URL) -> Any? {
         return nil
     }
 }
+
+// write a json object to a file
+func writeJsonToFile(url: URL, json: Any) {
+	do {
+		let data = try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted)
+		try data.write(to: url, options: [])
+	} catch {
+		print("Failed to write file: \(error)")
+	}
+}
