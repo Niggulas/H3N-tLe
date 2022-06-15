@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddTab: View {
 	
-	@State var searchBarContent: String = ""
+	@State var searchBarContent = ""
 	@State var isWebViewSheetVisible = false
 	
 	var body: some View {
@@ -35,11 +35,6 @@ struct AddTab: View {
 							library.runner.view.disallowContent()
 							
 							let js = """
-								let i = 0;
-								setInterval(() => {
-									i++;
-									postWebKitMessage(['print', ''+i]);
-								}, 2000);
 							"""
 							
 							library.runner.run(source: js, on: URL(string: searchBarContent))

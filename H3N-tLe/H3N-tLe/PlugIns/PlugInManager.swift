@@ -8,15 +8,15 @@
 import Foundation
 
 class PlugInManager {
-	static let pluginDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("PlugIns")
+	static let pluginDirectoryUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("PlugIns")
 	
 	init() {
-		// Make sure the plugInDirectory exists before trying to do something with it
-		if !isDirectory(url: PlugInManager.pluginDirectory) {
-			if fileManager.fileExists(atPath: PlugInManager.pluginDirectory.path) {
-				try! fileManager.removeItem(at: PlugInManager.pluginDirectory)
+		// Make sure the PlugIn directory exists before trying to do something with it
+		if !isDirectory(url: PlugInManager.pluginDirectoryUrl) {
+			if fileManager.fileExists(atPath: PlugInManager.pluginDirectoryUrl.path) {
+				try! fileManager.removeItem(at: PlugInManager.pluginDirectoryUrl)
 			}
-			try! fileManager.createDirectory(at: PlugInManager.pluginDirectory, withIntermediateDirectories: true, attributes: nil)
+			try! fileManager.createDirectory(at: PlugInManager.pluginDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
 		}
 		
 		// TLDR: Avoid an error - Explaination: Basiacally useless because they get overwritten immediately but required to be able to use self
@@ -33,7 +33,7 @@ class PlugInManager {
 		nameToPlugInMap = [String: PlugIn]()
 		domainToPlugInNameListMap = [String: [String]]()
 		
-		listDirectories(url: PlugInManager.pluginDirectory).forEach { dir in
+		listDirectories(url: PlugInManager.pluginDirectoryUrl).forEach { dir in
 			if let plugIn = try? PlugIn(name: dir.lastPathComponent) {
 				nameToPlugInMap[plugIn.name] = plugIn
 				
@@ -62,7 +62,7 @@ class PlugInManager {
 	
 	func deletePlugIn(name: String) -> Bool {
 		do {
-			try fileManager.removeItem(at: PlugInManager.pluginDirectory.appendingPathComponent(name))
+			try fileManager.removeItem(at: PlugInManager.pluginDirectoryUrl.appendingPathComponent(name))
 			registerPlugIns()
 			return true
 		} catch {

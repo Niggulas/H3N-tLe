@@ -20,7 +20,7 @@ class PlugIn {
 	
 	init(name: String) throws {
 		self.name = name
-		directory = PlugInManager.pluginDirectory.appendingPathComponent(name)
+		directory = PlugInManager.pluginDirectoryUrl.appendingPathComponent(name)
 		
 		let manifestURL = directory.appendingPathComponent("manifest.json")
 		

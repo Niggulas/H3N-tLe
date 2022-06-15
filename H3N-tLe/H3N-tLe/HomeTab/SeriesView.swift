@@ -17,8 +17,8 @@ struct SeriesView: View {
                 
                 // Series information
                 HStack {
-                    if series.coverUrl != nil {
-                        AsyncImage(url: series.coverUrl) { phase in
+                    if series.getCoverUrl() != nil {
+                        AsyncImage(url: series.getCoverUrl()) { phase in
                             if let image = phase.image {
                                 image
                                     .resizable()
@@ -55,7 +55,7 @@ struct SeriesView: View {
                         
                         Spacer()
                         
-                        Text(series.description ?? "")
+                        Text(series.description)
                             .font(.body)
                         
                         Spacer()

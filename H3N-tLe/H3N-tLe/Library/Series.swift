@@ -1,0 +1,229 @@
+//
+//  Series.swift
+//  H3N-tLe
+//
+//  Created by RC-14 on 12.06.22.
+//
+
+import Foundation
+
+class Series: Identifiable {
+	enum SeriesErrors: Error {
+		case SeriesDoesntExist
+		case SeriesAlreadyExist
+		case InvalidCoverFileName
+		case InvalidSeriesInfoFile
+	}
+	
+	static let STATUS_STRINGS = ["dropped", "ongoing", "<paused but the word used by the scanlation teams>", "finished", "unknown"]
+	
+	// Init for an existing series
+	init(existingSeriesName name: String) throws {
+		localUrl = Library.libraryUrl.appendingPathComponent(name)
+		infoUrl = localUrl.appendingPathComponent("info.json")
+		
+		if !isDirectory(url: localUrl) {
+			throw SeriesErrors.SeriesDoesntExist
+		}
+		
+		let json = readJsonFromFile(url: infoUrl) as? [String: Any]
+		
+		if json?["title"] as? String == nil {
+			throw SeriesErrors.InvalidSeriesInfoFile
+		}
+		
+		self.title = json!["title"] as! String
+		description = json!["description"] as? String ?? ""
+		author = json!["author"] as? String
+
+		if let coverName = json!["cover"] as? String {
+			// Make sure the name doesn't point to anything outside the Series directory
+			if coverName.contains("..") || coverName.isEmpty {
+				throw SeriesErrors.InvalidCoverFileName
+			}
+			self.coverName = coverName
+		} else {
+			self.coverName = nil
+		}
+		
+		remoteUrl = json!["url"] as? String
+		status = json!["status"] as? String
+		
+		tags = json!["tags"] as? [String]
+		lastReadChapter = json!["last_read_chapter"] as? String
+	}
+	
+	// Init for a series that doesn't exist yet
+	init(newSeriesName name: String, title: String, description: String) throws {
+		self.title = title
+		self.description = description
+		
+		localUrl = Library.libraryUrl.appendingPathComponent(name)
+		infoUrl = localUrl.appendingPathComponent("info.json")
+		
+		if isDirectory(url: localUrl) && fileManager.fileExists(atPath: infoUrl.path) && !isDirectory(url: infoUrl) {
+			throw SeriesErrors.SeriesAlreadyExist
+		}
+		
+		writeInfo()
+	}
+	
+	let id = UUID()
+	let localUrl: URL
+	let infoUrl: URL
+	let title: String
+	let description: String
+	private var author: String?
+	private var coverName: String?
+	private var remoteUrl: String?
+	private var status: String?
+	private var tags: [String]?
+	private var lastReadChapter: String?
+	
+	func getAuthor() -> String {
+		return author ?? ""
+	}
+	
+	func setAuthor(_ author: String) {
+		self.author = author.replacingOccurrences(of: "\n", with: "")
+	}
+	
+	func getCoverUrl() -> URL? {
+		if coverName?.isEmpty ?? true {
+			return nil
+		}
+		return localUrl.appendingPathComponent(coverName!)
+	}
+	
+	func setCoverName(_ name: String) {
+		if name.isEmpty || name.contains("..") {
+			return
+		}
+		coverName = name
+	}
+	
+	func getRemoteUrl() -> URL? {
+		if remoteUrl?.isEmpty ?? true {
+			return nil
+		} else if let remoteUrl = URL(string: remoteUrl!) {
+			return remoteUrl
+		}
+		return nil
+	}
+	
+	func setRemoteUrl(_ urlString: String) {
+		let url = URL(string: urlString)
+		
+		if url?.isFileURL ?? true {
+			return
+		}
+		
+		remoteUrl = url!.absoluteString
+	}
+	
+	func clearRemoteUrl() {
+		remoteUrl = nil
+	}
+	
+	func getStatus() -> String {
+		return status ?? "unknown"
+	}
+	
+	func setStatus(_ status: String) {
+		if Series.STATUS_STRINGS.contains(status) {
+			self.status = status
+		}
+	}
+	
+	func getTags() -> [String] {
+		return tags ?? [String]()
+	}
+	
+	func hasTag(_ tag: String) -> Bool {
+		return tags?.contains(tag) ?? false
+	}
+	
+	func addTag(_ tag: String) {
+		let safeTag = tag.replacingOccurrences(of: "\n", with: "")
+		
+		if hasTag(safeTag) {
+			return
+		}
+		tags?.append(safeTag)
+	}
+	
+	func removeTag(_ tagToRemove: String) {
+		tags?.removeAll(where: { tag in
+			return tag == tagToRemove
+		})
+	}
+	
+	func getLastReadChapter() -> String? {
+		return lastReadChapter
+	}
+	
+	func setLastReadChapter(_ chapterName: String) {
+		if getChapterList().contains(chapterName) {
+			lastReadChapter = chapterName
+		}
+	}
+	
+	func clearLastReadChapter() {
+		lastReadChapter = nil
+	}
+	
+	func getChapterList() -> [String] {
+		return listDirectories(url: self.localUrl).map { $0.lastPathComponent }
+	}
+	
+	func getChapterImageUrls(name: String) -> [URL] {
+		return listFiles(url: self.localUrl.appendingPathComponent(name))
+	}
+	
+	func downloadChapter(chapterName: String, imageUrls: [URL]) {
+		let chapterUrl = localUrl.appendingPathComponent(chapterName.trimmingCharacters(in: [" "]))
+		
+		if isDirectory(url: chapterUrl) && !listFiles(url: chapterUrl).isEmpty {
+			return
+		}
+		
+		// TODO: implement function
+	}
+	
+	func writeInfo() {
+		if !isDirectory(url: localUrl) {
+			try! fileManager.removeItem(at: localUrl)
+			try! fileManager.createDirectory(at: localUrl, withIntermediateDirectories: true)
+		}
+		if isDirectory(url: infoUrl) {
+			try! fileManager.removeItem(at: infoUrl)
+		}
+		
+		var info = [String: Any]()
+		
+		info["title"] = title
+		if !description.isEmpty {
+			info["description"] = description
+		}
+		if !(author?.isEmpty ?? true) {
+			info["author"] = author!
+		}
+		if !(coverName?.isEmpty ?? true) {
+			info["cover"] = coverName!
+		}
+		if !(remoteUrl?.isEmpty ?? true) {
+			info["url"] = remoteUrl!
+		}
+		if status != "unknown" {
+			info["status"] = status
+		}
+		if !(tags?.isEmpty ?? true) {
+			info["tags"] = tags!
+		}
+		if !(lastReadChapter?.isEmpty ?? true) {
+			info["last_read_chapter"] = lastReadChapter!
+		}
+		
+		writeJsonToFile(url: infoUrl, json: info)
+	}
+}
