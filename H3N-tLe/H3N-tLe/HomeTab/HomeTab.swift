@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeTab: View {
     
-    var seriesList: [Series] = getAllSeriesInfo()
+    var seriesList = library.getSeriesList()
     @State var firstTime: Bool = true
     @State var isSeriesViewOpen: Bool = false
     @State var selectedSeries: Series? = nil
@@ -25,8 +25,8 @@ struct HomeTab: View {
                             NavigationLink(destination: SeriesView(series: series), label: {
                                 
                                 HStack{
-                                    if series.coverUrl != nil {
-                                        AsyncImage(url: series.coverUrl) { phase in
+                                    if series.getCoverUrl() != nil {
+                                        AsyncImage(url: series.getCoverUrl()) { phase in
                                             if let image = phase.image {
                                                 image
                                                     .resizable()
@@ -58,7 +58,7 @@ struct HomeTab: View {
                                         .lineLimit(1)
                                     
                                     //HStack {
-                                    Text(series.description ?? "")
+                                    Text(series.description)
                                         .foregroundColor(Color.secondary)
                                         .font(.body)
                                         .lineLimit(2)
@@ -77,8 +77,8 @@ struct HomeTab: View {
                                     Button {
                                         ButtonClick(series: series)
                                     } label: {
-                                        if series.coverUrl != nil {
-                                            AsyncImage(url: series.coverUrl) { phase in
+                                        if series.getCoverUrl() != nil {
+                                            AsyncImage(url: series.getCoverUrl()) { phase in
                                                 if let image = phase.image {
                                                     image
                                                         .resizable()
