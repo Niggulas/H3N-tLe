@@ -9,23 +9,19 @@ import SwiftUI
 
 struct ChapterList: View {
     var body: some View {
-        
-        ForEach(0..<20) { plugin in
-            NavigationLink(destination: Reader(),
-                           label: {
-                Label("Plugin \(plugin)", systemImage: "link")
-                
-            })
-            
-        }
-        .onDelete(perform: {
-            indexSet in
-            
-            if let i = indexSet.first {
-                // TODO: remove plugin
-                // e.g. plugins.remove(at:i)
+        List {
+            ForEach(0..<20) { chapter in
+                NavigationLink(destination: Reader(), label: {
+                    Label("Chapter \(chapter + 1)", systemImage: "book")
+                        .foregroundColor(.red)
+                        .background(Color(.systemGray6))
+                        .frame(idealWidth: .infinity,idealHeight: 20)
+                        
+                    
+                        // set frame after background
+                })
             }
-        })
+        }
         .tabItem {
             Image(systemName: "books.vertical")
             Text("Chapter")

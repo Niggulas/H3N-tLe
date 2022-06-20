@@ -21,7 +21,7 @@ struct ContentView: View {
             HomeTab()
             
             Reader()        // only temp
-            
+            ChapterList()
             SettingsTab()
             
         }
