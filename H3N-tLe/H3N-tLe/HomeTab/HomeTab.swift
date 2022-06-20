@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeTab: View {
     
-	var seriesList = library.getSeriesList()
+    var seriesList: [Series] = getAllSeriesInfo()
     @State var firstTime: Bool = true
     @State var isSeriesViewOpen: Bool = false
     @State var selectedSeries: Series? = nil
@@ -19,10 +19,57 @@ struct HomeTab: View {
         VStack {
             NavigationView {
                 
-                    VStack{
+                    Form{           // was a VStack
                         ForEach(seriesList) { series in
                             // Series Element
-                            VStack {
+                            NavigationLink(destination: SeriesView(series: series), label: {
+                                
+                                HStack{
+                                    if series.coverUrl != nil {
+                                        AsyncImage(url: series.coverUrl) { phase in
+                                            if let image = phase.image {
+                                                image
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .frame(width: 85)
+                                                    .cornerRadius(5)
+                                            } else if phase.error != nil {
+                                                Image("Cover")
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .frame(width: 85)
+                                                    .cornerRadius(5)
+                                            } else {
+                                                Color(.systemGray6)
+                                            }
+                                        }
+                                    } else {
+                                        Image("Cover")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 85)
+                                            .cornerRadius(5)
+                                    }
+                                }
+                                
+                                VStack (alignment: .leading){
+                                    Text(series.title)
+                                        .font(.headline)
+                                        .lineLimit(1)
+                                    
+                                    //HStack {
+                                    Text(series.description ?? "")
+                                        .foregroundColor(Color.secondary)
+                                        .font(.body)
+                                        .lineLimit(2)
+                                    // TODO: check if the text is always aligned to the left
+                                    
+                                    //Spacer()
+                                    //}
+                                }
+                            })
+                            
+                            /*VStack {
                                 HStack {
                                     Spacer()
                                     
@@ -30,8 +77,8 @@ struct HomeTab: View {
                                     Button {
                                         ButtonClick(series: series)
                                     } label: {
-                                        if series.getCoverUrl() != nil {
-                                            AsyncImage(url: series.getCoverUrl()) { phase in
+                                        if series.coverUrl != nil {
+                                            AsyncImage(url: series.coverUrl) { phase in
                                                 if let image = phase.image {
                                                     image
                                                         .resizable()
@@ -69,7 +116,7 @@ struct HomeTab: View {
                                                     .lineLimit(1)
                                                 
                                                 HStack {
-                                                    Text(series.description)
+                                                    Text(series.description ?? "")
                                                         .foregroundColor(Color.secondary)
                                                         .font(.body)
                                                         .lineLimit(2)
@@ -99,7 +146,7 @@ struct HomeTab: View {
                                     }
                                 }
                                 Divider()
-                            }
+                            }*/
                         }
                     }
                     .navigationTitle("Library")
