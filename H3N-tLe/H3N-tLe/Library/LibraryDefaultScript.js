@@ -15,7 +15,7 @@ Object.defineProperty(window, 'Chapter', {
 				throw new Error('chapterName is too short (legnth 0)');
 			}
 			this.#name = chapterName;
-	
+			
 			// Check urls
 			if (!Array.isArray(urls)) {
 				throw new Error('urls list is not an Array');
