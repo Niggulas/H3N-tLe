@@ -22,10 +22,7 @@ struct PluginList: View {
             .onDelete(perform: {
                 indexSet in
                 
-                if let i = indexSet.first {
-                    // TODO: remove plugin
-                    // e.g. plugins.remove(at:i)
-                }
+                
             })
             
         }
