@@ -1,5 +1,5 @@
 //
-//  AddTab.swift
+//  DownloadTab.swift
 //  H3N-tLe
 //
 //  Created by Nikolas Huber on 31.03.22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddTab: View {
+struct DownloadTab: View {
 	
 	@State var searchBarContent = ""
 	@State var isWebViewSheetVisible = false

@@ -76,7 +76,7 @@ class Library {
 		seriesList.insert(series, at: 0)
 	}
 	
-	// Dirty fix because we can't initialize the Library in AddTab but we have to initialize the runner there
+	// Dirty fix because we can't initialize the Library in DownloadTab but we have to initialize the runner there
 	func setRunner(_ runner: JSRunner) {
 		if isRunnerSet {
 			return
