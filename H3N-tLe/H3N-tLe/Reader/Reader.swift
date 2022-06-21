@@ -8,48 +8,59 @@
 import SwiftUI
 
 struct Reader: View {
+    
+    init(series: Series, chapter: String) {
+        self.series = series
+        chapterIndex = series.getChapterList().firstIndex(of: chapter)!
+    }
+    
+    let series: Series
+    @State var chapterIndex: Int
+    
+    func isFirstChapter() -> Bool {
+        return chapterIndex == 0
+    }
+    func isLastChapter() -> Bool {
+        return chapterIndex == series.getChapterList().count - 1
+    }
+    
     var body: some View {
         ScrollView (.vertical, showsIndicators: false, content: {
-            List {
-                ForEach(0..<20) { chapter in
-                    NavigationLink(destination: PluginList(), label: {
-                        Label("Plugin list", systemImage: "list.bullet")
-                            .foregroundColor(.red)
-                    })
-                }
-            }
-            
             // Top Buttons
             HStack {
-                Button {
-                    // Code
-                } label: {
-                    Text("Previous Chapter")
-                        .font(.headline)
-                        .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                if !isFirstChapter() {
+                    Button {
+                        chapterIndex -= 1
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
                 }
-                .padding()
-                .background(Color(.systemGray5))
-                .foregroundColor(Color.red)
-                .cornerRadius(15)
                 
-                Button {
-                    // Code
-                } label: {
-                    Text("Next Chapter")
-                        .font(.headline)
-                        .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                if !isLastChapter() {
+                    Button {
+                        chapterIndex += 1
+                    } label: {
+                        Image(systemName: "arrow.right")
+                            .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
                 }
-                .padding()
-                .background(Color(.systemGray5))
-                .foregroundColor(Color.red)
-                .cornerRadius(15)
+                
             }
             
+            // Images
             VStack(spacing: 0) {            // Removes the spacing between the images
                 // Display Images
-                ForEach(0..<8) { index in
-                    AsyncImage(url: library.getSeriesList()[0].getChapterImageUrls(name: "chapter-1")[index]) { image in
+                ForEach(series.getChapterImageUrls(name: series.getChapterList()[chapterIndex]).map { IdentifieableAny(value: $0) } ) { url in
+                    AsyncImage(url: url.value as? URL) { image in
                         image.resizable()
                     } placeholder: {
                         ProgressView()
@@ -60,31 +71,35 @@ struct Reader: View {
                     // muss schauen wie man das auf den screen begrenzt bekommt
                 }
             }
+            
             // Bottom Buttons
             HStack {
-                Button {
-                    // Code
-                } label: {
-                    Text("Previous Chapter")
-                        .font(.headline)
-                        .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                if !isFirstChapter() {
+                    Button {
+                        chapterIndex -= 1
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
                 }
-                .padding()
-                .background(Color(.systemGray5))
-                .foregroundColor(Color.red)
-                .cornerRadius(15)
                 
-                Button {
-                    // Code
-                } label: {
-                    Text("Next Chapter")
-                        .font(.headline)
-                        .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                if !isLastChapter() {
+                    Button {
+                        chapterIndex += 1
+                    } label: {
+                        Image(systemName: "arrow.right")
+                            .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
+                    }
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(Color.red)
+                    .cornerRadius(15)
                 }
-                .padding()
-                .background(Color(.systemGray5))
-                .foregroundColor(Color.red)
-                .cornerRadius(15)
+                
             }
             
             
@@ -94,11 +109,5 @@ struct Reader: View {
             Image(systemName: "eyeglasses")
             Text("Reader")
         }
-    }
-}
-
-struct Reader_Previews: PreviewProvider {
-    static var previews: some View {
-        Reader()
     }
 }

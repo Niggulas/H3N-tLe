@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct IdentifieableString: Identifiable {
+struct IdentifieableAny: Identifiable {
     var id = UUID()
-    var value: String
+    var value: Any
 }

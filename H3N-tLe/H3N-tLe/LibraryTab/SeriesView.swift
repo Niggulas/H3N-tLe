@@ -24,7 +24,7 @@ struct SeriesView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 130)
                                 .cornerRadius(5)
-                                //.padding()
+                            //.padding()
                         } else if phase.error != nil {
                         } else {
                             Color(.systemGray6)
@@ -102,19 +102,19 @@ struct SeriesView: View {
                 .padding()
             
             // Chapter List
-                // NavigationLing to ChapterList
-                /*NavigationLink(destination: ChapterList(), label: {
-                    Label("Chapter List", systemImage: "book")
-                        .font(.headline)
-                        .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                        .padding()
-                        .foregroundColor(.red)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(15)
-                })*/
+            // NavigationLing to ChapterList
+            /*NavigationLink(destination: ChapterList(), label: {
+             Label("Chapter List", systemImage: "book")
+             .font(.headline)
+             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+             .padding()
+             .foregroundColor(.red)
+             .background(Color(.systemGray6))
+             .cornerRadius(15)
+             })*/
             
             VStack (spacing: 0) {
-                ForEach(series.getChapterList().map { IdentifieableString(value: $0) } ) { chapter in
+                ForEach(series.getChapterList().map { IdentifieableAny(value: $0) } ) { chapter in
                     HStack (spacing: 0){
                         Button {
                             // Code
@@ -122,13 +122,13 @@ struct SeriesView: View {
                         } label: {
                             /*  Changing of eye pseudo code
                              if chapterStatus = read
-                                Image(systemName: "eye")
-                                    .frame(...)
+                             Image(systemName: "eye")
+                             .frame(...)
                              else
-                                Image(systemName: "eye.slash")
-                                    .frame(...)
+                             Image(systemName: "eye.slash")
+                             .frame(...)
                              
-                                propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
+                             propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
                              */
                             Image(systemName: "eye")
                                 .frame(minWidth: 50, maxWidth: 50, minHeight: 20)
@@ -137,9 +137,9 @@ struct SeriesView: View {
                         .background(Color(.systemGray6))
                         .foregroundColor(Color.red)
                         
-                        NavigationLink(destination: Reader(), label: {
+                        NavigationLink(destination: Reader(series: series, chapter: chapter.value as! String), label: {
                             HStack {
-                                Text(chapter.value)
+                                Text(chapter.value as! String)
                                 Spacer()
                                 Image(systemName: "chevron.right")
                             }
@@ -177,149 +177,149 @@ struct SeriesView: View {
             .cornerRadius(15)
             
             /*ForEach(0..<20) { chapter in
-                NavigationLink(destination: Reader(), label: {
-                    Label("Chapter \(chapter + 1)", systemImage: "book")
-                        .foregroundColor(.red)
-                        .background(Color(.systemGray6))
-                        .frame(idealWidth: .infinity,idealHeight: 20)
-                        
-                    
-                        // set frame after background
-                })
-            }*/
+             NavigationLink(destination: Reader(), label: {
+             Label("Chapter \(chapter + 1)", systemImage: "book")
+             .foregroundColor(.red)
+             .background(Color(.systemGray6))
+             .frame(idealWidth: .infinity,idealHeight: 20)
+             
+             
+             // set frame after background
+             })
+             }*/
             
             
         })
         
         /*NavigationView {
-            
-            VStack {
-                
-                // Series information
-                HStack {
-                    if series.getCoverUrl() != nil {
-                        AsyncImage(url: series.getCoverUrl()) { phase in
-                            if let image = phase.image {
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 130)
-                                    .cornerRadius(5)
-                                    .padding()
-                            } else if phase.error != nil {
-                            } else {
-                                Color(.systemGray6)
-                            }
-                        }
-                    }
-                    Spacer()
-                    
-                    
-                    VStack {
-                        
-                        Text(series.title)
-                            .font(.title)
-                            .bold()
-                        
-                        Spacer()
-                        
-                        Text(series.description ?? "")
-                            .font(.body)
-                        
-                        Spacer()
-                    }
-                    
-                    Spacer()
-                    
-                }
-                
-                // End of series information
-                
-                Divider()
-                    .padding()
-                
-                // Buttons
-                
-                VStack {
-                    HStack {
-                        Button {
-                            // Code
-                        } label: {
-                            Text("Continue")
-                                .font(.headline)
-                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                        }
-                        .padding()
-                        .background(Color(.systemGray5))
-                        .foregroundColor(Color.red)
-                        .cornerRadius(15)
-                        
-                        Button {
-                            // Code
-                        } label: {
-                            Text("Update")
-                                .font(.headline)
-                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                        }
-                        .padding()
-                        .background(Color(.systemGray5))
-                        .foregroundColor(Color.red)
-                        .cornerRadius(15)
-                    }
-                    HStack {
-                        Button {
-                            // Code
-                        } label: {
-                            Text("Mark as read")
-                                .font(.headline)
-                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                        }
-                        .padding()
-                        .background(Color(.systemGray5))
-                        .foregroundColor(Color.red)
-                        .cornerRadius(15)
-                        
-                        Button {
-                            // Code
-                        } label: {
-                            Text("Delete")
-                                .font(.headline)
-                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                        }
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(Color.primary)
-                        .cornerRadius(15)
-                    }
-                }
-                
-                // End of buttons
-                
-                Divider()
-                    .padding()
-                
-                // Chapter list
-                List {
-                    ForEach(0..<20) { chapter in
-                        NavigationLink(destination: Reader(), label: {
-                            Label("Chapter \(chapter + 1)", systemImage: "book")
-                                .foregroundColor(.red)
-                        })
-                    }
-                }
-                /*ForEach(0..<20) { plugin in
-                 NavigationLink(destination: Reader(),
-                 label: {
-                 Label("Plugin \(plugin)", systemImage: "link")
-                 
-                 })
-                 
-                 }*/
-                
-                // End of chapter list
-                
-            }
-            
-        }//)  */
+         
+         VStack {
+         
+         // Series information
+         HStack {
+         if series.getCoverUrl() != nil {
+         AsyncImage(url: series.getCoverUrl()) { phase in
+         if let image = phase.image {
+         image
+         .resizable()
+         .aspectRatio(contentMode: .fit)
+         .frame(width: 130)
+         .cornerRadius(5)
+         .padding()
+         } else if phase.error != nil {
+         } else {
+         Color(.systemGray6)
+         }
+         }
+         }
+         Spacer()
+         
+         
+         VStack {
+         
+         Text(series.title)
+         .font(.title)
+         .bold()
+         
+         Spacer()
+         
+         Text(series.description ?? "")
+         .font(.body)
+         
+         Spacer()
+         }
+         
+         Spacer()
+         
+         }
+         
+         // End of series information
+         
+         Divider()
+         .padding()
+         
+         // Buttons
+         
+         VStack {
+         HStack {
+         Button {
+         // Code
+         } label: {
+         Text("Continue")
+         .font(.headline)
+         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+         }
+         .padding()
+         .background(Color(.systemGray5))
+         .foregroundColor(Color.red)
+         .cornerRadius(15)
+         
+         Button {
+         // Code
+         } label: {
+         Text("Update")
+         .font(.headline)
+         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+         }
+         .padding()
+         .background(Color(.systemGray5))
+         .foregroundColor(Color.red)
+         .cornerRadius(15)
+         }
+         HStack {
+         Button {
+         // Code
+         } label: {
+         Text("Mark as read")
+         .font(.headline)
+         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+         }
+         .padding()
+         .background(Color(.systemGray5))
+         .foregroundColor(Color.red)
+         .cornerRadius(15)
+         
+         Button {
+         // Code
+         } label: {
+         Text("Delete")
+         .font(.headline)
+         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+         }
+         .padding()
+         .background(Color.red)
+         .foregroundColor(Color.primary)
+         .cornerRadius(15)
+         }
+         }
+         
+         // End of buttons
+         
+         Divider()
+         .padding()
+         
+         // Chapter list
+         List {
+         ForEach(0..<20) { chapter in
+         NavigationLink(destination: Reader(), label: {
+         Label("Chapter \(chapter + 1)", systemImage: "book")
+         .foregroundColor(.red)
+         })
+         }
+         }
+         /*ForEach(0..<20) { plugin in
+          NavigationLink(destination: Reader(),
+          label: {
+          Label("Plugin \(plugin)", systemImage: "link")
+          
+          })
+          
+          }*/
+         
+         // End of chapter list
+         
+         }
+         
+         }//)  */
     }
 }

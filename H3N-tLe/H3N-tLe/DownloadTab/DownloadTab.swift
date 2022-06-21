@@ -60,7 +60,7 @@ struct DownloadTab: View {
             
             ScrollView(.vertical, showsIndicators: false, content: {
                 VStack(spacing: 0){
-                    ForEach(plugInList.map { IdentifieableString(value: $0) } ) { plugInName in
+                    ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
                         Button (action: {
                             library.runner.addMessageHandler({print($0)}, name: "print")
                             library.runner.view.disallowJS()
@@ -68,7 +68,7 @@ struct DownloadTab: View {
                             
                         }, label: {
                             HStack {
-                                Text(plugInName.value)//\(plugInList[plugin])")
+                                Text(plugInName.value as! String)//\(plugInList[plugin])")
                                     .font(.headline)
                                 Spacer()
                                 Image(systemName: "square.and.arrow.down")
