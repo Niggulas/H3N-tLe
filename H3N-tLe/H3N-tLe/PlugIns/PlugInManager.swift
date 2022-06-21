@@ -52,8 +52,8 @@ class PlugInManager {
 		return nameToPlugInMap.keys.map { $0 }
 	}
 	
-	func getPlugInNamesForDomain(_ domain: String) -> [String]? {
-		return domainToPlugInNameListMap[domain]
+	func getPlugInNamesForDomain(_ domain: String) -> [String] {
+		return domainToPlugInNameListMap[domain] ?? [String]()
 	}
 	
 	func getPlugInJSForDomain(domain: String, plugInName: String) -> String? {
