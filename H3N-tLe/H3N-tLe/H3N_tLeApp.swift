@@ -9,6 +9,7 @@ import SwiftUI
 
 let fileManager = FileManager.default
 let library = Library()
+let plugInManager = PlugInManager()
 
 @main
 struct H3N_tLeApp: App {
