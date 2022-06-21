@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+struct IdentifieableString: Identifiable {
+    var id = UUID()
+    var value: String
+}
+
 struct DownloadTab: View {
     
     @State var searchBarContent = ""
@@ -21,6 +26,10 @@ struct DownloadTab: View {
                 TextField("URL to series", text: $searchBarContent).onChange(of: searchBarContent) { newValue in
                     if let domain = URL(string: searchBarContent)?.host {
                         plugInList = plugInManager.getPlugInNamesForDomain(domain)
+                    } else if searchBarContent.isEmpty {
+                        plugInList = plugInManager.getAllPlugInNames()
+                    } else {
+                        plugInList = [String]()
                     }
                 }
                 .foregroundColor(Color.primary)
@@ -31,14 +40,14 @@ struct DownloadTab: View {
                 } label: {
                     Image(systemName: "square.and.arrow.down").onTapGesture {
                         /*library.runner.addMessageHandler({print($0)}, name: "print")
-                        library.runner.view.disallowJS()
-                        library.runner.view.disallowContent()
-                        
-                        let js = """
-                        """
-                        
-                        library.runner.run(source: js, on: URL(string: searchBarContent))
-                        library.runner.showPage()*/
+                         library.runner.view.disallowJS()
+                         library.runner.view.disallowContent()
+                         
+                         let js = """
+                         """
+                         
+                         library.runner.run(source: js, on: URL(string: searchBarContent))
+                         library.runner.showPage()*/
                     }
                     .foregroundColor(Color.red)
                 }
@@ -56,16 +65,15 @@ struct DownloadTab: View {
             
             ScrollView(.vertical, showsIndicators: false, content: {
                 VStack(spacing: 0){
-                    ForEach(0..<plugInList.count) { plugin in
+                    ForEach(plugInList.map { IdentifieableString(value: $0) } ) { plugInName in
                         Button (action: {
                             library.runner.addMessageHandler({print($0)}, name: "print")
                             library.runner.view.disallowJS()
                             library.runner.view.disallowContent()
                             
-                        },
-                        label: {
-                            HStack{
-                                Text("\(plugInList[plugin])")
+                        }, label: {
+                            HStack {
+                                Text(plugInName.value)//\(plugInList[plugin])")
                                     .font(.headline)
                                 Spacer()
                                 Image(systemName: "square.and.arrow.down")
@@ -82,6 +90,7 @@ struct DownloadTab: View {
                         
                     }
                 }
+                
                 .cornerRadius(15)
                 .padding()
                 
