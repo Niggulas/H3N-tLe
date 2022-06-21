@@ -46,19 +46,20 @@ struct Reader: View {
                 .cornerRadius(15)
             }
             
-            // Display Images
-            ForEach(0..<8) { index in
-                AsyncImage(url: library.getSeriesList()[0].getChapterImageUrls(name: "chapter-1")[index]) { image in
-                    image.resizable()
-                } placeholder: {
-                    ProgressView()
-                }
-                .aspectRatio(contentMode: .fit)
-                .frame(minWidth: 1, idealWidth: .infinity, maxWidth: .infinity) //Komische dinge passieren
+            VStack(spacing: 0) {
+                // Display Images
+                ForEach(0..<8) { index in
+                    AsyncImage(url: library.getSeriesList()[0].getChapterImageUrls(name: "chapter-1")[index]) { image in
+                        image.resizable()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    .aspectRatio(contentMode: .fit)
+                    .frame(minWidth: 1, idealWidth: .infinity, maxWidth: .infinity) //Komische dinge passieren
                     // Image wird breiter geladen, als der screen weit ist
                     // muss schauen wie man das auf den screen begrenzt bekommt
+                }
             }
-            
             // Bottom Buttons
             HStack {
                 Button {
