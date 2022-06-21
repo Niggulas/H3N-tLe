@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-struct IdentifieableString: Identifiable {
-    var id = UUID()
-    var value: String
-}
-
 struct DownloadTab: View {
     
     @State var searchBarContent = ""
