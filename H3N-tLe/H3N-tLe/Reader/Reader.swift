@@ -46,7 +46,7 @@ struct Reader: View {
                 .cornerRadius(15)
             }
             
-            VStack(spacing: 0) {
+            VStack(spacing: 0) {            // Removes the spacing between the images
                 // Display Images
                 ForEach(0..<8) { index in
                     AsyncImage(url: library.getSeriesList()[0].getChapterImageUrls(name: "chapter-1")[index]) { image in
