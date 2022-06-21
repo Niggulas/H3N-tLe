@@ -1,0 +1,5 @@
+{
+	"manifest_version": "1",
+	"example.com": "path/to/example.js",
+	"www.example.com": "path/to/example.js"
+}
