@@ -23,6 +23,7 @@ struct DownloadTab: View {
                         plugInList = plugInManager.getPlugInNamesForDomain(domain)
                     }
                 }
+                .foregroundColor(Color.primary)
                 
                 Button {
                     // TODO: call a funnction to add entered URL
@@ -39,11 +40,11 @@ struct DownloadTab: View {
                         library.runner.run(source: js, on: URL(string: searchBarContent))
                         library.runner.showPage()*/
                     }
+                    .foregroundColor(Color.red)
                 }
             }
             .padding()
             .background(Color(.systemGray6))
-            .foregroundColor(Color.red)
             .cornerRadius(15)
             .padding()
             .sheet(isPresented: $isWebViewSheetVisible) {
