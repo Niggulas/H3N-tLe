@@ -114,7 +114,7 @@ struct SeriesView: View {
                 })*/
             
             VStack (spacing: 0) {
-                ForEach(0..<20) { chapter in
+                ForEach(series.getChapterList().map { IdentifieableString(value: $0) } ) { chapter in
                     HStack (spacing: 0){
                         Button {
                             // Code
@@ -139,7 +139,7 @@ struct SeriesView: View {
                         
                         NavigationLink(destination: Reader(), label: {
                             HStack {
-                                Text("Chapter \(chapter + 1)")
+                                Text(chapter.value)
                                 Spacer()
                                 Image(systemName: "chevron.right")
                             }
