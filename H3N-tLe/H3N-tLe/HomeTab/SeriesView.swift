@@ -55,19 +55,21 @@ struct SeriesView: View {
             
             // Buttons
             VStack {
+                Button {
+                    // Code
+                } label: {
+                    Text("Continue")
+                        .font(.headline)
+                        .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .foregroundColor(Color.red)
+                .cornerRadius(15)
+                
+                
+                
                 HStack {
-                    Button {
-                        // Code
-                    } label: {
-                        Text("Continue")
-                            .font(.headline)
-                            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                    }
-                    .padding()
-                    .background(Color(.systemGray5))
-                    .foregroundColor(Color.red)
-                    .cornerRadius(15)
-                    
                     Button {
                         // Code
                     } label: {
@@ -76,11 +78,10 @@ struct SeriesView: View {
                             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
                     }
                     .padding()
-                    .background(Color(.systemGray5))
+                    .background(Color(.systemGray6))
                     .foregroundColor(Color.red)
                     .cornerRadius(15)
-                }
-                HStack {
+                    
                     Button {
                         // Code
                     } label: {
@@ -89,21 +90,10 @@ struct SeriesView: View {
                             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
                     }
                     .padding()
-                    .background(Color(.systemGray5))
+                    .background(Color(.systemGray6))
                     .foregroundColor(Color.red)
                     .cornerRadius(15)
                     
-                    Button {
-                        // Code
-                    } label: {
-                        Text("Delete")
-                            .font(.headline)
-                            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                    }
-                    .padding()
-                    .background(Color.red)
-                    .foregroundColor(Color.primary)
-                    .cornerRadius(15)
                 }
             }
             
@@ -112,7 +102,77 @@ struct SeriesView: View {
                 .padding()
             
             // Chapter List
-            ChapterList()
+                // NavigationLing to ChapterList
+                /*NavigationLink(destination: ChapterList(), label: {
+                    Label("Chapter List", systemImage: "book")
+                        .font(.headline)
+                        .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                        .padding()
+                        .foregroundColor(.red)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(15)
+                })*/
+            
+            VStack (spacing: 0) {
+                ForEach(0..<20) { chapter in
+                    HStack (spacing: 0){
+                        Button {
+                            // Code
+                            // toggle chapterStatus
+                        } label: {
+                            /*  Changing of eye pseudo code
+                             if chapterStatus = read
+                                Image(systemName: "eye")
+                                    .frame(...)
+                             else
+                                Image(systemName: "eye.slash")
+                                    .frame(...)
+                             */
+                            Image(systemName: "eye")
+                                .frame(minWidth: 50, maxWidth: 50, minHeight: 20)
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .foregroundColor(Color.red)
+                        
+                        NavigationLink(destination: Reader(), label: {
+                            HStack {
+                                Text("Chapter \(chapter + 1)")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                            }
+                            //Label("Chapter \(chapter + 1)", systemImage: "book")
+                            .font(.headline)
+                            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+                            .padding()
+                            .foregroundColor(.red)
+                            .background(Color(.systemGray6))
+                            //.cornerRadius(15)
+                            // set frame after background
+                        })
+                        
+                        
+                    }
+                    Divider()
+                }
+            }
+            .cornerRadius(15)
+            
+            // Seperator
+            Divider()
+                .padding()
+            
+            Button {
+                // Code
+            } label: {
+                Text("Delete this series")
+                    .font(.headline)
+                    .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+            }
+            .padding()
+            .background(Color.red)
+            .foregroundColor(Color.primary)
+            .cornerRadius(15)
             
             /*ForEach(0..<20) { chapter in
                 NavigationLink(destination: Reader(), label: {
