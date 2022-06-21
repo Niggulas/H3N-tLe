@@ -85,7 +85,6 @@ class Library {
 		
 		self.runner = runner
 		
-		// TODO: Register message handler for downloadChapter and add a default script to make it easier to use
 		self.runner.addMessageHandler({ chapterInfoJson in
 			let chapterInfo = try? JSONSerialization.jsonObject(with: chapterInfoJson.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
 			
@@ -93,8 +92,10 @@ class Library {
 				return
 			}
 			
-			
+			// TODO: Implement message handler for Series.downloadChapter(chapterName: String, imageUrls: [URL])
 			
 		}, name: "DownlaodChapter")
+		
+		// TODO: Add a default script to make the message handler/sender easier to use
 	}
 }
