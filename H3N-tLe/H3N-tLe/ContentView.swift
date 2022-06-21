@@ -18,7 +18,7 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             DownloadTab()
             
-            HomeTab()
+            LibraryTab()
             
             // Reader()        // only temp
             // ChapterList()

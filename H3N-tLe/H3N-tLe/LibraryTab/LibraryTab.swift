@@ -1,5 +1,5 @@
 //
-//  HomeTab.swift
+//  LibraryTab.swift
 //  H3N-tLe
 //
 //  Created by Nikolas Huber on 31.03.22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeTab: View {
+struct LibraryTab: View {
     
     var seriesList = library.getSeriesList()
     @State var firstTime: Bool = true
