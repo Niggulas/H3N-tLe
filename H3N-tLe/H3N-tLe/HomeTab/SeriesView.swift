@@ -127,6 +127,8 @@ struct SeriesView: View {
                              else
                                 Image(systemName: "eye.slash")
                                     .frame(...)
+                             
+                                propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
                              */
                             Image(systemName: "eye")
                                 .frame(minWidth: 50, maxWidth: 50, minHeight: 20)
