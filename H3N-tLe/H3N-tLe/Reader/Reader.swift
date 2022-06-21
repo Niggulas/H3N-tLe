@@ -47,9 +47,14 @@ struct Reader: View {
             }
             
             // Display Images
-            ForEach(0..<20) { index in
-                Image("aNiceThumbNail")
-                    //.frame(minWidth: 1, idealWidth: .infinity, maxWidth: .infinity, minHeight: 1, idealHeight: .infinity, maxHeight: .infinity) //Komische dinge passieren
+            ForEach(0..<8) { index in
+                AsyncImage(url: library.getSeriesList()[0].getChapterImageUrls(name: "chapter-1")[index]) { image in
+                    image.resizable()
+                } placeholder: {
+                    ProgressView()
+                }
+                .aspectRatio(contentMode: .fit)
+                .frame(minWidth: 1, idealWidth: .infinity, maxWidth: .infinity) //Komische dinge passieren
                     // Image wird breiter geladen, als der screen weit ist
                     // muss schauen wie man das auf den screen begrenzt bekommt
             }
