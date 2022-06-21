@@ -8,15 +8,15 @@
 import Foundation
 
 class PlugInManager {
-	static let pluginDirectoryUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("PlugIns")
+	static let plugInsDirectoryUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("PlugIns")
 	
 	init() {
 		// Make sure the PlugIn directory exists before trying to do something with it
-		if !isDirectory(url: PlugInManager.pluginDirectoryUrl) {
-			if fileManager.fileExists(atPath: PlugInManager.pluginDirectoryUrl.path) {
-				try! fileManager.removeItem(at: PlugInManager.pluginDirectoryUrl)
+		if !isDirectory(url: PlugInManager.plugInsDirectoryUrl) {
+			if fileManager.fileExists(atPath: PlugInManager.plugInsDirectoryUrl.path) {
+				try! fileManager.removeItem(at: PlugInManager.plugInsDirectoryUrl)
 			}
-			try! fileManager.createDirectory(at: PlugInManager.pluginDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
+			try! fileManager.createDirectory(at: PlugInManager.plugInsDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
 		}
 		
 		// TLDR: Avoid an error - Explaination: Basiacally useless because they get overwritten immediately but required to be able to use self
@@ -33,7 +33,7 @@ class PlugInManager {
 		nameToPlugInMap = [String: PlugIn]()
 		domainToPlugInNameListMap = [String: [String]]()
 		
-		listDirectories(url: PlugInManager.pluginDirectoryUrl).forEach { dir in
+		listDirectories(url: PlugInManager.plugInsDirectoryUrl).forEach { dir in
 			if let plugIn = try? PlugIn(name: dir.lastPathComponent) {
 				nameToPlugInMap[plugIn.name] = plugIn
 				
@@ -62,7 +62,7 @@ class PlugInManager {
 	
 	func deletePlugIn(name: String) -> Bool {
 		do {
-			try fileManager.removeItem(at: PlugInManager.pluginDirectoryUrl.appendingPathComponent(name))
+			try fileManager.removeItem(at: PlugInManager.plugInsDirectoryUrl.appendingPathComponent(name))
 			registerPlugIns()
 			return true
 		} catch {
