@@ -39,6 +39,15 @@ struct SettingsTab: View {
                         })
 
                     }
+					
+					Section(header: Text("Trust")) {
+						
+						NavigationLink(destination: InformationOnTrust(), label: {
+							Label("Information about Passwords", systemImage: "info")
+								.foregroundColor(.red)
+						})
+
+					}
                     //Debug section with Reader in it
                     /*Section(header: Text("Debug")) {
                         NavigationLink(destination: Reader(), label: {
