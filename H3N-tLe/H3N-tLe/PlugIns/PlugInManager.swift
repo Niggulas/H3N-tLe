@@ -52,6 +52,10 @@ class PlugInManager {
 		return nameToPlugInMap.keys.map { $0 }
 	}
 	
+	func getPlugInWebsite(plugIn name: String) -> URL? {
+		return nameToPlugInMap[name]?.website
+	}
+	
 	func getPlugInNamesForDomain(_ domain: String) -> [String] {
 		return domainToPlugInNameListMap[domain] ?? [String]()
 	}

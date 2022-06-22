@@ -36,7 +36,11 @@ class PlugIn {
 		} else if manifest?[PlugIn.manifestVersionKey] != PlugIn.manifestVersion {
 			throw PlugInError.UnsupportedManifestVersion
 		}
-        website = manifest![PlugIn.websiteKey]
+		
+		if let url = URL(string: manifest![PlugIn.websiteKey] ?? "") {
+			website = url
+		}
+		
         let domains = manifest!.keys.filter { $0 != PlugIn.manifestVersionKey && $0 != PlugIn.websiteKey }
 		
 		try! domains.forEach {
@@ -57,7 +61,7 @@ class PlugIn {
 	}
 	
 	let name: String
-    let website: String?
+    let website: URL?
 	private let directory: URL
 	private var domainToScriptUrlMap = [String: URL]()
 	
