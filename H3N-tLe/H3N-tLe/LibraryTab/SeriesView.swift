@@ -160,7 +160,7 @@ struct SeriesView: View {
                 .padding()
             
             Button {
-                // Code
+				series.delete()
             } label: {
                 Text("Delete this series")
                     .font(.headline)

@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import WebKit
 
 struct LibraryTab: View {
     
-    var seriesList = library.getSeriesList()
+    @State var seriesList = library.getSeriesList()
     
     var body: some View {
         VStack {
@@ -62,8 +63,23 @@ struct LibraryTab: View {
                             })
                             
                         }
+						.onDelete(perform: { index in
+							seriesList[index.first!].delete()
+							library.updateSeriesList()
+							seriesList = library.getSeriesList()
+						})
                     }
                     .navigationTitle("Library")
+					.toolbar {
+						Button {
+							library.updateSeriesList()
+							seriesList = library.getSeriesList()
+						} label: {
+							Text("Refresh")
+								.foregroundColor(.red)
+						}
+
+					}
                     
             }
             
@@ -73,6 +89,10 @@ struct LibraryTab: View {
             Text("Library")
         }
         .tag(1)
+		.onDisappear(perform: {
+			library.updateSeriesList()
+			seriesList = library.getSeriesList()
+		})
         
     }
     

@@ -20,8 +20,6 @@ struct ContentView: View {
             
             LibraryTab()
             
-            // Reader()        // only temp
-            // ChapterList()
             SettingsTab()
             
         }
