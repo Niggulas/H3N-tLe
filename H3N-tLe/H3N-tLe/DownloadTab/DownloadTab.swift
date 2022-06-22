@@ -11,7 +11,7 @@ struct DownloadTab: View {
     
     @State var searchBarContent = ""
     @State var plugInList = plugInManager.getAllPlugInNames()
-    @State var isWebViewSheetVisible = true
+    @State var isWebViewSheetVisible = false
     
     var body: some View {
         
