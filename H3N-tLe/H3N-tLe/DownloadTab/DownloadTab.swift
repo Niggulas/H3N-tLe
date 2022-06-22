@@ -11,7 +11,7 @@ struct DownloadTab: View {
     
     @State var searchBarContent = ""
     @State var plugInList = plugInManager.getAllPlugInNames()
-    @State var isWebViewSheetVisible = false
+    @State var isWebViewSheetVisible = true
     
     var body: some View {
         
@@ -53,7 +53,31 @@ struct DownloadTab: View {
             .padding()
             .sheet(isPresented: $isWebViewSheetVisible) {
                 // TODO: Warning not to get your passwords stolen here
-                library.runner.view
+                // TODO: Melde nich nicht an wenn du dem pluginautor nicht vertraust
+                // die TODO darüber wurde erledigt
+                
+				VStack (spacing: 0) {
+                    
+                    HStack {
+						
+						Button {
+							isWebViewSheetVisible = false
+						} label: {
+							Text("Hide")
+								.font(.headline)
+						}
+						.padding()
+						//.background(Color(.systemGray4))
+						.foregroundColor(Color.red)
+						
+						Spacer()
+                    }
+                    
+                    library.runner.view
+                        
+                }
+                .ignoresSafeArea()
+                
             }
             
             Spacer()
@@ -113,4 +137,14 @@ struct DownloadTab: View {
             ))
         }
     }
+}
+
+struct DownloadTab_Previews: PreviewProvider {
+	static var previews: some View {
+		DownloadTab()
+			.preferredColorScheme(.dark)
+			.previewDevice("iPhone 12")
+			.previewLayout(.sizeThatFits)
+			
+	}
 }
