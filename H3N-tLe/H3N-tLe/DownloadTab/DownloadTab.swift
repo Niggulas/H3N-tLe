@@ -58,6 +58,7 @@ struct DownloadTab: View {
             
             Spacer()
             
+            // List of Plugins that are compatible with the site
             ScrollView(.vertical, showsIndicators: false, content: {
                 VStack(spacing: 0){
                     ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
