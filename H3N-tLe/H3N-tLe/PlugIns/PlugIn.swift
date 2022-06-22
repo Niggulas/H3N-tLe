@@ -39,7 +39,9 @@ class PlugIn {
 		
 		if let url = URL(string: manifest![PlugIn.websiteKey] ?? "") {
 			website = url
-		}
+        } else {
+            website = nil
+        }
 		
         let domains = manifest!.keys.filter { $0 != PlugIn.manifestVersionKey && $0 != PlugIn.websiteKey }
 		

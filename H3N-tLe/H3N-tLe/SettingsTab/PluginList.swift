@@ -16,14 +16,25 @@ struct PluginList: View {
         
         // Use of a list, so that the plugins get displayed in a organized way
         List {
-            
             // Loop that goes throu the array of installed plugins
             ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
                 
-                // The Elements are Links, so they can lead to their repo
-                Link(destination: URL(string: "example.com")!, label: { // TODO: make the Link dynamic to the website of the plugin
-                    Label(plugInName.value as! String, systemImage: "link")
-                })
+                if let url = plugInManager.getPlugInWebsite(plugIn: plugInName.value as! String) {
+                    // The Elements are Links, so they can lead to their repo
+                    Link(destination: url, label: { // TODO: make the Link dynamic to the website of the plugin
+                        HStack{
+                            Text(plugInName.value as! String)
+                            Spacer()
+                            Image(systemName: "link")
+                        }
+                    })
+                    
+                    
+                } else {
+                    Text(plugInName.value as! String)
+                        .foregroundColor(.red)
+                }
+                
                 
             }
             
