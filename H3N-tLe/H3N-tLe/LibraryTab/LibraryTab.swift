@@ -38,6 +38,7 @@ struct LibraryTab: View {
                                                     .cornerRadius(5)
                                             } else {
                                                 Color(.systemGray6)
+													.frame(width: 85, height: 128)
                                             }
                                         }
                                     } else {
