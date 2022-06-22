@@ -27,7 +27,10 @@ class Library {
 	private var whiteList = [String]()
 	private var blackList = ["hidden"]
 	
-	var runner = JSRunner(showView: {}, hideView: {}, isViewVisible: {return false})
+	private var currentDownloadUrl: URL?
+	private var currentDownloadPluginName: String?
+	
+	var runner = JSRunner(showView: {}, hideView: {}, isViewVisible: {false})
 	
 	// Returns a filtered list of all series
 	func getSeriesList() -> [Series] {
@@ -76,26 +79,104 @@ class Library {
 		seriesList.insert(series, at: 0)
 	}
 	
+	func download(url: URL, with pluginName: String) {
+		if let js = plugInManager.getPlugInJSForDomain(domain: url.host!, plugInName: pluginName) {
+			currentDownloadUrl = url
+			currentDownloadPluginName = pluginName
+			runner.run(source: js, on: url)
+		}
+	}
+	
 	// Dirty fix because we can't initialize the Library in DownloadTab but we have to initialize the runner there
-	func setRunner(_ runner: JSRunner) {
+	func setRunner(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool) {
 		if isRunnerSet {
 			return
 		}
-		isRunnerSet = true
 		
-		self.runner = runner
+		let libraryDefaultScript = try! String(contentsOf: Bundle.main.url(forResource: "JSRunnerDefaultScript", withExtension: "js")!)
 		
-		self.runner.addMessageHandler({ chapterInfoJson in
-			let chapterInfo = try? JSONSerialization.jsonObject(with: chapterInfoJson.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
+		self.runner = JSRunner(showView: showView, hideView: hideView, isViewVisible: isViewVisible, contentWorld: .world(name: "PlugIn"), defaultScripts: [libraryDefaultScript])
+		
+		self.runner.addMessageHandlerThatReplies({ seriesTitle in
+			return self.seriesList.contains(where: { $0.title == seriesTitle }) ? "present" : "absent"
+		}, name: "DoesSeriesExist")
+		
+		self.runner.addMessageHandler({ [self] json in
+			runner.stop()
 			
-			if chapterInfo == nil {
+			let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
+			if info == nil {
 				return
 			}
 			
-			// TODO: Implement message handler for Series.downloadChapter(chapterName: String, imageUrls: [URL])
+			/*
+			 Series related
+			 */
 			
+			let seriesInfo = info!["series"] as? [String: String]
+			if seriesInfo?["title"]?.isEmpty ?? true {
+				return
+			}
+			
+			var series = try? Series(existingSeriesName: seriesInfo!["title"]!)
+			if series == nil {
+				series = try! Series(title: seriesInfo!["title"]!, description: seriesInfo!["description"] ?? "")
+			}
+			if let author = seriesInfo!["author"] {
+				series!.setAuthor(author)
+			}
+			if let status = seriesInfo!["status"] {
+				series!.setStatus(status)
+			}
+			if let coverUrl = URL(string: seriesInfo!["coverUrl"] ?? "") {
+				if series!.getCoverUrl() != nil && fileManager.fileExists(atPath: series!.getCoverUrl()!.path) {
+					try! fileManager.removeItem(at: series!.getCoverUrl()!)
+				}
+				let coverName = "cover" + coverUrl.lastPathComponent.split(separator: ".").last!
+				
+				
+				
+				series!.setCoverName(coverName)
+			}
+			series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
+			
+			/*
+			 Chapter related
+			 */
+			let chapterName = info!["chapterName"] as? String
+			if chapterName == nil {
+				return
+			}
+			
+			let imageUrlStrings = info!["urls"] as? [String]
+			if imageUrlStrings == nil {
+				return
+			}
+			let imageUrls = imageUrlStrings!.map { URL(string: $0) ?? URL(string: "faulty://url")! }
+			for imageUrl in imageUrls {
+				if imageUrl.scheme! != "http" && imageUrl.scheme! != "https" {
+					return
+				}
+			}
+			
+			// The actual download
+			series!.downloadChapter(chapterName: chapterName!, imageUrls: imageUrls)
+			
+			/*
+			 Next chapter download related
+			 */
+			if currentDownloadPluginName?.isEmpty ?? true {
+				return
+			}
+			series!.setLastPluginName(currentDownloadPluginName!)
+			
+			if let nextUrlString = info!["nextUrl"] as? String {
+				if let nextUrl = URL(string: nextUrlString) {
+					download(url: nextUrl, with: currentDownloadPluginName!)
+				}
+			}
 		}, name: "DownlaodChapter")
 		
-		// TODO: Add a default script to make the message handler/sender easier to use
+		isRunnerSet = true
 	}
 }

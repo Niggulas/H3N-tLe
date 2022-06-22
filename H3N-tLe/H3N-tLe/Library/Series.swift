@@ -15,7 +15,7 @@ class Series: Identifiable {
 		case InvalidSeriesInfoFile
 	}
 	
-	static let STATUS_STRINGS = ["dropped", "ongoing", "<paused but the word used by the scanlation teams>", "finished", "unknown"]
+	static let STATUS_STRINGS = ["dropped", "ongoing", "hiatus", "finished", "unknown"]
 	
 	// Init for an existing series
 	init(existingSeriesName name: String) throws {
@@ -47,6 +47,7 @@ class Series: Identifiable {
 		}
 		
 		remoteUrl = json!["url"] as? String
+		lastPluginName = json!["plugin"] as? String
 		status = json!["status"] as? String
 		
 		tags = json!["tags"] as? [String]
@@ -55,11 +56,11 @@ class Series: Identifiable {
 	}
 	
 	// Init for a series that doesn't exist yet
-	init(newSeriesName name: String, title: String, description: String) throws {
+	init(title: String, description: String) throws {
 		self.title = title
 		self.description = description
 		
-		localUrl = Library.libraryUrl.appendingPathComponent(name)
+		localUrl = Library.libraryUrl.appendingPathComponent(title)
 		infoUrl = localUrl.appendingPathComponent("info.json")
 		
 		if isDirectory(url: localUrl) && fileManager.fileExists(atPath: infoUrl.path) && !isDirectory(url: infoUrl) {
@@ -77,10 +78,11 @@ class Series: Identifiable {
 	private var author: String?
 	private var coverName: String?
 	private var remoteUrl: String?
+	private var lastPluginName: String?
 	private var status: String?
 	private var tags: [String]?
+	private var readChapterList: [String]?
 	private var lastReadChapter: String?
-    private var readChapterList: [String]?
 	
 	func getAuthor() -> String {
 		return author ?? ""
@@ -129,6 +131,20 @@ class Series: Identifiable {
 	func clearRemoteUrl() {
 		remoteUrl = nil
         writeInfo()
+	}
+	
+	func setLastPluginName(_ plugin: String) {
+		if plugInManager.getAllPlugInNames().contains(plugin) {
+			lastPluginName = plugin
+		}
+	}
+	
+	func getLastPluginName() -> String? {
+		return lastPluginName
+	}
+	
+	func clearLastPluginName() {
+		lastPluginName = nil
 	}
 	
 	func getStatus() -> String {
@@ -259,6 +275,9 @@ class Series: Identifiable {
 		}
 		if !(remoteUrl?.isEmpty ?? true) {
 			info["url"] = remoteUrl!
+		}
+		if !(lastPluginName?.isEmpty ?? true) {
+			info["plugin"] = lastPluginName
 		}
 		if status != "unknown" {
 			info["status"] = status
