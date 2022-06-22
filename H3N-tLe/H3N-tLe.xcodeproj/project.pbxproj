@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		171630DC282BD3B8001F799E /* Reader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171630DB282BD3B8001F799E /* Reader.swift */; };
-		1718C86D27FC246200D048DC /* SeriesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718C86C27FC246200D048DC /* SeriesSheet.swift */; };
 		172DE72027F4B30D00882059 /* H3N_tLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DE71F27F4B30D00882059 /* H3N_tLeApp.swift */; };
 		172DE72227F4B30D00882059 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DE72127F4B30D00882059 /* ContentView.swift */; };
 		172DE72427F4B31000882059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 172DE72327F4B31000882059 /* Assets.xcassets */; };
@@ -33,7 +32,6 @@
 
 /* Begin PBXFileReference section */
 		171630DB282BD3B8001F799E /* Reader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reader.swift; sourceTree = "<group>"; };
-		1718C86C27FC246200D048DC /* SeriesSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesSheet.swift; sourceTree = "<group>"; };
 		172DE71C27F4B30D00882059 /* H3N-tLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "H3N-tLe.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		172DE71F27F4B30D00882059 /* H3N_tLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = H3N_tLeApp.swift; sourceTree = "<group>"; };
 		172DE72127F4B30D00882059 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; tabWidth = 4; };
@@ -81,7 +79,6 @@
 			isa = PBXGroup;
 			children = (
 				17361EA627F5ACD0000D70CF /* LibraryTab.swift */,
-				1718C86C27FC246200D048DC /* SeriesSheet.swift */,
 				172E623A284792E10039B5F0 /* SeriesView.swift */,
 			);
 			path = LibraryTab;
@@ -254,7 +251,6 @@
 				41A3326E28528E450009A6EC /* PlugInManager.swift in Sources */,
 				171630DC282BD3B8001F799E /* Reader.swift in Sources */,
 				416AE264285399FA00224AF2 /* WebView.swift in Sources */,
-				1718C86D27FC246200D048DC /* SeriesSheet.swift in Sources */,
 				17B28F4E286362D2000B66C2 /* InformationOnTrust.swift in Sources */,
 				17B28F4828621FB9000B66C2 /* IdentifiableAnyStruct.swift in Sources */,
 				17361EB227F72937000D70CF /* PluginList.swift in Sources */,
