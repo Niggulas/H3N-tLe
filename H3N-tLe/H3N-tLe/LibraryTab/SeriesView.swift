@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SeriesView: View {
     
-    let series: Series
+    @State var series: Series
     
     var body: some View {
         ScrollView (.vertical, showsIndicators: false, content:{
