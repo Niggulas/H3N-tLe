@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SeriesView: View {
     
-    var series: Series
+    let series: Series
     
     var body: some View {
         ScrollView (.vertical, showsIndicators: false, content:{
@@ -53,23 +53,24 @@ struct SeriesView: View {
             Divider()
                 .padding()
             
-            // Buttons
+            // Upper Buttons
             VStack {
-                Button {
-                    // Code
-                } label: {
+                
+                // Continue button: open the first unread chapter
+                NavigationLink (destination: Reader(series: series, chapter: series.getNextUnreadChapter() ), label: {
                     Text("Continue")
                         .font(.headline)
                         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-                }
+                })
                 .padding()
                 .background(Color(.systemGray6))
                 .foregroundColor(Color.red)
                 .cornerRadius(15)
                 
-                
-                
+                // Update & mark as read buttons
                 HStack {
+                    
+                    // Update button
                     Button {
                         // Code
                     } label: {
@@ -82,8 +83,9 @@ struct SeriesView: View {
                     .foregroundColor(Color.red)
                     .cornerRadius(15)
                     
+                    // Mark as read button
                     Button {
-                        // Code
+                        series.markAllChaptersAsRead()
                     } label: {
                         Text("Mark as read")
                             .font(.headline)
@@ -102,20 +104,13 @@ struct SeriesView: View {
                 .padding()
             
             // Chapter List
-            // NavigationLing to ChapterList
-            /*NavigationLink(destination: ChapterList(), label: {
-             Label("Chapter List", systemImage: "book")
-             .font(.headline)
-             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-             .padding()
-             .foregroundColor(.red)
-             .background(Color(.systemGray6))
-             .cornerRadius(15)
-             })*/
-            
             VStack (spacing: 0) {
+                
                 ForEach(series.getChapterList().map { IdentifieableAny(value: $0) } ) { chapter in
+                    
+                    // Chapter element
                     HStack (spacing: 0){
+                        
                         Button {
                             // Code
                             // toggle chapterStatus
@@ -191,135 +186,5 @@ struct SeriesView: View {
             
         })
         
-        /*NavigationView {
-         
-         VStack {
-         
-         // Series information
-         HStack {
-         if series.getCoverUrl() != nil {
-         AsyncImage(url: series.getCoverUrl()) { phase in
-         if let image = phase.image {
-         image
-         .resizable()
-         .aspectRatio(contentMode: .fit)
-         .frame(width: 130)
-         .cornerRadius(5)
-         .padding()
-         } else if phase.error != nil {
-         } else {
-         Color(.systemGray6)
-         }
-         }
-         }
-         Spacer()
-         
-         
-         VStack {
-         
-         Text(series.title)
-         .font(.title)
-         .bold()
-         
-         Spacer()
-         
-         Text(series.description ?? "")
-         .font(.body)
-         
-         Spacer()
-         }
-         
-         Spacer()
-         
-         }
-         
-         // End of series information
-         
-         Divider()
-         .padding()
-         
-         // Buttons
-         
-         VStack {
-         HStack {
-         Button {
-         // Code
-         } label: {
-         Text("Continue")
-         .font(.headline)
-         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-         }
-         .padding()
-         .background(Color(.systemGray5))
-         .foregroundColor(Color.red)
-         .cornerRadius(15)
-         
-         Button {
-         // Code
-         } label: {
-         Text("Update")
-         .font(.headline)
-         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-         }
-         .padding()
-         .background(Color(.systemGray5))
-         .foregroundColor(Color.red)
-         .cornerRadius(15)
-         }
-         HStack {
-         Button {
-         // Code
-         } label: {
-         Text("Mark as read")
-         .font(.headline)
-         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-         }
-         .padding()
-         .background(Color(.systemGray5))
-         .foregroundColor(Color.red)
-         .cornerRadius(15)
-         
-         Button {
-         // Code
-         } label: {
-         Text("Delete")
-         .font(.headline)
-         .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-         }
-         .padding()
-         .background(Color.red)
-         .foregroundColor(Color.primary)
-         .cornerRadius(15)
-         }
-         }
-         
-         // End of buttons
-         
-         Divider()
-         .padding()
-         
-         // Chapter list
-         List {
-         ForEach(0..<20) { chapter in
-         NavigationLink(destination: Reader(), label: {
-         Label("Chapter \(chapter + 1)", systemImage: "book")
-         .foregroundColor(.red)
-         })
-         }
-         }
-         /*ForEach(0..<20) { plugin in
-          NavigationLink(destination: Reader(),
-          label: {
-          Label("Plugin \(plugin)", systemImage: "link")
-          
-          })
-          
-          }*/
-         
-         // End of chapter list
-         
-         }
-         
-         }//)  */
     }
 }
