@@ -26,16 +26,11 @@ struct PluginList: View {
                 })
                 
             }
-            // this makes the elements able to be swiped left to delete them
-            .onDelete(perform: {
-                indexSet in
-                
-                PlugInManager.deletePlugIn(<#T##self: PlugInManager##PlugInManager#>)
-                // TODO: write action to remove plugin
-            })
             
         }
+        
     }
+    
 }
 
 struct PluginList_Previews: PreviewProvider {
