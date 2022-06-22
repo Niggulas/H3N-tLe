@@ -59,14 +59,4 @@ class PlugInManager {
 	func getPlugInJSForDomain(domain: String, plugInName: String) -> String? {
 		return nameToPlugInMap[plugInName]?.getScriptForDomain(domain)
 	}
-	
-	func deletePlugIn(name: String) -> Bool {
-		do {
-			try fileManager.removeItem(at: PlugInManager.plugInsDirectoryUrl.appendingPathComponent(name))
-			registerPlugIns()
-			return true
-		} catch {
-			return false
-		}
-	}
 }
