@@ -276,7 +276,8 @@ class Series: Identifiable {
 		writeJsonToFile(url: infoUrl, json: info)
 	}
 	
-	func delete() throws {
-		try fileManager.removeItem(at: localUrl)
+	func delete() {
+		try! fileManager.removeItem(at: localUrl)
+		library.updateSeriesList()
 	}
 }
