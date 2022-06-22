@@ -275,4 +275,8 @@ class Series: Identifiable {
 		
 		writeJsonToFile(url: infoUrl, json: info)
 	}
+	
+	func delete() throws {
+		try fileManager.removeItem(at: localUrl)
+	}
 }
