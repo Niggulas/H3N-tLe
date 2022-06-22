@@ -37,20 +37,6 @@ struct SettingsTab: View {
                             Label("Plugin list", systemImage: "list.bullet")
                                 .foregroundColor(.red)
                         })
-                        
-                        Button {
-                            // TODO: Check for updates
-                        } label: {
-                            Label("Check for updates", systemImage: "magnifyingglass")
-                        }
-                        
-                        // TODO: if update is available show a button element to update plugins
-                        
-                        Button {
-                            // TODO: Install base Plugin
-                        } label: {
-                            Label("Install base plugin", systemImage: "puzzlepiece.extension")
-                        }
 
                     }
                     //Debug section with Reader in it
