@@ -283,7 +283,7 @@ class Series: Identifiable {
 	
 	func writeInfo() {
 		if !isDirectory(url: localUrl) {
-			try! fileManager.removeItem(at: localUrl)
+			try? fileManager.removeItem(at: localUrl)
 			try! fileManager.createDirectory(at: localUrl, withIntermediateDirectories: true)
 		}
 		if isDirectory(url: infoUrl) {
