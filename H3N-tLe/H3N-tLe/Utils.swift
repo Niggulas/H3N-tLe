@@ -54,3 +54,7 @@ func writeJsonToFile(url: URL, json: Any) {
 		print("Failed to write file: \(error)")
 	}
 }
+
+func downloadFile(from remoteUrl: URL, to fileURL: URL) throws {
+	// TODO: Implement function
+}

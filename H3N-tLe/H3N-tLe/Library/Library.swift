@@ -132,7 +132,6 @@ class Library {
 				if series!.getCoverUrl() != nil && fileManager.fileExists(atPath: series!.getCoverUrl()!.path) {
 					try! fileManager.removeItem(at: series!.getCoverUrl()!)
 				}
-				let coverName = "cover" + coverUrl.lastPathComponent.split(separator: ".").last!
 				
 				
 				
