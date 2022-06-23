@@ -103,40 +103,33 @@ class Library {
 		 Series related
 		 */
 		
-		let seriesInfo = info!["series"] as? [String: String]
-		if seriesInfo?["title"]?.isEmpty ?? true {
+		let seriesInfo = info!["series"] as? [String: Any]
+		if (seriesInfo?["title"] as? String)?.isEmpty ?? true {
 			return
 		}
 		
-		var series = try? Series(existingSeriesName: seriesInfo!["title"]!)
+		var series = try? Series(existingSeriesName: seriesInfo!["title"] as! String)
 		if series == nil {
-			series = try! Series(title: seriesInfo!["title"]!, description: seriesInfo!["description"] ?? "")
+			series = try! Series(title: seriesInfo!["title"] as! String, description: seriesInfo!["description"] as? String ?? "")
 		}
-		if let author = seriesInfo!["author"] {
+		if let author = seriesInfo!["author"] as? String {
 			series!.setAuthor(author)
 		}
-		if let status = seriesInfo!["status"] {
+		if let status = seriesInfo!["status"] as? String {
 			series!.setStatus(status)
 		}
-		if let coverUrl = URL(string: seriesInfo!["coverUrl"] ?? "") {
-			let coverName = "cover" + coverUrl.lastPathComponent.split(separator: ".").last!
-			if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
-				try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
-			}
-			
+		if let cover = seriesInfo!["cover"] as? [String: String] {
 			do {
-				try downloadFile(from: coverUrl, to: series!.localUrl.appendingPathComponent(coverName+".tmp"))
+				let coverName = "cover" + cover["ext"]!
+				let coverUrl = series!.localUrl.appendingPathComponent(coverName)
+				let coverData = Data(base64Encoded: cover["b64"]!)
 				
-				if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName).path) {
-					try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName))
+				if fileManager.fileExists(atPath: coverUrl.path) {
+					try! fileManager.removeItem(at: coverUrl)
 				}
-				try fileManager.moveItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"), to: series!.localUrl.appendingPathComponent(coverName))
+				try! coverData?.write(to: coverUrl)
 				
 				series!.setCoverName(coverName)
-			} catch {
-				if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
-					try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
-				}
 			}
 		}
 		series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
@@ -149,19 +142,13 @@ class Library {
 			return
 		}
 		
-		let imageUrlStrings = info!["urls"] as? [String]
-		if imageUrlStrings == nil {
+		let images = info!["images"] as? [[String: String]]
+		if images == nil{
 			return
-		}
-		let imageUrls = imageUrlStrings!.map { URL(string: $0) ?? URL(string: "faulty://url")! }
-		for imageUrl in imageUrls {
-			if imageUrl.scheme! != "http" && imageUrl.scheme! != "https" {
-				return
-			}
 		}
 		
 		// The actual download
-		series!.downloadChapter(chapterName: chapterName!, imageUrls: imageUrls)
+		series!.saveChapter(chapterName: chapterName!, images: images)
 		
 		/*
 		 Next chapter download related

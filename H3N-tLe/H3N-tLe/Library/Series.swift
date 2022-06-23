@@ -250,7 +250,7 @@ class Series: Identifiable {
 		return listFiles(url: self.localUrl.appendingPathComponent(name))
 	}
 	
-	func downloadChapter(chapterName: String, imageUrls: [URL]) {
+	func saveChapter(chapterName: String, images: [[String: String]]) {
 		if chapterName == "info.json" {
 			return
 		}
@@ -268,9 +268,14 @@ class Series: Identifiable {
 			try! fileManager.createDirectory(at: chapterUrl, withIntermediateDirectories: true)
 		}
 		
-		for i in 0..<imageUrls.count {
-			let imageName: String = "\(i)."+imageUrls[i].lastPathComponent.split(separator: ".").last!
-			try? downloadFile(from: imageUrls[i], to: chapterUrl.appendingPathComponent(imageName))
+		for i in 0..<images.count {
+			do {
+				let imageName: String = "\(i)." + images[i]["ext"]!
+				
+				let imageData = Data(base64Encoded: images[i]["b64"]!)
+				
+				try! imageData!.write(to: chapterUrl.appendingPathComponent(imageName))
+			}
 		}
 	}
 	
