@@ -210,6 +210,10 @@ class Series: Identifiable {
     func markAllChaptersAsRead() {
         getChapterList().forEach { markChapterAsRead(chapter: $0) }
     }
+	
+	func clearReadChapters() {
+		readChapterList = nil
+	}
     
     func didReadChapter(_ name: String) -> Bool {
         return readChapterList?.contains(name) ?? false
