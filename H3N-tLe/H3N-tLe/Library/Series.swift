@@ -213,6 +213,7 @@ class Series: Identifiable {
 	
 	func clearReadChapters() {
 		readChapterList = nil
+		writeInfo()
 	}
     
     func didReadChapter(_ name: String) -> Bool {

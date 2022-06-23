@@ -172,7 +172,8 @@ struct SeriesView: View {
 			
 			// Mark as unread
 			Button {
-				// Code
+				series.clearReadChapters()
+				series.clearLastReadChapter()
 			} label: {
 				Text("Mark as unread")
 					.font(.headline)
