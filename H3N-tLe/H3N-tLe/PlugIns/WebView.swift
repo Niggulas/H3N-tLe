@@ -88,7 +88,6 @@ final class WebView: NSObject, UIViewRepresentable {
 			completionHandler: { ruleList, error in
 				// Handle error
 				if ruleList == nil {
-					print(error!)
 					return
 				}
 				

@@ -40,7 +40,6 @@ func readJsonFromFile(url: URL) -> Any? {
 		let json = try JSONSerialization.jsonObject(with: data, options: [])
 		return json
 	} catch {
-		print("Failed to read file: \(error)")
 		return nil
 	}
 }
@@ -51,6 +50,6 @@ func writeJsonToFile(url: URL, json: Any) {
 		let data = try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted)
 		try data.write(to: url, options: [])
 	} catch {
-		print("Failed to write file: \(error)")
+		return
 	}
 }

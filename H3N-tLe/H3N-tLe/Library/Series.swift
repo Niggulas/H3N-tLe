@@ -274,8 +274,8 @@ class Series: Identifiable {
 				
 				let imageData = Data(base64Encoded: images[i]["b64"]!)
 				
-				try! imageData!.write(to: chapterUrl.appendingPathComponent(imageName))
-			}
+				try imageData!.write(to: chapterUrl.appendingPathComponent(imageName))
+			} catch {}
 		}
 	}
 	

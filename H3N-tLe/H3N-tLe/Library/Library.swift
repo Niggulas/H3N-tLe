@@ -80,6 +80,10 @@ class Library {
 	}
 	
 	func download(url: URL, with pluginName: String) {
+		runner.stop()
+		runner.view.disallowJS()
+		runner.view.disallowContent()
+		
 		if let js = plugInManager.getPlugInJSForDomain(domain: url.host!, plugInName: pluginName) {
 			currentDownloadUrl = url
 			currentDownloadPluginName = pluginName
@@ -125,12 +129,12 @@ class Library {
 				let coverData = Data(base64Encoded: cover["b64"]!)
 				
 				if fileManager.fileExists(atPath: coverUrl.path) {
-					try! fileManager.removeItem(at: coverUrl)
+					try fileManager.removeItem(at: coverUrl)
 				}
-				try! coverData?.write(to: coverUrl)
+				try coverData?.write(to: coverUrl)
 				
 				series!.setCoverName(coverName)
-			}
+			} catch {}
 		}
 		series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
 		
@@ -148,7 +152,7 @@ class Library {
 		}
 		
 		// The actual download
-		series!.saveChapter(chapterName: chapterName!, images: images)
+		series!.saveChapter(chapterName: chapterName!, images: images!)
 		
 		/*
 		 Next chapter download related
@@ -181,6 +185,11 @@ class Library {
 		}, name: "DoesSeriesExist")
 		
 		self.runner.addMessageHandler(downloadMessageHandler, name: "DownlaodChapter")
+		
+		self.runner.addMessageHandler({ error in
+			print(error)
+			self.runner.stop()
+		}, name: "Failed")
 		
 		isRunnerSet = true
 	}

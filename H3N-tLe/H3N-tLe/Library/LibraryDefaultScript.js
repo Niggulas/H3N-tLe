@@ -26,7 +26,7 @@ Object.defineProperty(window, 'doesSeriesExist', {
 });
 
 // Function to download a chapter and send some other information to swift (url to next chapter, description of the series, ...)
-Object.defineProperty(window, 'downloadChapter', {
+Object.defineProperty(window, 'download', {
 	configurable: false,
 	enumerable: true,
 	writable: false,
@@ -35,10 +35,23 @@ Object.defineProperty(window, 'downloadChapter', {
 			typeof chapterInfo !== 'object' ||
 			typeof chapterInfo.series?.title !== 'string' ||
 			typeof chapterInfo.chapterName !== 'string' ||
-			!Array.isArray(chapterInfo.urls)
+			!Array.isArray(chapterInfo.images)
 		) {
 			throw new Error('Invalid chapterInfo');
 		}
 		window.postWebKitMessage(['DownlaodChapter', JSON.stringify(chapterInfo)]);
+	}
+});
+
+// Function to tell swift that whatever was being done failed
+Object.defineProperty(window, 'fail', {
+	configurable: false,
+	enumerable: true,
+	writable: false,
+	value: (error = 'Unknown error in JS') => {
+		if (typeof error !== 'string') {
+			throw new Error('Error must be a string');
+		}
+		window.postWebKitMessage(['Failed', error]);
 	}
 });
