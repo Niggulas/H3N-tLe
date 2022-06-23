@@ -67,10 +67,12 @@ struct DownloadTab: View {
 				VStack(spacing: 0){
 					ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
 						Button (action: {
-							library.runner.addMessageHandler({print($0)}, name: "print")
 							library.runner.view.disallowJS()
 							library.runner.view.disallowContent()
 							
+							if let url = URL(string: searchBarContent) {
+								library.download(url: url, with: plugInName.value as! String)
+							}
 						}, label: {
 							HStack {
 								Text(plugInName.value as! String)//\(plugInList[plugin])")
