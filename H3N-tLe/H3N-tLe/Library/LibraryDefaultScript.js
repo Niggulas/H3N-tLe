@@ -33,9 +33,9 @@ Object.defineProperty(window, 'downloadChapter', {
 	value: (chapterInfo) => {
 		if (
 			typeof chapterInfo !== 'object' ||
-			typeof chapterInfo?.series?.title !== 'string' ||
-			typeof chapterInfo?.chapterName !== 'string' ||
-			!Array.isArray(chapterInfo?.urls)
+			typeof chapterInfo.series?.title !== 'string' ||
+			typeof chapterInfo.chapterName !== 'string' ||
+			!Array.isArray(chapterInfo.urls)
 		) {
 			throw new Error('Invalid chapterInfo');
 		}
