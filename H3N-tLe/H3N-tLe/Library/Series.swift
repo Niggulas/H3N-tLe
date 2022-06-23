@@ -243,13 +243,27 @@ class Series: Identifiable {
 	}
 	
 	func downloadChapter(chapterName: String, imageUrls: [URL]) {
+		if chapterName == "info.json" {
+			return
+		}
+		
 		let chapterUrl = localUrl.appendingPathComponent(chapterName.trimmingCharacters(in: [" "]))
 		
 		if isDirectory(url: chapterUrl) && !listFiles(url: chapterUrl).isEmpty {
 			return
 		}
 		
-		// TODO: implement function
+		if fileManager.fileExists(atPath: chapterUrl.path) && !isDirectory(url: chapterUrl) {
+			try! fileManager.removeItem(at: chapterUrl)
+		}
+		if !isDirectory(url: chapterUrl) {
+			try! fileManager.createDirectory(at: chapterUrl, withIntermediateDirectories: true)
+		}
+		
+		for i in 0..<imageUrls.count {
+			let imageName: String = "\(i)."+imageUrls[i].lastPathComponent.split(separator: ".").last!
+			try? downloadFile(from: imageUrls[i], to: chapterUrl.appendingPathComponent(imageName))
+		}
 	}
 	
 	func writeInfo() {
