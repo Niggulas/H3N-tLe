@@ -67,6 +67,7 @@ struct DownloadTab: View {
 				VStack(spacing: 0){
 					ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
 						Button (action: {
+							library.runner.addMessageHandler({print("JS: "+$0)}, name: "print")
 							library.runner.view.disallowJS()
 							library.runner.view.disallowContent()
 							

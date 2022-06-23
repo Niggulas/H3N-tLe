@@ -274,6 +274,13 @@ class Series: Identifiable {
 		}
 	}
 	
+	func updateChapters() {
+		if URL(string: remoteUrl ?? "") == nil || lastPluginName == nil {
+			return
+		}
+		library.download(url: URL(string: remoteUrl!)!, with: lastPluginName!)
+	}
+	
 	func writeInfo() {
 		if !isDirectory(url: localUrl) {
 			try! fileManager.removeItem(at: localUrl)

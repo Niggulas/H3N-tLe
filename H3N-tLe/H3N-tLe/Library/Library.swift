@@ -80,7 +80,9 @@ class Library {
 	}
 	
 	func download(url: URL, with pluginName: String) {
+		print("Startet download")
 		if let js = plugInManager.getPlugInJSForDomain(domain: url.host!, plugInName: pluginName) {
+			print("Got JS")
 			currentDownloadUrl = url
 			currentDownloadPluginName = pluginName
 			runner.run(source: js, on: url)
@@ -88,90 +90,92 @@ class Library {
 	}
 	
 	private func downloadMessageHandler(json: String) {
+		print("Got Download message")
 		runner.stop()
-		   
-		   let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
-		   if info == nil {
-			   return
-		   }
-		   
-		   /*
-			Series related
-			*/
-		   
-		   let seriesInfo = info!["series"] as? [String: String]
-		   if seriesInfo?["title"]?.isEmpty ?? true {
-			   return
-		   }
-		   
-		   var series = try? Series(existingSeriesName: seriesInfo!["title"]!)
-		   if series == nil {
-			   series = try! Series(title: seriesInfo!["title"]!, description: seriesInfo!["description"] ?? "")
-		   }
-		   if let author = seriesInfo!["author"] {
-			   series!.setAuthor(author)
-		   }
-		   if let status = seriesInfo!["status"] {
-			   series!.setStatus(status)
-		   }
-		   if let coverUrl = URL(string: seriesInfo!["coverUrl"] ?? "") {
-			   let coverName = "cover" + coverUrl.lastPathComponent.split(separator: ".").last!
-			   if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
-				   try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
-			   }
-			   
-			   do {
-				   try downloadFile(from: coverUrl, to: series!.localUrl.appendingPathComponent(coverName+".tmp"))
-				   
-				   if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName).path) {
-					   try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName))
-				   }
-				   try fileManager.moveItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"), to: series!.localUrl.appendingPathComponent(coverName))
-					   
-				   series!.setCoverName(coverName)
-			   } catch {
-				   if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
-					   try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
-				   }
-			   }
-		   }
-		   series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
-		   
-		   /*
-			Chapter related
-			*/
-		   let chapterName = info!["chapterName"] as? String
-		   if chapterName == nil {
-			   return
-		   }
-		   
-		   let imageUrlStrings = info!["urls"] as? [String]
-		   if imageUrlStrings == nil {
-			   return
-		   }
-		   let imageUrls = imageUrlStrings!.map { URL(string: $0) ?? URL(string: "faulty://url")! }
-		   for imageUrl in imageUrls {
-			   if imageUrl.scheme! != "http" && imageUrl.scheme! != "https" {
-				   return
-			   }
-		   }
-		   
-		   // The actual download
-		   series!.downloadChapter(chapterName: chapterName!, imageUrls: imageUrls)
-		   
-		   /*
-			Next chapter download related
-			*/
-		   if currentDownloadPluginName?.isEmpty ?? true {
-			   return
-		   }
-		   series!.setLastPluginName(currentDownloadPluginName!)
-		   
-		   if let nextUrlString = info!["nextUrl"] as? String {
-			   if let nextUrl = URL(string: nextUrlString) {
-				   download(url: nextUrl, with: currentDownloadPluginName!)
-			   }
-		   }
+		
+		let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
+		if info == nil {
+			return
+		}
+		
+		/*
+		 Series related
+		 */
+		
+		let seriesInfo = info!["series"] as? [String: String]
+		if seriesInfo?["title"]?.isEmpty ?? true {
+			return
+		}
+		
+		var series = try? Series(existingSeriesName: seriesInfo!["title"]!)
+		if series == nil {
+			series = try! Series(title: seriesInfo!["title"]!, description: seriesInfo!["description"] ?? "")
+		}
+		if let author = seriesInfo!["author"] {
+			series!.setAuthor(author)
+		}
+		if let status = seriesInfo!["status"] {
+			series!.setStatus(status)
+		}
+		if let coverUrl = URL(string: seriesInfo!["coverUrl"] ?? "") {
+			let coverName = "cover" + coverUrl.lastPathComponent.split(separator: ".").last!
+			if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
+				try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
+			}
+			
+			do {
+				try downloadFile(from: coverUrl, to: series!.localUrl.appendingPathComponent(coverName+".tmp"))
+				
+				if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName).path) {
+					try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName))
+				}
+				try fileManager.moveItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"), to: series!.localUrl.appendingPathComponent(coverName))
+				
+				series!.setCoverName(coverName)
+			} catch {
+				if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
+					try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
+				}
+			}
+		}
+		series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
+		
+		/*
+		 Chapter related
+		 */
+		let chapterName = info!["chapterName"] as? String
+		if chapterName == nil {
+			return
+		}
+		
+		let imageUrlStrings = info!["urls"] as? [String]
+		if imageUrlStrings == nil {
+			return
+		}
+		let imageUrls = imageUrlStrings!.map { URL(string: $0) ?? URL(string: "faulty://url")! }
+		for imageUrl in imageUrls {
+			if imageUrl.scheme! != "http" && imageUrl.scheme! != "https" {
+				return
+			}
+		}
+		
+		// The actual download
+		series!.downloadChapter(chapterName: chapterName!, imageUrls: imageUrls)
+		
+		/*
+		 Next chapter download related
+		 */
+		if currentDownloadPluginName?.isEmpty ?? true {
+			return
+		}
+		series!.setLastPluginName(currentDownloadPluginName!)
+		
+		if let nextUrlString = info!["nextUrl"] as? String {
+			if let nextUrl = URL(string: nextUrlString) {
+				print("Next url: \(nextUrl.absoluteString)")
+				download(url: nextUrl, with: currentDownloadPluginName!)
+			}
+		}
 	}
 	
 	// Dirty fix because we can't initialize the Library in DownloadTab but we have to initialize the runner there
