@@ -54,16 +54,3 @@ func writeJsonToFile(url: URL, json: Any) {
 		print("Failed to write file: \(error)")
 	}
 }
-
-func downloadFile(from remoteUrl: URL, to fileURL: URL) throws {
-	let urlSession = URLSession(configuration: .default)
-	urlSession.downloadTask(with: remoteUrl) { (tempFileUrl, response, error) in
-		if error != nil {
-			return
-		} else if tempFileUrl == nil {
-			return
-		}
-		
-		try! Data(contentsOf: tempFileUrl!).write(to: fileURL)
-	}.resume()
-}
