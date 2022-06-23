@@ -9,9 +9,9 @@ import Foundation
 
 // Check if a URL is a directory and not a file
 func isDirectory(url: URL) -> Bool {
-    var isDir: ObjCBool = false
-    fileManager.fileExists(atPath: url.path, isDirectory: &isDir)
-    return isDir.boolValue
+	var isDir: ObjCBool = false
+	fileManager.fileExists(atPath: url.path, isDirectory: &isDir)
+	return isDir.boolValue
 }
 
 // Sort URLs by the name od the file they're pointing to - ["2.txt", "3.txt", "1.txt"] -> ["1.txt", "2.txt", "3.txt"]
@@ -21,28 +21,28 @@ func sortFileUrlsByFileName(urls: [URL]) -> [URL] {
 
 // List all directories in a directory
 func listDirectories(url: URL) -> [URL] {
-    let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
+	let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
 	let directories = directoryContents.filter { isDirectory(url: $0) }
 	return sortFileUrlsByFileName(urls: directories)
 }
 
 // List all files in a directory
 func listFiles(url: URL) -> [URL] {
-    let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
+	let directoryContents = try! fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
 	let files = directoryContents.filter { !isDirectory(url: $0) }
-    return sortFileUrlsByFileName(urls: files)
+	return sortFileUrlsByFileName(urls: files)
 }
 
 // Read a json file and return the json object
 func readJsonFromFile(url: URL) -> Any? {
-    do {
-        let data = try Data(contentsOf: url)
-        let json = try JSONSerialization.jsonObject(with: data, options: [])
-        return json
-    } catch {
-        print("Failed to read file: \(error)")
-        return nil
-    }
+	do {
+		let data = try Data(contentsOf: url)
+		let json = try JSONSerialization.jsonObject(with: data, options: [])
+		return json
+	} catch {
+		print("Failed to read file: \(error)")
+		return nil
+	}
 }
 
 // write a json object to a file
@@ -56,5 +56,14 @@ func writeJsonToFile(url: URL, json: Any) {
 }
 
 func downloadFile(from remoteUrl: URL, to fileURL: URL) throws {
-	// TODO: Implement function
+	let urlSession = URLSession(configuration: .default)
+	urlSession.downloadTask(with: remoteUrl) { (tempFileUrl, response, error) in
+		if error != nil {
+			return
+		} else if tempFileUrl == nil {
+			return
+		}
+		
+		try! Data(contentsOf: tempFileUrl!).write(to: fileURL)
+	}.resume()
 }
