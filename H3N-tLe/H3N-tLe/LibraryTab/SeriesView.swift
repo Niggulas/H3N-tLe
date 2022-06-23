@@ -79,7 +79,7 @@ struct SeriesView: View {
 					
 					// Update button
 					Button {
-						// Code
+						series.updateChapters()
 					} label: {
 						Text("Update")
 							.font(.headline)
