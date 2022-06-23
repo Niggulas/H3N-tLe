@@ -15,24 +15,37 @@ struct SettingsTab: View {
                 
                 Form {
                     
+					// Help section
                     Section(header: Text("Help")) {
                         
+						// when you tap this element you get redirected to the "Hot to use" section of our github README file
                         Link(destination: URL(string: "https://github.com/Niggulas/H3N-tLe#how-to-use-h3n-tle")!,
                             label:{
                                 Label("How to use", systemImage: "link")
                             })
-                        
+						
+						// when you tap this element you get redirected to the "Hot to install Plugins" section of our github README file
                         Link(destination: URL(string: "https://github.com/Niggulas/H3N-tLe#how-to-install-plugins")!,
                              label: {
                                 Label("How to install Plugins", systemImage: "link")
                             })
                         
                     }
+					
+					// Series update section
+					Section(header: Text("Update series")) {
+						Button {
+							// TODO: implement updateAll function
+						} label: {
+							Label("Update all series", systemImage: "square.and.arrow.down.on.square")
+						}
+
+					}
                     
-                    // TODO: TAG SYSTEM
-                    
+					// Plugin section
                     Section(header: Text("Plugins")) {
                         
+						// navigates to the PluginList.swift
                         NavigationLink(destination: PluginList(), label: {
                             Label("Plugin list", systemImage: "list.bullet")
                                 .foregroundColor(.red)
@@ -40,6 +53,7 @@ struct SettingsTab: View {
 
                     }
 					
+					// Password information section
 					Section(header: Text("Trust")) {
 						
 						NavigationLink(destination: InformationOnTrust(), label: {
@@ -48,23 +62,18 @@ struct SettingsTab: View {
 						})
 
 					}
-                    //Debug section with Reader in it
-                    /*Section(header: Text("Debug")) {
-                        NavigationLink(destination: Reader(), label: {
-                            Label("Reader", systemImage: "eyeglasses")
-                                .foregroundColor(.red)
-                        })
-                    } */
                     
                 }
                 .navigationTitle("Settings")
             }
             
         }
+		// define symbol and text for the Settings element in the tab bar
         .tabItem {
             Image(systemName: "gear")
             Text("Settings")
         }
         .tag(2)
     }
+	
 }
