@@ -36,6 +36,7 @@ struct SettingsTab: View {
 					Section(header: Text("Update series")) {
 						Button {
 							// TODO: implement updateAll function
+							library.updateChaptersForAll()
 						} label: {
 							Label("Update all series", systemImage: "square.and.arrow.down.on.square")
 						}
