@@ -49,6 +49,9 @@ class Series: Identifiable {
 		remoteUrl = json!["url"] as? String
 		lastPluginName = json!["plugin"] as? String
 		status = json!["status"] as? String
+		if status != nil && !Series.STATUS_STRINGS.contains(status!) {
+			status = nil
+		}
 		
 		tags = json!["tags"] as? [String]
         readChapterList = json!["read_chapters"] as? [String]
