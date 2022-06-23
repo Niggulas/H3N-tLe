@@ -89,6 +89,10 @@ class Library {
 		}
 	}
 	
+	func updateChaptersForAll() {
+		getSeriesList().forEach { $0.updateChapters() }
+	}
+	
 	private func downloadMessageHandler(json: String) {
 		print("Got Download message")
 		runner.stop()
