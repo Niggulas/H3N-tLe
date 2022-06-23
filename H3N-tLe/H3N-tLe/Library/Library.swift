@@ -87,13 +87,100 @@ class Library {
 		}
 	}
 	
+	private func downloadMessageHandler(json: String) {
+		runner.stop()
+		   
+		   let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
+		   if info == nil {
+			   return
+		   }
+		   
+		   /*
+			Series related
+			*/
+		   
+		   let seriesInfo = info!["series"] as? [String: String]
+		   if seriesInfo?["title"]?.isEmpty ?? true {
+			   return
+		   }
+		   
+		   var series = try? Series(existingSeriesName: seriesInfo!["title"]!)
+		   if series == nil {
+			   series = try! Series(title: seriesInfo!["title"]!, description: seriesInfo!["description"] ?? "")
+		   }
+		   if let author = seriesInfo!["author"] {
+			   series!.setAuthor(author)
+		   }
+		   if let status = seriesInfo!["status"] {
+			   series!.setStatus(status)
+		   }
+		   if let coverUrl = URL(string: seriesInfo!["coverUrl"] ?? "") {
+			   let coverName = "cover" + coverUrl.lastPathComponent.split(separator: ".").last!
+			   if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
+				   try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
+			   }
+			   
+			   do {
+				   try downloadFile(from: coverUrl, to: series!.localUrl.appendingPathComponent(coverName+".tmp"))
+				   
+				   if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName).path) {
+					   try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName))
+				   }
+				   try fileManager.moveItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"), to: series!.localUrl.appendingPathComponent(coverName))
+					   
+				   series!.setCoverName(coverName)
+			   } catch {
+				   if fileManager.fileExists(atPath: series!.localUrl.appendingPathComponent(coverName+".tmp").path) {
+					   try! fileManager.removeItem(at: series!.localUrl.appendingPathComponent(coverName+".tmp"))
+				   }
+			   }
+		   }
+		   series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
+		   
+		   /*
+			Chapter related
+			*/
+		   let chapterName = info!["chapterName"] as? String
+		   if chapterName == nil {
+			   return
+		   }
+		   
+		   let imageUrlStrings = info!["urls"] as? [String]
+		   if imageUrlStrings == nil {
+			   return
+		   }
+		   let imageUrls = imageUrlStrings!.map { URL(string: $0) ?? URL(string: "faulty://url")! }
+		   for imageUrl in imageUrls {
+			   if imageUrl.scheme! != "http" && imageUrl.scheme! != "https" {
+				   return
+			   }
+		   }
+		   
+		   // The actual download
+		   series!.downloadChapter(chapterName: chapterName!, imageUrls: imageUrls)
+		   
+		   /*
+			Next chapter download related
+			*/
+		   if currentDownloadPluginName?.isEmpty ?? true {
+			   return
+		   }
+		   series!.setLastPluginName(currentDownloadPluginName!)
+		   
+		   if let nextUrlString = info!["nextUrl"] as? String {
+			   if let nextUrl = URL(string: nextUrlString) {
+				   download(url: nextUrl, with: currentDownloadPluginName!)
+			   }
+		   }
+	}
+	
 	// Dirty fix because we can't initialize the Library in DownloadTab but we have to initialize the runner there
 	func setRunner(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool) {
 		if isRunnerSet {
 			return
 		}
 		
-		let libraryDefaultScript = try! String(contentsOf: Bundle.main.url(forResource: "JSRunnerDefaultScript", withExtension: "js")!)
+		let libraryDefaultScript = try! String(contentsOf: Bundle.main.url(forResource: "LibraryDefaultScript", withExtension: "js")!)
 		
 		self.runner = JSRunner(showView: showView, hideView: hideView, isViewVisible: isViewVisible, contentWorld: .world(name: "PlugIn"), defaultScripts: [libraryDefaultScript])
 		
@@ -101,80 +188,7 @@ class Library {
 			return self.seriesList.contains(where: { $0.title == seriesTitle }) ? "present" : "absent"
 		}, name: "DoesSeriesExist")
 		
-		self.runner.addMessageHandler({ [self] json in
-			runner.stop()
-			
-			let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
-			if info == nil {
-				return
-			}
-			
-			/*
-			 Series related
-			 */
-			
-			let seriesInfo = info!["series"] as? [String: String]
-			if seriesInfo?["title"]?.isEmpty ?? true {
-				return
-			}
-			
-			var series = try? Series(existingSeriesName: seriesInfo!["title"]!)
-			if series == nil {
-				series = try! Series(title: seriesInfo!["title"]!, description: seriesInfo!["description"] ?? "")
-			}
-			if let author = seriesInfo!["author"] {
-				series!.setAuthor(author)
-			}
-			if let status = seriesInfo!["status"] {
-				series!.setStatus(status)
-			}
-			if let coverUrl = URL(string: seriesInfo!["coverUrl"] ?? "") {
-				if series!.getCoverUrl() != nil && fileManager.fileExists(atPath: series!.getCoverUrl()!.path) {
-					try! fileManager.removeItem(at: series!.getCoverUrl()!)
-				}
-				
-				
-				
-				series!.setCoverName(coverName)
-			}
-			series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
-			
-			/*
-			 Chapter related
-			 */
-			let chapterName = info!["chapterName"] as? String
-			if chapterName == nil {
-				return
-			}
-			
-			let imageUrlStrings = info!["urls"] as? [String]
-			if imageUrlStrings == nil {
-				return
-			}
-			let imageUrls = imageUrlStrings!.map { URL(string: $0) ?? URL(string: "faulty://url")! }
-			for imageUrl in imageUrls {
-				if imageUrl.scheme! != "http" && imageUrl.scheme! != "https" {
-					return
-				}
-			}
-			
-			// The actual download
-			series!.downloadChapter(chapterName: chapterName!, imageUrls: imageUrls)
-			
-			/*
-			 Next chapter download related
-			 */
-			if currentDownloadPluginName?.isEmpty ?? true {
-				return
-			}
-			series!.setLastPluginName(currentDownloadPluginName!)
-			
-			if let nextUrlString = info!["nextUrl"] as? String {
-				if let nextUrl = URL(string: nextUrlString) {
-					download(url: nextUrl, with: currentDownloadPluginName!)
-				}
-			}
-		}, name: "DownlaodChapter")
+		self.runner.addMessageHandler(downloadMessageHandler, name: "DownlaodChapter")
 		
 		isRunnerSet = true
 	}
