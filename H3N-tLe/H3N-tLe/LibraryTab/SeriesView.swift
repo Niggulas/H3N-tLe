@@ -49,9 +49,16 @@ struct SeriesView: View {
 				}
 			}
 			
+			/*
+			 Spaceholder to get some padding below the series information
+			 Can't use .padding() on the Divider() because we need .padding() on the buttons so they don't go edge to edge
+			 Can't use .padding() on the HStack because we don't want it to be pushed in on the sides
+			 */
+			Text("")
+			Text("")
+			
 			// Seperator
 			Divider()
-				.padding()
 			
 			// Upper Buttons
 			VStack {
@@ -98,10 +105,10 @@ struct SeriesView: View {
 					
 				}
 			}
+			.padding()
 			
 			// Seperator
 			Divider()
-				.padding()
 			
 			// Chapter List
 			VStack (spacing: 0) {
@@ -111,27 +118,31 @@ struct SeriesView: View {
 					// Chapter element
 					HStack (spacing: 0){
 						
-						Button {
-							// Code
-							// toggle chapterStatus
-						} label: {
-							/*  Changing of eye pseudo code
-							 if chapterStatus = read
-							 Image(systemName: "eye")
-							 .frame(...)
-							 else
-							 Image(systemName: "eye.slash")
-							 .frame(...)
-							 
-							 propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
-							 */
-							Image(systemName: "eye")
-								.frame(minWidth: 50, maxWidth: 50, minHeight: 20)
-						}
-						.padding()
-						.background(Color(.systemGray6))
-						.foregroundColor(Color.red)
+						// Eye Button
+						/*
+						 Button {
+						 // Code
+						 // toggle chapterStatus
+						 } label: {
+						 /*  Changing of eye pseudo code
+						  if chapterStatus = read
+						  Image(systemName: "eye")
+						  .frame(...)
+						  else
+						  Image(systemName: "eye.slash")
+						  .frame(...)
+						  
+						  propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
+						  */
+						 Image(systemName: "eye")
+						 .frame(minWidth: 50, maxWidth: 50, minHeight: 20)
+						 }
+						 .padding()
+						 .background(Color(.systemGray6))
+						 .foregroundColor(Color.red)
+						 */
 						
+						// Chapter element
 						NavigationLink(destination: Reader(series: series, chapter: chapter.value as! String), label: {
 							HStack {
 								Text(chapter.value as! String)
@@ -154,6 +165,25 @@ struct SeriesView: View {
 				}
 			}
 			.cornerRadius(15)
+			.padding()
+			
+			// Seperator
+			Divider()
+			
+			// Mark as unread
+			Button {
+				// Code
+			} label: {
+				Text("Mark as unread")
+					.font(.headline)
+					.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+			}
+			.padding()
+			.background(Color(.systemGray6))
+			.foregroundColor(Color.red)
+			.cornerRadius(15)
+			.padding()
+			
 			
 		})
 		
