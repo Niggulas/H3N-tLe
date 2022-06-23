@@ -80,9 +80,7 @@ class Library {
 	}
 	
 	func download(url: URL, with pluginName: String) {
-		print("Startet download")
 		if let js = plugInManager.getPlugInJSForDomain(domain: url.host!, plugInName: pluginName) {
-			print("Got JS")
 			currentDownloadUrl = url
 			currentDownloadPluginName = pluginName
 			runner.run(source: js, on: url)
@@ -94,7 +92,6 @@ class Library {
 	}
 	
 	private func downloadMessageHandler(json: String) {
-		print("Got Download message")
 		runner.stop()
 		
 		let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
