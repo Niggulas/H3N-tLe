@@ -29,7 +29,7 @@ class PlugInManager {
 	private var nameToPlugInMap: [String: PlugIn]
 	private var domainToPlugInNameListMap: [String: [String]]
 	
-	private func registerPlugIns() {
+	func registerPlugIns() {
 		nameToPlugInMap = [String: PlugIn]()
 		domainToPlugInNameListMap = [String: [String]]()
 		

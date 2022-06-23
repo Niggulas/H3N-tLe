@@ -125,6 +125,10 @@ struct LibraryTab: View {
 				.navigationTitle("Library")
 				.toolbar {
 					Button {
+						// Refresh PlugIns
+						plugInManager.registerPlugIns()
+						
+						// Refresh Library
 						library.updateSeriesList()
 						seriesList = library.getSeriesList()
 					} label: {
