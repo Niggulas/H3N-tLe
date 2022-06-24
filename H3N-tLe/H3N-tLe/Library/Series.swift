@@ -163,9 +163,15 @@ class Series: Identifiable {
 		writeInfo()
 	}
 	
-	func getNextUnreadChapter() -> String {
-		if getLastReadChapter() != nil {
-			return getLastReadChapter()!
+	func getNextChapter() -> String {
+		if lastReadChapter != nil {
+			var nextChapterIndex = (getChapterList().firstIndex(of: lastReadChapter!) ?? -1) + 1
+			
+			if nextChapterIndex == getChapterList().count {
+				nextChapterIndex = getChapterList().count - 1
+			}
+			
+			return getChapterList()[nextChapterIndex]
 		} else {
 			return getChapterList()[0]
 		}

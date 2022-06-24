@@ -59,7 +59,7 @@ struct SeriesView: View {
 			HStack {
 				
 				// Continue button: open the first unread chapter
-				NavigationLink (destination: Reader(series: series, chapter: series.getNextUnreadChapter() ), label: {
+				NavigationLink (destination: Reader(series: series, chapter: series.getNextChapter() ), label: {
 					Text("Continue")
 						.font(.headline)
 						.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
