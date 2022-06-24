@@ -8,7 +8,7 @@
 import Foundation
 
 class PlugIn {
-	enum PlugInError: Error {
+	private enum PlugInError: Error {
 		case NoManifestFound
 		case InvalidManifest
 		case UnsupportedManifestVersion
