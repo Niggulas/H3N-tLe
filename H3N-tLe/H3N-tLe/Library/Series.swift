@@ -251,4 +251,10 @@ class Series: Identifiable {
 		
 		try! writeJsonToFile(url: infoUrl, json: info)
 	}
+	
+	// Delete the series
+	func delete() {
+		try! fileManager.removeItem(at: localUrl)
+		library.updateSeriesList()
+	}
 }
