@@ -2,7 +2,7 @@
 
 ## Ordnerstruktur
 
-Sämmtliche Ordner und Dateien auf die die App zugreift sind in ihrem "Documents" Ordner.
+Sämtliche Ordner und Dateien auf die die App zugreift sind in ihrem "Documents" Ordner.
 Direkt "Documents" untergeordnet sind der "Library" und der "PlugIns" Ordner.
 Dem "Library" Ordner sind wiederum die Comic Ordner direkt untergeordnet, die wiederum die Kapitel Ordner enthalten.
 Direkt dem "PlugIns" Ordner untergeordnet sind die Ordner der einzelnen PlugIns, die wiederum beliebig viele Unterordner haben können, die beliebig verschachtelt sein können.
@@ -11,29 +11,29 @@ Direkt dem "PlugIns" Ordner untergeordnet sind die Ordner der einzelnen PlugIns,
 
 Comics werden von Instanzen der Series Klasse repräsentiert.
 Jeder Comic Ordner enthält eine "info.json" Datei.
-"info.json" Dateien müssen ein JSON objekt das einen "title" Schlüssel und dazugehörigen Wert vom Typ String haben, ansonsten schlägt das erstellen einer Instanz der Series Klasse für den Ordner fehl.
+"info.json" Dateien müssen ein JSON Objekt das einen "title" Schlüssel und dazugehörigen Wert vom Typ String haben, ansonsten schlägt das erstellen einer Instanz der Series Klasse für den Ordner fehl.
 Eine "info.json" Datei kann optional auch die folgenden Werte als String enthalten (Schlüssel in den Klammern):
 
 - die Beschreibung (description)
 - den Status (status)
-- den Namen der Datei die das Titlebild enthält (cover)
+- den Namen der Datei die das Titelbild enthält (cover)
 - das zuletzt gelesene Kapitel (last_read_chapter)
 - die URL zum zuletzt heruntergeladenen Kapitel (url)
 
-Die dem Comic Ordner untergeordneten Ordner werden von Instanzen der Series Klasse mit deren Namen als Kapitel aufgelistet und bei anfrage nach den URLs zu den Bildern eines Kapitels zu sämmtlichen Dateien im Kapitel Ordner URLs zurückgegeben.
-Die Bilder in den Kapitel Ordnern sollten von 0 an nummeriert damit die URLs zu ihnen in der korrekten Reihenfolge zurückgegeben werden können, dies wird allerdings nicht überprüft es ist also auch möglich A bis Z zu verwenden oder etwas anderes was der Sortieralgorythmus in die richtige Reihenfolge bringt.
+Die dem Comic Ordner untergeordneten Ordner werden von Instanzen der Series Klasse mit deren Namen als Kapitel aufgelistet und bei anfrage nach den URLs zu den Bildern eines Kapitels zu sämtlichen Dateien im Kapitel Ordner URLs zurückgegeben.
+Die Bilder in den Kapitel Ordnern sollten von 0 an nummeriert damit die URLs zu ihnen in der korrekten Reihenfolge zurückgegeben werden können, dies wird allerdings nicht überprüft es ist also auch möglich A bis Z zu verwenden oder etwas anderes was der Sortieralgorithmus in die richtige Reihenfolge bringt.
 
 ## Library
 
-Der "LibraryTab()" greift, um die Comicliste anzeigen zu können, auf eine Instanz der Library Klassse zu.
+Der "LibraryTab()" greift, um die Comicliste anzeigen zu können, auf eine Instanz der Library Klasse zu.
 
-Die Library Klasse ist dafür verantwortlich eine Liste aller Comics zu führen und bereitzustellen, sowie den Download eines neuen Kapitel zu starten und die Anfrage des PlugIns dieses zu speichern zu beabeiten.
+Die Library Klasse ist dafür verantwortlich eine Liste aller Comics zu führen und bereitzustellen, sowie den Download eines neuen Kapitel zu starten und die Anfrage des PlugIns dieses zu speichern zu bearbeiten.
 
 Für den "LibraryTab()" ist allerdings nur das bereitstellen der geführten Liste aller Comics relevant, um diese dann anzuzeigen.
 Das zusammenstellen der Liste erfolgt, indem aus dem "Library" Ordner die Namen aller Ordner ausgelesen werden und bei jedem überprüft wird ob es sich um ein Comic handelt.
 Dazu versucht die Instanz der "Library" Klasse für jeden der Ordnernamen eine Instanz der Series Klasse zu erstellen, gelingt das wird diese Instanz der Liste hinzugefügt.
 
-Die Informationen aus der "info.json" Datei werden (mit ausnahme des zuletzt gelesenen Kapitel und des zuletzt heruntergeladenen Kapitel) dann verwendet um im "LibraryTab()" Titel, Beschreibung (falls vorhanden), Status (wenn nicht in "info.json" automatisch "unknown") und Titelbild (falls kein Name in "info.json" war oder die Datei nicht gelesen werden konnte ein Platzhalter) für jedes Comic zu zeigen.
+Die Informationen aus der "info.json" Datei werden (mit Ausnahme des zuletzt gelesenen Kapitel und des zuletzt heruntergeladenen Kapitel) dann verwendet um im "LibraryTab()" Titel, Beschreibung (falls vorhanden), Status (wenn nicht in "info.json" automatisch "unknown") und Titelbild (falls kein Name in "info.json" war oder die Datei nicht gelesen werden konnte ein Platzhalter) für jedes Comic zu zeigen.
 
 ## Series Instanzen im "SeriesView()" und "Reader()"
 
@@ -57,8 +57,8 @@ Optional kann im Manifest unter dem Schlüssel "website" auch eine URL als Strin
 
 Im Manifest des PlugIns können beliebig viele andere Schlüssel mit Stringwerten angegeben werden, die dann als Hostname verstanden werden und deren Stringwert als Pfad, relativ zum Manifest, zu JavaScript Dateien zeigt, die auf der Webseite für entsprechenden Hostnamen verwendet werden können um Kapitel herunter zu laden.
 
-Sämmtliche PlugIns werden von einer Instanz der PlugInManager Klasse in einer Liste für die jeweiligen Hostnamen eingetragen.
-Die Scripte und Webseite der PlugIns können über die Instanz von PlugInManager abgefragt werden.
+Sämtliche PlugIns werden von einer Instanz der PlugInManager Klasse in einer Liste für die jeweiligen Hostnamen eingetragen.
+Die Skripte und Webseite der PlugIns können über die Instanz von PlugInManager abgefragt werden.
 
 ## Starten eines Downloads durch den "DownloadsTab()"
 
@@ -72,11 +72,11 @@ Dazu wird die Instanz der Library Klasse verwendet.
 ## JSRunner
 
 Die WebView Klasse, von der JSRunner eine Instanz verwendet, verwendet eine Instanz von WKWebView, dem in iOS eingebauten Objekt um Webseiten anzuzeigen, um Webseiten zu laden und macht WKWebView SwiftUI kompatibel, damit die Webseite angezeigt werden kann.
-Außerdem vereinfacht WebView das deaktivieren und aktivieren von JavaScript auf der WebSeite, sowie das blockieren des anfragens von sämmtlichen, nicht in der HTML Datei enthaltenen, Daten.
+Außerdem vereinfacht WebView das deaktivieren und aktivieren von JavaScript auf der WebSeite, sowie das blockieren des Anfragens von sämtlichen, nicht in der HTML Datei enthaltenen, Daten.
 
-JSRunner wiederum macht den Umgang mit "Message Handler"n (Funktionen um Nachrichten von den Scripten zu verarbeiten) und das Ausführen von JavaScript in einer WebView Instanz einfacher und erlaubt es dem JavaScript die Webseite anzuzeigen und auszublenden, sowie JavaScript der Webseite und Inhalte die nicht in der HTML Datei vorhanden sind zu erlauben und zu blockieren.
+JSRunner wiederum macht den Umgang mit "Message Handler"n (Funktionen um Nachrichten von den Skripten zu verarbeiten) und das Ausführen von JavaScript in einer WebView Instanz einfacher und erlaubt es dem JavaScript die Webseite anzuzeigen und auszublenden, sowie JavaScript der Webseite und Inhalte die nicht in der HTML Datei vorhanden sind zu erlauben und zu blockieren.
 
-Die Library Instanz verwendet eine JSRunner Instanz um die Scripte von PlugIns auf Websieten auszuführen und ihnen zu erlauben zu überprüfen ob für ein Comic bereits ein Ordner Vorhanden ist, der App mitzuteilen, dass der Download fehlgeschlagen ist (was zum sofortigen beenden der ausführung des Scripts führt) und heruntergeladene Kapitel zu speichern.
+Die Library Instanz verwendet eine JSRunner Instanz um die Skripte von PlugIns auf Webseiten auszuführen und ihnen zu erlauben zu überprüfen ob für ein Comic bereits ein Ordner Vorhanden ist, der App mitzuteilen, dass der Download fehlgeschlagen ist (was zum sofortigen beenden der Ausführung des Scripts führt) und heruntergeladene Kapitel zu speichern.
 
 ## Download
 
