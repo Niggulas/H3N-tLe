@@ -119,13 +119,3 @@ struct DownloadTab: View {
 		}
 	}
 }
-
-struct DownloadTab_Previews: PreviewProvider {
-	static var previews: some View {
-		DownloadTab()
-			.preferredColorScheme(.dark)
-			.previewDevice("iPhone 12")
-			.previewLayout(.sizeThatFits)
-		
-	}
-}

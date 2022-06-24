@@ -19,12 +19,3 @@ struct InformationOnTrust: View {
 		}
     }
 }
-
-struct InformationOnTrust_Previews: PreviewProvider {
-    static var previews: some View {
-		InformationOnTrust()
-			.preferredColorScheme(.dark)
-			.previewDevice("iPhone 11")
-			
-    }
-}
