@@ -57,7 +57,7 @@ class Library {
 		
 		// If for some reason there is no JavaScript even though the PlugIn was listed we don't want to do anything to prevent crashes (shouldn't ever happen
 		if let js = plugInManager.getPlugInJSForHost(host: url.host!, plugInName: pluginName) {
-			// These variables need to be set because we can't pass them to the downloadMessageHandler directly
+			// These variables need to be set because we can't pass them to the downloadMessageProcessor directly
 			currentDownloadUrl = url
 			currentDownloadPluginName = pluginName
 			
@@ -66,7 +66,7 @@ class Library {
 		}
 	}
 	
-	private func downloadMessageHandler(json: String) {
+	private func downloadMessageProcessor(json: String) {
 		// When this gets called the PlugIn should have done everything it needs to do
 		runner.stop()
 		
@@ -148,7 +148,7 @@ class Library {
 	
 	// Dirty fix because we can't initialize the Library in DownloadTab but we have to initialize the runner there
 	func setRunner(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool) {
-		// Make sure the rnner gets only set once
+		// Make sure the runner gets only set once
 		if isRunnerSet {
 			return
 		}
@@ -158,14 +158,15 @@ class Library {
 		
 		self.runner = JSRunner(showView: showView, hideView: hideView, isViewVisible: isViewVisible, contentWorld: .world(name: "PlugIn"), defaultScripts: [libraryDefaultScript])
 		
-		self.runner.addMessageHandlerThatReplies({ seriesTitle in
+		// Message processor that allows the PlugIn to check if the series already exists
+		self.runner.addMessageProcessorThatReplies({ seriesTitle in
 			return self.seriesList.contains(where: { $0.title == seriesTitle }) ? "present" : "absent"
 		}, name: "DoesSeriesExist")
 		
-		self.runner.addMessageHandler(downloadMessageHandler, name: "SaveChapter")
+		self.runner.addMessageProcessor(downloadMessageProcessor, name: "SaveChapter")
 		
-		// Option for the PlugIn to tell us that it failed without passing faulty input to the downloadMessageHandler
-		self.runner.addMessageHandler({ error in
+		// Option for the PlugIn to tell us that it failed without passing faulty input to the downloadMessageProcessor
+		self.runner.addMessageProcessor({ error in
 			print(error)
 			self.runner.stop()
 		}, name: "Failed")

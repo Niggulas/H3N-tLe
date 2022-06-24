@@ -19,16 +19,16 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		
 		super.init()
 		
-		// Add the message handlers to the WebView (the ones that receive all messages and then decide which message handler function to execute)
+		// Add the message handlers to the WebView (the ones that receive all messages and then decide which message processor function to execute)
 		view.wkWebView.configuration.userContentController.add(self, contentWorld: contentWorld, name: "noReply")
 		view.wkWebView.configuration.userContentController.addScriptMessageHandler(self, contentWorld: contentWorld, name: "reply")
 		
 		/*
-		 Add default message handlers
+		 Add default message processors
 		 */
 		
-		// Add a message handler for requests to show and hide the view
-		addMessageHandler({ message in
+		// Add a message processor for requests to show and hide the view
+		addMessageProcessor({ message in
 			if message == "show" {
 				self.showPage()
 			} else if message == "hide" {
@@ -36,16 +36,16 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 			}
 		}, name: "View")
 		
-		// Add a message handler that answers requests for the current state of the view ("hidden" or "visisble")
-		addMessageHandlerThatReplies({message in
+		// Add a message processor that answers requests for the current state of the view ("hidden" or "visisble")
+		addMessageProcessorThatReplies({message in
 			if message == "state" {
 				return self.isViewVisible() ? "visible" : "hidden"
 			}
 			return ""
 		}, name: "View")
 		
-		// Add a message handler for requests to allow and disallow the loading of content such as images or styles
-		addMessageHandler({ message in
+		// Add a message processor for requests to allow and disallow the loading of content such as images or styles
+		addMessageProcessor({ message in
 			if message == "allow" {
 				self.view.allowContent()
 			} else if message == "disallow" {
@@ -53,16 +53,16 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 			}
 		}, name: "Content")
 		
-		// Add a message handler that answers requests for the current state of content blocking ("allowed" or "forbidden")
-		addMessageHandlerThatReplies({message in
+		// Add a message processor that answers requests for the current state of content blocking ("allowed" or "forbidden")
+		addMessageProcessorThatReplies({message in
 			if message == "state" {
 				return self.view.isContentAllowed() ? "allowed" : "forbidden"
 			}
 			return ""
 		}, name: "Content")
 		
-		// Add a message handler for requests to allow and disallow the execution of JavaScript
-		addMessageHandler({ message in
+		// Add a message processor for requests to allow and disallow the execution of JavaScript
+		addMessageProcessor({ message in
 			if message == "allow" {
 				self.view.allowJS()
 			} else if message == "disallow" {
@@ -70,8 +70,8 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 			}
 		}, name: "JavaScript")
 		
-		// Add a message handler that answers requests for the current state of JavaScript blocking ("allowed" or "forbidden")
-		addMessageHandlerThatReplies({message in
+		// Add a message processor that answers requests for the current state of JavaScript blocking ("allowed" or "forbidden")
+		addMessageProcessorThatReplies({message in
 			if message == "state" {
 				return self.view.isJSAllowed() ? "allowed" : "forbidden"
 			}
@@ -99,8 +99,8 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 	private var hideView: () -> Void
 	private var isViewVisible: () -> Bool
 	private var defaultScripts = [WKUserScript]()
-	private var messageHandlers = [String: (String) -> Void]()
-	private var messageHandlersThatReply = [String: (String) -> String?]()
+	private var messageProcessors = [String: (String) -> Void]()
+	private var messageProcessorsThatReply = [String: (String) -> String?]()
 	
 	/*
 	 Handle the visibility of the WebView
@@ -149,25 +149,25 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 	}
 	
 	/*
-	 Message Handlers
+	 Message Processors
 	 */
 	
-	// Add message handlers
-	func addMessageHandler(_ handler: @escaping (String) -> Void, name: String) {
-		messageHandlers.updateValue(handler, forKey: name)
+	// Add message processors
+	func addMessageProcessor(_ processor: @escaping (String) -> Void, name: String) {
+		messageProcessors.updateValue(processor, forKey: name)
 	}
 	
-	func addMessageHandlerThatReplies(_ handler: @escaping (String) -> String?, name: String) {
-		messageHandlersThatReply.updateValue(handler, forKey: name)
+	func addMessageProcessorThatReplies(_ processor: @escaping (String) -> String?, name: String) {
+		messageProcessorsThatReply.updateValue(processor, forKey: name)
 	}
 	
-	// Remove message handlers
-	func removeMessageHandler(name: String) {
-		messageHandlers.removeValue(forKey: name)
+	// Remove message processors
+	func removeMessageProcessor(name: String) {
+		messageProcessors.removeValue(forKey: name)
 	}
 	
-	func removeMessageHandlerThatReplies(name: String) {
-		messageHandlersThatReply.removeValue(forKey: name)
+	func removeMessageProcessorThatReplies(name: String) {
+		messageProcessorsThatReply.removeValue(forKey: name)
 	}
 	
 	// Handle messages from JS
@@ -188,16 +188,16 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 			return
 		}
 		
-		let handlerName = messageBody.first!
+		let processorName = messageBody.first!
 		let stringMessage = messageBody.last!
 		
 		// Do nothing if the message handler doesn't exist
-		if !messageHandlers.keys.contains(handlerName) {
+		if !messageProcessors.keys.contains(processorName) {
 			return
 		}
 		
-		// Execute the message handler
-		messageHandlers[handlerName]!(stringMessage)
+		// Execute the message processor
+		messageProcessors[processorName]!(stringMessage)
 	}
 	
 	func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
@@ -219,16 +219,16 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 			return
 		}
 		
-		let handlerName = messageBody.first!
+		let processorName = messageBody.first!
 		let stringMessage = messageBody.last!
 		
 		// Send an error back if the message handler doesn't exist
-		if !messageHandlersThatReply.keys.contains(handlerName) {
-			replyHandler(nil, "No handler with that name: \(handlerName)")
+		if !messageProcessorsThatReply.keys.contains(processorName) {
+			replyHandler(nil, "No processor with that name: \(processorName)")
 			return
 		}
 		
-		// Execute the message handler and send back the reply
-		replyHandler(messageHandlersThatReply[handlerName]!(stringMessage) ?? false, nil)
+		// Execute the message processor and send back the reply
+		replyHandler(messageProcessorsThatReply[processorName]!(stringMessage) ?? false, nil)
 	}
 }
