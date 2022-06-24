@@ -56,7 +56,7 @@ class Library {
 		runner.view.disallowContent()
 		
 		// If for some reason there is no JavaScript even though the PlugIn was listed we don't want to do anything to prevent crashes (shouldn't ever happen
-		if let js = plugInManager.getPlugInJSForDomain(domain: url.host!, plugInName: pluginName) {
+		if let js = plugInManager.getPlugInJSForHost(host: url.host!, plugInName: pluginName) {
 			// These variables need to be set because we can't pass them to the downloadMessageHandler directly
 			currentDownloadUrl = url
 			currentDownloadPluginName = pluginName

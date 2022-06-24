@@ -20,7 +20,7 @@ struct DownloadTab: View {
 			HStack {
 				TextField("URL to series", text: $searchBarContent).onChange(of: searchBarContent) { newValue in
 					if let domain = URL(string: searchBarContent)?.host {
-						plugInList = plugInManager.getPlugInNamesForDomain(domain)
+						plugInList = plugInManager.getPlugInNamesForHost(domain)
 					} else if searchBarContent.isEmpty {
 						plugInList = plugInManager.getAllPlugInNames()
 					} else {

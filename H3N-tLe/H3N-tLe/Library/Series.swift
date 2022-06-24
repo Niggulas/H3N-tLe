@@ -221,7 +221,7 @@ class Series: Identifiable {
 	}
 	
 	// Write current values of all attributes to the info.json file
-	func writeInfo() {
+	private func writeInfo() {
 		if !isDirectory(url: localUrl) {
 			try? fileManager.removeItem(at: localUrl)
 			try! fileManager.createDirectory(at: localUrl, withIntermediateDirectories: true)

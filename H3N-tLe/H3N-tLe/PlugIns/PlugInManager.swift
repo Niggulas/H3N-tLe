@@ -20,27 +20,27 @@ class PlugInManager {
 		}
 		
 		nameToPlugInMap = [String: PlugIn]()
-		domainToPlugInNameListMap = [String: [String]]()
+		hostToPlugInNameListMap = [String: [String]]()
 		
 		registerPlugIns()
 	}
 	
 	private var nameToPlugInMap: [String: PlugIn]
-	private var domainToPlugInNameListMap: [String: [String]]
+	private var hostToPlugInNameListMap: [String: [String]]
 	
 	func registerPlugIns() {
 		nameToPlugInMap.removeAll()
-		domainToPlugInNameListMap.removeAll()
+		hostToPlugInNameListMap.removeAll()
 		
 		listDirectories(url: PlugInManager.plugInsDirectoryUrl).forEach { dir in
 			if let plugIn = try? PlugIn(name: dir.lastPathComponent) {
 				nameToPlugInMap[plugIn.name] = plugIn
 				
-				plugIn.getSupportedDomains().forEach { domain in
-					if domainToPlugInNameListMap[domain] == nil {
-						domainToPlugInNameListMap[domain] = [String]()
+				plugIn.getSupportedHosts().forEach { host in
+					if hostToPlugInNameListMap[host] == nil {
+						hostToPlugInNameListMap[host] = [String]()
 					}
-					domainToPlugInNameListMap[domain]!.append(plugIn.name)
+					hostToPlugInNameListMap[host]!.append(plugIn.name)
 				}
 			}
 		}
@@ -55,11 +55,11 @@ class PlugInManager {
 		return nameToPlugInMap[name]?.website
 	}
 	
-	func getPlugInNamesForDomain(_ domain: String) -> [String] {
-		return domainToPlugInNameListMap[domain] ?? [String]()
+	func getPlugInNamesForHost(_ host: String) -> [String] {
+		return hostToPlugInNameListMap[host] ?? [String]()
 	}
 	
-	func getPlugInJSForDomain(domain: String, plugInName: String) -> String? {
-		return nameToPlugInMap[plugInName]?.getScriptForDomain(domain)
+	func getPlugInJSForHost(host: String, plugInName: String) -> String? {
+		return nameToPlugInMap[plugInName]?.getScriptForHost(host)
 	}
 }

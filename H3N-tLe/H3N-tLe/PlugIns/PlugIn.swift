@@ -44,9 +44,9 @@ class PlugIn {
             website = nil
         }
 		
-        let domains = manifest!.keys.filter { $0 != PlugIn.manifestVersionKey && $0 != PlugIn.websiteKey }
+        let hosts = manifest!.keys.filter { $0 != PlugIn.manifestVersionKey && $0 != PlugIn.websiteKey }
 		
-		try! domains.forEach {
+		try! hosts.forEach {
 			let path = manifest![$0]!
 			
 			// Make sure the PlugIn can only use files in its directory
@@ -61,26 +61,26 @@ class PlugIn {
 				throw PlugInError.ManifestContainsInvalidPath
 			}
 			
-			domainToScriptUrlMap[$0] = url
+			hostToScriptUrlMap[$0] = url
 		}
 	}
 	
 	let name: String
     let website: URL?
 	private let directory: URL
-	private var domainToScriptUrlMap = [String: URL]()
+	private var hostToScriptUrlMap = [String: URL]()
 	
-	func getSupportedDomains() -> [String] {
+	func getSupportedHosts() -> [String] {
 		// filter is used to get a value of type [String] because "as [String]" doesn't work
-		return domainToScriptUrlMap.keys.filter { _ in true }
+		return hostToScriptUrlMap.keys.filter { _ in true }
 	}
 	
-	func getScriptForDomain(_ domain: String) -> String? {
-		if domainToScriptUrlMap[domain] == nil {
+	func getScriptForHost(_ host: String) -> String? {
+		if hostToScriptUrlMap[host] == nil {
 			return nil
 		}
 		
-		return try? String(contentsOf: domainToScriptUrlMap[domain]!)
+		return try? String(contentsOf: hostToScriptUrlMap[host]!)
 	}
     
 }
