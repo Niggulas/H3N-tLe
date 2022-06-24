@@ -17,14 +17,23 @@ struct DownloadTab: View {
 		
 		VStack {
 			// URL Bar
-			TextField("URL to series", text: $searchBarContent).onChange(of: searchBarContent) { newValue in
-				if let domain = URL(string: searchBarContent)?.host {
-					plugInList = plugInManager.getPlugInNamesForDomain(domain)
-				} else if searchBarContent.isEmpty {
-					plugInList = plugInManager.getAllPlugInNames()
-				} else {
-					plugInList = [String]()
+			HStack {
+				TextField("URL to series", text: $searchBarContent).onChange(of: searchBarContent) { newValue in
+					if let domain = URL(string: searchBarContent)?.host {
+						plugInList = plugInManager.getPlugInNamesForDomain(domain)
+					} else if searchBarContent.isEmpty {
+						plugInList = plugInManager.getAllPlugInNames()
+					} else {
+						plugInList = [String]()
+					}
 				}
+				Button {
+					searchBarContent = ""
+				} label: {
+					Image(systemName: "x.circle.fill")
+						.foregroundColor(Color.secondary)
+				}
+				
 			}
 			.foregroundColor(Color.primary)
 			.padding()
