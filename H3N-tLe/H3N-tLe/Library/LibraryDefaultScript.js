@@ -26,7 +26,7 @@ Object.defineProperty(window, 'doesSeriesExist', {
 });
 
 // Function to download a chapter and send some other information to swift (url to next chapter, description of the series, ...)
-Object.defineProperty(window, 'download', {
+Object.defineProperty(window, 'save', {
 	configurable: false,
 	enumerable: true,
 	writable: false,
@@ -39,7 +39,7 @@ Object.defineProperty(window, 'download', {
 		) {
 			throw new Error('Invalid chapterInfo');
 		}
-		window.postWebKitMessage(['DownlaodChapter', JSON.stringify(chapterInfo)]);
+		window.postWebKitMessage(['SaveChapter', JSON.stringify(chapterInfo)]);
 	}
 });
 

@@ -24,43 +24,15 @@ class Library {
 	
 	private var isRunnerSet = false
 	private var seriesList = [Series]()
-	private var whiteList = [String]()
-	private var blackList = ["hidden"]
 	
 	private var currentDownloadUrl: URL?
 	private var currentDownloadPluginName: String?
 	
-	var runner = JSRunner(showView: {}, hideView: {}, isViewVisible: {false})
+	// Used to execute JavaScript (PlugIns)
+	var runner = JSRunner(showView: {}, hideView: {}, isViewVisible: {false}, contentWorld: .defaultClient, defaultScripts: [String]())
 	
-	// Returns a filtered list of all series
 	func getSeriesList() -> [Series] {
-		return seriesList.filter { series in
-			// Check if we need to loop
-			if series.getTags().isEmpty {
-				// If the series doesn't have tags it will always pass the black list filter
-				return whiteList.isEmpty
-			}
-			
-			// White list filter
-			if !whiteList.isEmpty {
-				for tag in whiteList {
-					if !series.hasTag(tag) {
-						return false
-					}
-				}
-			}
-			
-			// Black list filter
-			if !blackList.isEmpty {
-				for tag in blackList {
-					if series.hasTag(tag) {
-						return false
-					}
-				}
-			}
-			
-			return true
-		}
+		return seriesList
 	}
 	
 	func updateSeriesList() {
@@ -80,22 +52,26 @@ class Library {
 	}
 	
 	func download(url: URL, with pluginName: String) {
+		// Stop whatever is currently running to make sure it doesn't mess with the preparations
 		runner.stop()
+		
+		// Prepare
 		runner.view.disallowJS()
 		runner.view.disallowContent()
 		
+		// If for some reason there is no JavaScript even though the PlugIn was listed we don't want to do anything to prevent crashes (shouldn't ever happen
 		if let js = plugInManager.getPlugInJSForDomain(domain: url.host!, plugInName: pluginName) {
+			// These variables need to be set because we can't pass them to the downloadMessageHandler directly
 			currentDownloadUrl = url
 			currentDownloadPluginName = pluginName
+			
+			// Run the PlugIn
 			runner.run(source: js, on: url)
 		}
 	}
 	
-	func updateChaptersForAll() {
-		getSeriesList().forEach { $0.updateChapters() }
-	}
-	
 	private func downloadMessageHandler(json: String) {
+		// When this gets called the PlugIn should have done everything it needs to do
 		runner.stop()
 		
 		let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
@@ -104,21 +80,25 @@ class Library {
 		}
 		
 		/*
-		 Series related
+		 Series
+		 
+		 Here we set all the information related to the series.
+		 This has to be done before we save the chapter because a chapter can't exist without a series.
 		 */
 		
 		let seriesInfo = info!["series"] as? [String: Any]
 		if (seriesInfo?["title"] as? String)?.isEmpty ?? true {
+			// If no title for the series was provided we can't save the chapter and have to stop
 			return
 		}
 		
+		// Try to read an existing series from disc and if that fails create a new one
 		var series = try? Series(existingSeriesName: seriesInfo!["title"] as! String)
 		if series == nil {
 			series = try! Series(title: seriesInfo!["title"] as! String, description: seriesInfo!["description"] as? String ?? "")
+			library.addNewSeriesToSeriesList(series!)
 		}
-		if let author = seriesInfo!["author"] as? String {
-			series!.setAuthor(author)
-		}
+		// Set al the additional information that the PlugIn might provide
 		if let status = seriesInfo!["status"] as? String {
 			series!.setStatus(status)
 		}
@@ -126,12 +106,12 @@ class Library {
 			do {
 				let coverName = "cover" + cover["ext"]!
 				let coverUrl = series!.localUrl.appendingPathComponent(coverName)
-				let coverData = Data(base64Encoded: cover["b64"]!)
 				
 				if fileManager.fileExists(atPath: coverUrl.path) {
 					try fileManager.removeItem(at: coverUrl)
 				}
-				try coverData?.write(to: coverUrl)
+				
+				try writeBase64ToFile(url: coverUrl, base64: cover["b64"]!)
 				
 				series!.setCoverName(coverName)
 			} catch {}
@@ -139,32 +119,36 @@ class Library {
 		series!.setRemoteUrl(currentDownloadUrl!.absoluteString)
 		
 		/*
-		 Chapter related
+		 Chapter
+		 
+		 We made sure the series exists and can now save the chapter. (after checking that we got what we needed)
 		 */
 		let chapterName = info!["chapterName"] as? String
 		if chapterName == nil {
 			return
 		}
-		
 		let images = info!["images"] as? [[String: String]]
 		if images == nil{
 			return
 		}
 		
-		// The actual download
 		series!.saveChapter(chapterName: chapterName!, images: images!)
 		
 		/*
-		 Next chapter download related
+		 Next Chapter
+		 
+		 If we got a URL to the next chapter we just simply repeat everything with that URL.
 		 */
-		if currentDownloadPluginName?.isEmpty ?? true {
-			return
-		}
+		
+		// Gets only set now because we don't want to automatically use a PlugIn which failed to do what it should
 		series!.setLastPluginName(currentDownloadPluginName!)
 		
 		if let nextUrlString = info!["nextUrl"] as? String {
 			if let nextUrl = URL(string: nextUrlString) {
-				print("Next url: \(nextUrl.absoluteString)")
+				/*
+				 This only starts the PlugIn again and exits afterwards
+				 It doesn't wait for it to finish executing which means we don't hang here until all chapters got downloaded.
+				 */
 				download(url: nextUrl, with: currentDownloadPluginName!)
 			}
 		}
@@ -172,10 +156,12 @@ class Library {
 	
 	// Dirty fix because we can't initialize the Library in DownloadTab but we have to initialize the runner there
 	func setRunner(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool) {
+		// Make sure the rnner gets only set once
 		if isRunnerSet {
 			return
 		}
 		
+		// A script that gets executed before the PlugIn gets executed to provide ease of use functions for sending messages to the message handlers
 		let libraryDefaultScript = try! String(contentsOf: Bundle.main.url(forResource: "LibraryDefaultScript", withExtension: "js")!)
 		
 		self.runner = JSRunner(showView: showView, hideView: hideView, isViewVisible: isViewVisible, contentWorld: .world(name: "PlugIn"), defaultScripts: [libraryDefaultScript])
@@ -184,8 +170,9 @@ class Library {
 			return self.seriesList.contains(where: { $0.title == seriesTitle }) ? "present" : "absent"
 		}, name: "DoesSeriesExist")
 		
-		self.runner.addMessageHandler(downloadMessageHandler, name: "DownlaodChapter")
+		self.runner.addMessageHandler(downloadMessageHandler, name: "SaveChapter")
 		
+		// Option for the PlugIn to tell us that it failed without passing faulty input to the downloadMessageHandler
 		self.runner.addMessageHandler({ error in
 			print(error)
 			self.runner.stop()

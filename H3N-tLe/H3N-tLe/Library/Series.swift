@@ -15,14 +15,24 @@ class Series: Identifiable {
 		case InvalidSeriesInfoFile
 	}
 	
+	/*
+	 Allowed status for a series
+	 
+	 dropped: story not finished but doesn't get continued
+	 ongoing: story is not finished and there are still chapters to come
+	 hiatus: author takes a break but will come back to continue the series
+	 finished: story is finished - there may still be bonus chapters coming
+	 unknown: selfexplanatory
+	 */
 	static let STATUS_STRINGS = ["dropped", "ongoing", "hiatus", "finished", "unknown"]
 	
-	// Init for an existing series
+	// Init to read a series that already exists
 	init(existingSeriesName name: String) throws {
 		localUrl = Library.libraryUrl.appendingPathComponent(name)
 		infoUrl = localUrl.appendingPathComponent("info.json")
 		
-		if !isDirectory(url: localUrl) {
+		// Throw an error if the series doesn't exist
+		if !isDirectory(url: localUrl) || fileManager.fileExists(atPath: infoUrl.path) {
 			throw SeriesErrors.SeriesDoesntExist
 		}
 		
@@ -32,10 +42,10 @@ class Series: Identifiable {
 			throw SeriesErrors.InvalidSeriesInfoFile
 		}
 		
+		// Get the attributes of the series from the serialized JSON data
 		self.title = json!["title"] as! String
 		description = json!["description"] as? String ?? ""
-		author = json!["author"] as? String
-
+		
 		if let coverName = json!["cover"] as? String {
 			// Make sure the name doesn't point to anything outside the Series directory
 			if coverName.contains("..") || coverName.isEmpty {
@@ -47,14 +57,11 @@ class Series: Identifiable {
 		}
 		
 		remoteUrl = json!["url"] as? String
-		lastPluginName = json!["plugin"] as? String
 		status = json!["status"] as? String
-		if status != nil && !Series.STATUS_STRINGS.contains(status!) {
+		if !Series.STATUS_STRINGS.contains(status!) {
 			status = nil
 		}
 		
-		tags = json!["tags"] as? [String]
-        readChapterList = json!["read_chapters"] as? [String]
 		lastReadChapter = json!["last_read_chapter"] as? String
 	}
 	
@@ -66,6 +73,7 @@ class Series: Identifiable {
 		localUrl = Library.libraryUrl.appendingPathComponent(title)
 		infoUrl = localUrl.appendingPathComponent("info.json")
 		
+		// Throw an error if the series already exists
 		if isDirectory(url: localUrl) && fileManager.fileExists(atPath: infoUrl.path) && !isDirectory(url: infoUrl) {
 			throw SeriesErrors.SeriesAlreadyExist
 		}
@@ -78,23 +86,10 @@ class Series: Identifiable {
 	let infoUrl: URL
 	let title: String
 	let description: String
-	private var author: String?
 	private var coverName: String?
 	private var remoteUrl: String?
-	private var lastPluginName: String?
 	private var status: String?
-	private var tags: [String]?
-	private var readChapterList: [String]?
 	private var lastReadChapter: String?
-	
-	func getAuthor() -> String {
-		return author ?? ""
-	}
-	
-	func setAuthor(_ author: String) {
-		self.author = author.replacingOccurrences(of: "\n", with: "")
-        writeInfo()
-	}
 	
 	func getCoverUrl() -> URL? {
 		if coverName?.isEmpty ?? true {
@@ -108,7 +103,7 @@ class Series: Identifiable {
 			return
 		}
 		coverName = name
-        writeInfo()
+		writeInfo()
 	}
 	
 	func getRemoteUrl() -> URL? {
@@ -128,26 +123,12 @@ class Series: Identifiable {
 		}
 		
 		remoteUrl = url!.absoluteString
-        writeInfo()
+		writeInfo()
 	}
 	
 	func clearRemoteUrl() {
 		remoteUrl = nil
-        writeInfo()
-	}
-	
-	func setLastPluginName(_ plugin: String) {
-		if plugInManager.getAllPlugInNames().contains(plugin) {
-			lastPluginName = plugin
-		}
-	}
-	
-	func getLastPluginName() -> String? {
-		return lastPluginName
-	}
-	
-	func clearLastPluginName() {
-		lastPluginName = nil
+		writeInfo()
 	}
 	
 	func getStatus() -> String {
@@ -158,105 +139,61 @@ class Series: Identifiable {
 		if Series.STATUS_STRINGS.contains(status) {
 			self.status = status
 		}
-        
-        writeInfo()
-	}
-	
-	func getTags() -> [String] {
-		return tags ?? [String]()
-	}
-	
-	func hasTag(_ tag: String) -> Bool {
-		return tags?.contains(tag) ?? false
-	}
-	
-	func addTag(_ tag: String) {
-		let safeTag = tag.replacingOccurrences(of: "\n", with: "")
 		
-		if hasTag(safeTag) {
-			return
-		}
-		tags?.append(safeTag)
-        
-        writeInfo()
-	}
-	
-	func removeTag(_ tagToRemove: String) {
-		tags?.removeAll(where: { tag in
-			return tag == tagToRemove
-		})
-        
-        writeInfo()
-	}
-	
-    /*
-     Mark chapters as read and check if a chapter was read
-     */
-    
-    func markChapterAsRead(chapter: String) {
-        if readChapterList == nil {
-            readChapterList = [String]()
-        }
-        
-        if getChapterList().contains(chapter) {
-            if !readChapterList!.contains(chapter) {
-                readChapterList!.append(chapter)
-            }
-            lastReadChapter = chapter
-        }
-        writeInfo()
-    }
-    
-    func markAllChaptersAsRead() {
-        getChapterList().forEach { markChapterAsRead(chapter: $0) }
-    }
-	
-	func clearReadChapters() {
-		readChapterList = nil
 		writeInfo()
 	}
-    
-    func didReadChapter(_ name: String) -> Bool {
-        return readChapterList?.contains(name) ?? false
-    }
-    
-    func getLastReadChapter() -> String? {
-        return lastReadChapter
-    }
-    
-    func getNextUnreadChapter() -> String {
-        if getLastReadChapter() != nil {
-            return getLastReadChapter()!
-        } else {
-            return getChapterList()[0]
-        }
-    }
-    
-	func clearLastReadChapter() {
-		lastReadChapter = nil
-        
-        writeInfo()
+	
+	/*
+	 Mark chapters as read and check if a chapter was read
+	 */
+	
+	func getLastReadChapter() -> String? {
+		return lastReadChapter
 	}
 	
-    /*
-     Get a list of downloaded Chapters, their images or download a chapter
-     */
-    
+	func setLastReadChapter(chapter: String) {
+		lastReadChapter = chapter
+		
+		writeInfo()
+	}
+	
+	func clearLastReadChapter() {
+		lastReadChapter = nil
+		
+		writeInfo()
+	}
+	
+	func getNextUnreadChapter() -> String {
+		if getLastReadChapter() != nil {
+			return getLastReadChapter()!
+		} else {
+			return getChapterList()[0]
+		}
+	}
+	
+	/*
+	 Get a list of downloaded Chapters, their images or save a chapter
+	 */
+	
 	func getChapterList() -> [String] {
+		// Returns a list of the names of all folders in the directory of the series
 		return listDirectories(url: self.localUrl).map { $0.lastPathComponent }
 	}
 	
 	func getChapterImageUrls(name: String) -> [URL] {
+		// No special checks if the file really is an image because there is no reason for a chapter to contain anything else
 		return listFiles(url: self.localUrl.appendingPathComponent(name))
 	}
 	
+	// Saves Base64 encoded images to a chapter if it doesn't already exist or is empty
 	func saveChapter(chapterName: String, images: [[String: String]]) {
 		if chapterName == "info.json" {
 			return
 		}
 		
-		let chapterUrl = localUrl.appendingPathComponent(chapterName.trimmingCharacters(in: [" "]))
+		let chapterUrl = localUrl.appendingPathComponent(chapterName)
 		
+		// Do nothing if a chapter with that name akready exists and has images in it
 		if isDirectory(url: chapterUrl) && !listFiles(url: chapterUrl).isEmpty {
 			return
 		}
@@ -268,24 +205,16 @@ class Series: Identifiable {
 			try! fileManager.createDirectory(at: chapterUrl, withIntermediateDirectories: true)
 		}
 		
+		// Save the images and skip ones where something fails
 		for i in 0..<images.count {
 			do {
 				let imageName: String = "\(i)." + images[i]["ext"]!
-				
-				let imageData = Data(base64Encoded: images[i]["b64"]!)
-				
-				try imageData!.write(to: chapterUrl.appendingPathComponent(imageName))
+				try writeBase64ToFile(url: chapterUrl.appendingPathComponent(imageName), base64: images[i]["b64"]!)
 			} catch {}
 		}
 	}
 	
-	func updateChapters() {
-		if URL(string: remoteUrl ?? "") == nil || lastPluginName == nil {
-			return
-		}
-		library.download(url: URL(string: remoteUrl!)!, with: lastPluginName!)
-	}
-	
+	// Write current values of all attributes to the info.json file
 	func writeInfo() {
 		if !isDirectory(url: localUrl) {
 			try? fileManager.removeItem(at: localUrl)
@@ -301,34 +230,23 @@ class Series: Identifiable {
 		if !description.isEmpty {
 			info["description"] = description
 		}
-		if !(author?.isEmpty ?? true) {
-			info["author"] = author!
-		}
 		if !(coverName?.isEmpty ?? true) {
 			info["cover"] = coverName!
 		}
 		if !(remoteUrl?.isEmpty ?? true) {
 			info["url"] = remoteUrl!
 		}
-		if !(lastPluginName?.isEmpty ?? true) {
-			info["plugin"] = lastPluginName
-		}
 		if status != "unknown" {
 			info["status"] = status
 		}
-		if !(tags?.isEmpty ?? true) {
-			info["tags"] = tags!
-		}
-        if !(readChapterList?.isEmpty ?? true) {
-            info["read_chapters"] = readChapterList!
-        }
 		if !(lastReadChapter?.isEmpty ?? true) {
 			info["last_read_chapter"] = lastReadChapter!
 		}
 		
-		writeJsonToFile(url: infoUrl, json: info)
+		try! writeJsonToFile(url: infoUrl, json: info)
 	}
 	
+	// Delete the series
 	func delete() {
 		try! fileManager.removeItem(at: localUrl)
 		library.updateSeriesList()

@@ -60,7 +60,7 @@ final class WebView: NSObject, UIViewRepresentable {
 		// Create the content blocker
 		WKContentRuleListStore.default().compileContentRuleList(
 			forIdentifier: "ContentBlocker",
-			// The actual ruels in JSON
+			// The rules in JSON
 			// first part blocks all (no exception for PlugIns) requests, second part adds an exception for the document of the main frame
 			encodedContentRuleList: """
 				[

@@ -33,6 +33,7 @@ struct Reader: View {
                 if !isFirstChapter() {
                     Button {
                         chapterIndex -= 1
+						series.setLastReadChapter(chapter: series.getChapterList()[chapterIndex])
                     } label: {
                         Image(systemName: "arrow.left")
                             .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
@@ -47,7 +48,7 @@ struct Reader: View {
                 if !isLastChapter() {
                     Button {
                         chapterIndex += 1
-                        series.markChapterAsRead(chapter: series.getChapterList()[chapterIndex])
+						series.setLastReadChapter(chapter: series.getChapterList()[chapterIndex])
                     } label: {
                         Image(systemName: "arrow.right")
                             .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
@@ -81,6 +82,7 @@ struct Reader: View {
                 if !isFirstChapter() {
                     Button {
                         chapterIndex -= 1
+						series.setLastReadChapter(chapter: series.getChapterList()[chapterIndex])
                     } label: {
                         Image(systemName: "arrow.left")
                             .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
@@ -95,7 +97,7 @@ struct Reader: View {
                 if !isLastChapter() {
                     Button {
                         chapterIndex += 1
-                        series.markChapterAsRead(chapter: series.getChapterList()[chapterIndex])
+                        series.setLastReadChapter(chapter: series.getChapterList()[chapterIndex])
                     } label: {
                         Image(systemName: "arrow.right")
                             .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
@@ -115,7 +117,7 @@ struct Reader: View {
          */
         .onAppear {
             if isLastChapter() {
-                series.markChapterAsRead(chapter: series.getChapterList()[chapterIndex])
+                series.setLastReadChapter(chapter: series.getChapterList()[chapterIndex])
             }
         }
         

@@ -11,6 +11,7 @@ Object.defineProperty(window, 'postWebKitMessage', {
 		} else if (typeof message[0] !== 'string' || typeof message[1] !== 'string') {
 			throw new Error('Message must be an array of strings');
 		}
+		// Depending on if we expect a reply we have to send the message to a diffrent message handler
 		if (expectReply) {
 			return webkit.messageHandlers.reply.postMessage(message);
 		}

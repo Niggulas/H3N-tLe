@@ -40,9 +40,6 @@ struct DownloadTab: View {
 			.cornerRadius(15)
 			.padding()
 			.sheet(isPresented: $isWebViewSheetVisible) {
-				// TODO: Warning not to get your passwords stolen here
-				// TODO: Melde nich nicht an wenn du dem pluginautor nicht vertraust
-				// die TODO darüber wurde erledigt
 				
 				VStack (spacing: 0) {
 					
@@ -55,7 +52,6 @@ struct DownloadTab: View {
 								.font(.headline)
 						}
 						.padding()
-						//.background(Color(.systemGray4))
 						.foregroundColor(Color.red)
 						
 						Spacer()
@@ -75,16 +71,12 @@ struct DownloadTab: View {
 				VStack(spacing: 0){
 					ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
 						Button (action: {
-							library.runner.addMessageHandler({print("JS: "+$0)}, name: "print")
-							library.runner.view.disallowJS()
-							library.runner.view.disallowContent()
-							
 							if let url = URL(string: searchBarContent) {
 								library.download(url: url, with: plugInName.value as! String)
 							}
 						}, label: {
 							HStack {
-								Text(plugInName.value as! String)//\(plugInList[plugin])")
+								Text(plugInName.value as! String)
 									.font(.headline)
 								Spacer()
 								Image(systemName: "square.and.arrow.down")
@@ -97,7 +89,6 @@ struct DownloadTab: View {
 						.background(Color(.systemGray6))
 						
 						Divider()
-						
 						
 					}
 				}

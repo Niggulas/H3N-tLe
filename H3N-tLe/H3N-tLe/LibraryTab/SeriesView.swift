@@ -30,7 +30,6 @@ struct SeriesView: View {
 								.aspectRatio(contentMode: .fit)
 								.frame(width: 130)
 								.cornerRadius(5)
-							//.padding()
 						} else if phase.error != nil {
 						} else {
 							Color(.systemGray6)
@@ -74,7 +73,7 @@ struct SeriesView: View {
 				Button {
 					series.clearLastReadChapter()
 				} label: {
-					Text("Mark as unread")
+					Text("Clear last read chapter")
 						.font(.headline)
 						.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
 				}
@@ -96,30 +95,6 @@ struct SeriesView: View {
 					// Chapter element
 					HStack (spacing: 0){
 						
-						// Eye Button
-						/*
-						 Button {
-						 // Code
-						 // toggle chapterStatus
-						 } label: {
-						 /*  Changing of eye pseudo code
-						  if chapterStatus = read
-						  Image(systemName: "eye")
-						  .frame(...)
-						  else
-						  Image(systemName: "eye.slash")
-						  .frame(...)
-						  
-						  propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
-						  */
-						 Image(systemName: "eye")
-						 .frame(minWidth: 50, maxWidth: 50, minHeight: 20)
-						 }
-						 .padding()
-						 .background(Color(.systemGray6))
-						 .foregroundColor(Color.red)
-						 */
-						
 						// Chapter element
 						NavigationLink(destination: Reader(series: series, chapter: chapter.value as! String), label: {
 							HStack {
@@ -127,14 +102,11 @@ struct SeriesView: View {
 								Spacer()
 								Image(systemName: "chevron.right")
 							}
-							//Label("Chapter \(chapter + 1)", systemImage: "book")
 							.font(.headline)
 							.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
 							.padding()
 							.foregroundColor(.red)
 							.background(Color(.systemGray6))
-							//.cornerRadius(15)
-							// set frame after background
 						})
 						
 						

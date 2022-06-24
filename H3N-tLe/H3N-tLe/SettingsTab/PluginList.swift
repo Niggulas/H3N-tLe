@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PluginList: View {
 	
-	// Get an array of currently installed plugins
+	// Get an array of all currently installed plugins
 	@State var plugInList = plugInManager.getAllPlugInNames()
 	
 	var body: some View {
@@ -21,7 +21,7 @@ struct PluginList: View {
 			ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
 				
 				/*
-				 if the .json file of the plugin containes a link, you can tap the element to ofen the link
+				 if the maifest.json file of the plugin containes a link, you can tap the element to open the link
 				 and in the right side of the element a "link" icon will apear
 				 */
 				if let url = plugInManager.getPlugInWebsite(plugIn: plugInName.value as! String) {
@@ -37,7 +37,7 @@ struct PluginList: View {
 					
 				}
 				
-				// if the .json file doesn't contain a link the element just contains the Name of the Plugin
+				// if the manifest.json file doesn't contain a link the element just contains the Name of the Plugin
 				else {
 					Text(plugInName.value as! String)
 						.foregroundColor(.red)

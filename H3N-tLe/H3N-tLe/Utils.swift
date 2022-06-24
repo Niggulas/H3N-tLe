@@ -44,12 +44,14 @@ func readJsonFromFile(url: URL) -> Any? {
 	}
 }
 
-// write a json object to a file
-func writeJsonToFile(url: URL, json: Any) {
-	do {
-		let data = try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted)
-		try data.write(to: url, options: [])
-	} catch {
-		return
-	}
+// Convert something to a JSON string and write it to a file
+func writeJsonToFile(url: URL, json: Any) throws {
+	let data = try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted)
+	try data.write(to: url, options: [])
+}
+
+// Decodes the base64 String and writes it to a file
+func writeBase64ToFile(url: URL, base64: String) throws {
+	let data = Data(base64Encoded: base64)
+	try data!.write(to: url)
 }
