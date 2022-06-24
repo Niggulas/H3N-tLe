@@ -14,6 +14,12 @@ struct SeriesView: View {
 	var body: some View {
 		ScrollView (.vertical, showsIndicators: false, content:{
 			// Series Information
+			Text(series.title)
+				.font(.title)
+				.bold()
+				.padding()
+				.frame(alignment: .center)
+			
 			HStack {
 				// Cover
 				if series.getCoverUrl() != nil {
@@ -32,21 +38,11 @@ struct SeriesView: View {
 					}
 				}
 				
-				// Title & Description
-				VStack {
-					// Title
-					Text(series.title)
-						.font(.title)
-						.bold()
-						.padding()
-					
-					// Description
-					Text(series.description)
-						.font(.body)
-					
-					Spacer()
-					
-				}
+				// Description
+				Text(series.description)
+					.font(.body)
+					.lineLimit(9)
+				
 			}
 			
 			/*
@@ -74,36 +70,19 @@ struct SeriesView: View {
 				.foregroundColor(Color.red)
 				.cornerRadius(15)
 				
-				// Update & mark as read buttons
-				HStack {
-					
-					// Update button
-					Button {
-						series.updateChapters()
-					} label: {
-						Text("Update")
-							.font(.headline)
-							.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-					}
-					.padding()
-					.background(Color(.systemGray6))
-					.foregroundColor(Color.red)
-					.cornerRadius(15)
-					
-					// Mark as read button
-					Button {
-						series.markAllChaptersAsRead()
-					} label: {
-						Text("Mark as read")
-							.font(.headline)
-							.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-					}
-					.padding()
-					.background(Color(.systemGray6))
-					.foregroundColor(Color.red)
-					.cornerRadius(15)
-					
+				// Clear last read chapter button
+				Button {
+					series.clearLastReadChapter()
+				} label: {
+					Text("Mark as unread")
+						.font(.headline)
+						.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
 				}
+				.padding()
+				.background(Color(.systemGray6))
+				.foregroundColor(Color.red)
+				.cornerRadius(15)
+				.padding()
 			}
 			.padding()
 			
@@ -164,24 +143,6 @@ struct SeriesView: View {
 					Divider()
 				}
 			}
-			.cornerRadius(15)
-			.padding()
-			
-			// Seperator
-			Divider()
-			
-			// Mark as unread
-			Button {
-				series.clearReadChapters()
-				series.clearLastReadChapter()
-			} label: {
-				Text("Mark as unread")
-					.font(.headline)
-					.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-			}
-			.padding()
-			.background(Color(.systemGray6))
-			.foregroundColor(Color.red)
 			.cornerRadius(15)
 			.padding()
 			
