@@ -8,7 +8,7 @@
 import Foundation
 
 class Series: Identifiable {
-	enum SeriesErrors: Error {
+	private enum SeriesErrors: Error {
 		case SeriesDoesntExist
 		case SeriesAlreadyExist
 		case InvalidCoverFileName
