@@ -14,6 +14,13 @@ struct SeriesView: View {
 	var body: some View {
 		ScrollView (.vertical, showsIndicators: false, content:{
 			// Series Information
+			// Title
+			Text(series.title)
+				.font(.title)
+				.bold()
+				.padding()
+				.frame(alignment: .center)
+			
 			HStack {
 				// Cover
 				if series.getCoverUrl() != nil {
@@ -32,21 +39,11 @@ struct SeriesView: View {
 					}
 				}
 				
-				// Title & Description
-				VStack {
-					// Title
-					Text(series.title)
-						.font(.title)
-						.bold()
-						.padding()
-					
-					// Description
-					Text(series.description)
-						.font(.body)
-					
-					Spacer()
-					
-				}
+				// Description
+				Text(series.description)
+					.font(.body)
+					.lineLimit(9)
+				
 			}
 			
 			/*
