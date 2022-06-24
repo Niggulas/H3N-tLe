@@ -140,9 +140,6 @@ class Library {
 		 If we got a URL to the next chapter we just simply repeat everything with that URL.
 		 */
 		
-		// Gets only set now because we don't want to automatically use a PlugIn which failed to do what it should
-		series!.setLastPluginName(currentDownloadPluginName!)
-		
 		if let nextUrlString = info!["nextUrl"] as? String {
 			if let nextUrl = URL(string: nextUrlString) {
 				/*
