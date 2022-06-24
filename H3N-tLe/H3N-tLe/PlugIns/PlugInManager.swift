@@ -19,7 +19,6 @@ class PlugInManager {
 			try! fileManager.createDirectory(at: PlugInManager.plugInsDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
 		}
 		
-		// TLDR: Avoid an error - Explaination: Basiacally useless because they get overwritten immediately but required to be able to use self
 		nameToPlugInMap = [String: PlugIn]()
 		domainToPlugInNameListMap = [String: [String]]()
 		
@@ -30,8 +29,8 @@ class PlugInManager {
 	private var domainToPlugInNameListMap: [String: [String]]
 	
 	func registerPlugIns() {
-		nameToPlugInMap = [String: PlugIn]()
-		domainToPlugInNameListMap = [String: [String]]()
+		nameToPlugInMap.removeAll()
+		domainToPlugInNameListMap.removeAll()
 		
 		listDirectories(url: PlugInManager.plugInsDirectoryUrl).forEach { dir in
 			if let plugIn = try? PlugIn(name: dir.lastPathComponent) {
@@ -48,8 +47,8 @@ class PlugInManager {
 	}
 	
 	func getAllPlugInNames() -> [String] {
-		// map is used to get a value of type [String] because "as [String]" doesn't work
-		return nameToPlugInMap.keys.map { $0 }
+		// filter is used to get a value of type [String] because "as [String]" doesn't work
+		return nameToPlugInMap.keys.filter { _ in true }
 	}
 	
 	func getPlugInWebsite(plugIn name: String) -> URL? {

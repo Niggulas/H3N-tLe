@@ -31,7 +31,8 @@ class PlugIn {
 		
 		let manifest = readJsonFromFile(url: manifestURL) as? [String: String]
 		
-		if manifest == nil || !(manifest?.keys.contains(PlugIn.manifestVersionKey) ?? false) {
+		// Throw an error if the manifest is invalid or if the manifest version is nit the currently supported one
+		if !(manifest?.keys.contains(PlugIn.manifestVersionKey) ?? false) {
 			throw PlugInError.InvalidManifest
 		} else if manifest?[PlugIn.manifestVersionKey] != PlugIn.manifestVersion {
 			throw PlugInError.UnsupportedManifestVersion
@@ -48,12 +49,14 @@ class PlugIn {
 		try! domains.forEach {
 			let path = manifest![$0]!
 			
+			// Make sure the PlugIn can only use files in its directory
 			if path.contains("..") {
 				throw PlugInError.ManifestContainsInvalidPath
 			}
 			
 			let url = URL(string: path, relativeTo: directory)!
 			
+			// Throw an error if the file doesn't exist or isn't a file
 			if !fileManager.fileExists(atPath: url.path) || isDirectory(url: url) {
 				throw PlugInError.ManifestContainsInvalidPath
 			}
@@ -68,8 +71,8 @@ class PlugIn {
 	private var domainToScriptUrlMap = [String: URL]()
 	
 	func getSupportedDomains() -> [String] {
-		// map is used to get a value of type [String] because "as [String]" doesn't work
-		return domainToScriptUrlMap.keys.map { $0 }
+		// filter is used to get a value of type [String] because "as [String]" doesn't work
+		return domainToScriptUrlMap.keys.filter { _ in true }
 	}
 	
 	func getScriptForDomain(_ domain: String) -> String? {

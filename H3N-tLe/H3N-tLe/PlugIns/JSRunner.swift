@@ -10,42 +10,6 @@ import WebKit
 import SwiftUI
 
 class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithReply {
-	init(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool) {
-		contentWorld = WKContentWorld.defaultClient
-		
-		self.showView = showView
-		self.hideView = hideView
-		self.isViewVisible = isViewVisible
-		
-		super.init()
-		
-		initConfig(defaultScripts: [String]())
-	}
-	
-	init(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool, defaultScripts: [String]) {
-		contentWorld = WKContentWorld.defaultClient
-		
-		self.showView = showView
-		self.hideView = hideView
-		self.isViewVisible = isViewVisible
-		
-		super.init()
-		
-		initConfig(defaultScripts: defaultScripts)
-	}
-	
-	init(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool, contentWorld: WKContentWorld) {
-		self.contentWorld = contentWorld
-		
-		self.showView = showView
-		self.hideView = hideView
-		self.isViewVisible = isViewVisible
-		
-		super.init()
-		
-		initConfig(defaultScripts: [String]())
-	}
-	
 	init(showView: @escaping () -> Void, hideView: @escaping () -> Void, isViewVisible: @escaping () -> Bool, contentWorld: WKContentWorld, defaultScripts: [String]) {
 		self.contentWorld = contentWorld
 		
@@ -55,11 +19,6 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		
 		super.init()
 		
-		initConfig(defaultScripts: defaultScripts)
-	}
-	
-	// Configurations that have to run in all inits
-	private func initConfig(defaultScripts: [String]) {
 		// Add the message handlers to the WebView (the ones that receive all messages and then decide which message handler function to execute)
 		view.wkWebView.configuration.userContentController.add(self, contentWorld: contentWorld, name: "noReply")
 		view.wkWebView.configuration.userContentController.addScriptMessageHandler(self, contentWorld: contentWorld, name: "reply")
@@ -123,14 +82,13 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		 Add default scripts
 		 */
 		
-		// Create the default script objects
+		// Add the JSRunner default script that provides ease of use functions for sending messages to the message handlers
+		let runnerDefaultScript = try! String(contentsOf: Bundle.main.url(forResource: "JSRunnerDefaultScript", withExtension: "js")!)
+		self.defaultScripts.append(WKUserScript(source: runnerDefaultScript, injectionTime: .atDocumentStart, forMainFrameOnly: true, in: contentWorld))
+		
+		// Create the other default script objects
 		for defaultScript in defaultScripts {
 			self.defaultScripts.append(WKUserScript(source: defaultScript, injectionTime: .atDocumentStart, forMainFrameOnly: true, in: contentWorld))
-		}
-		
-		// Add the JSRunner default script that provides easier access to the postMessage functions
-		if let runnerDefaultScriptUrl = Bundle.main.url(forResource: "JSRunnerDefaultScript", withExtension: "js") {
-			try! self.defaultScripts.insert(WKUserScript(source: String(contentsOf: runnerDefaultScriptUrl), injectionTime: .atDocumentStart, forMainFrameOnly: true, in: contentWorld), at: 0)
 		}
 	}
 	
