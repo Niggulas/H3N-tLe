@@ -57,7 +57,7 @@ struct SeriesView: View {
 			Divider()
 			
 			// Upper Buttons
-			VStack {
+			HStack {
 				
 				// Continue button: open the first unread chapter
 				NavigationLink (destination: Reader(series: series, chapter: series.getNextUnreadChapter() ), label: {
@@ -82,7 +82,6 @@ struct SeriesView: View {
 				.background(Color(.systemGray6))
 				.foregroundColor(Color.red)
 				.cornerRadius(15)
-				.padding()
 			}
 			.padding()
 			
