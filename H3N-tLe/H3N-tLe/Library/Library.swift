@@ -47,10 +47,6 @@ class Library {
 		}
 	}
 	
-	func addNewSeriesToSeriesList(_ series: Series) {
-		seriesList.insert(series, at: 0)
-	}
-	
 	func download(url: URL, with pluginName: String) {
 		// Stop whatever is currently running to make sure it doesn't mess with the preparations
 		runner.stop()
@@ -96,7 +92,6 @@ class Library {
 		var series = try? Series(existingSeriesName: seriesInfo!["title"] as! String)
 		if series == nil {
 			series = try! Series(title: seriesInfo!["title"] as! String, description: seriesInfo!["description"] as? String ?? "")
-			library.addNewSeriesToSeriesList(series!)
 		}
 		// Set al the additional information that the PlugIn might provide
 		if let status = seriesInfo!["status"] as? String {
