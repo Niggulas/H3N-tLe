@@ -70,7 +70,7 @@ struct LibraryTab: View {
 								
 								// Show the status of the series in a color corralating to the status
 								switch series.getStatus() {
-									case "dropped" :
+									case "dropped":
 										Text(series.getStatus())
 											.font(.body)
 											.lineLimit(1)
@@ -78,7 +78,7 @@ struct LibraryTab: View {
 											.background(Color(.systemGray5))
 											.cornerRadius(5)
 									
-									case "ongoing" :
+									case "ongoing":
 										Text(series.getStatus())
 											.font(.body)
 											.lineLimit(1)
@@ -86,7 +86,7 @@ struct LibraryTab: View {
 											.background(Color(.systemGray5))
 											.cornerRadius(5)
 									
-									case "hiatus" :
+									case "hiatus":
 										Text(series.getStatus())
 											.font(.body)
 											.lineLimit(1)
@@ -94,7 +94,7 @@ struct LibraryTab: View {
 											.background(Color(.systemGray5))
 											.cornerRadius(5)
 										
-									case "finished" :
+									case "finished":
 										Text(series.getStatus())
 											.font(.body)
 											.lineLimit(1)
@@ -102,7 +102,7 @@ struct LibraryTab: View {
 											.background(Color(.systemGray5))
 											.cornerRadius(5)
 									
-									default :
+									default:
 										Text(series.getStatus())
 											.font(.body)
 											.lineLimit(1)
