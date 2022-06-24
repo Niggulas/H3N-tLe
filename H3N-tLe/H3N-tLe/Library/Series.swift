@@ -32,7 +32,7 @@ class Series: Identifiable {
 		infoUrl = localUrl.appendingPathComponent("info.json")
 		
 		// Throw an error if the series doesn't exist
-		if !isDirectory(url: localUrl) || fileManager.fileExists(atPath: infoUrl.path) {
+		if !isDirectory(url: localUrl) || !fileManager.fileExists(atPath: infoUrl.path) {
 			throw SeriesErrors.SeriesDoesntExist
 		}
 		
@@ -58,7 +58,7 @@ class Series: Identifiable {
 		
 		remoteUrl = json!["url"] as? String
 		status = json!["status"] as? String
-		if !Series.STATUS_STRINGS.contains(status!) {
+		if status == nil || !Series.STATUS_STRINGS.contains(status!) {
 			status = nil
 		}
 		
