@@ -191,7 +191,7 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		let processorName = messageBody.first!
 		let stringMessage = messageBody.last!
 		
-		// Do nothing if the message handler doesn't exist
+		// Do nothing if the message processor doesn't exist
 		if !messageProcessors.keys.contains(processorName) {
 			return
 		}
@@ -222,7 +222,7 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		let processorName = messageBody.first!
 		let stringMessage = messageBody.last!
 		
-		// Send an error back if the message handler doesn't exist
+		// Send an error back if the message processor doesn't exist
 		if !messageProcessorsThatReply.keys.contains(processorName) {
 			replyHandler(nil, "No processor with that name: \(processorName)")
 			return
