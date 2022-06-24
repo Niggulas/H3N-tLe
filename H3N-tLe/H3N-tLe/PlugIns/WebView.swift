@@ -66,8 +66,8 @@ final class WebView: NSObject, UIViewRepresentable {
 	private var remoteContentAllowed = true
 	private var contentBlockerRuleList = WKContentRuleList()
 	
-	var url: URL?
-	var html: String?
+	private var url: URL?
+	private var html: String?
 	
 	/*
 	 (Re)Load a page
