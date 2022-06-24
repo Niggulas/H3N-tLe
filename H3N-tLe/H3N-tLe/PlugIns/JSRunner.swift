@@ -47,19 +47,19 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		// Add a message processor for requests to allow and disallow the loading of content such as images or styles
 		addMessageProcessor({ message in
 			if message == "allow" {
-				self.view.allowContent()
+				self.view.allowRemoteContent()
 			} else if message == "disallow" {
-				self.view.disallowContent()
+				self.view.disallowRemoteContent()
 			}
-		}, name: "Content")
+		}, name: "RemoteContent")
 		
 		// Add a message processor that answers requests for the current state of content blocking ("allowed" or "forbidden")
 		addMessageProcessorThatReplies({message in
 			if message == "state" {
-				return self.view.isContentAllowed() ? "allowed" : "forbidden"
+				return self.view.isRemoteContentAllowed() ? "allowed" : "forbidden"
 			}
 			return ""
-		}, name: "Content")
+		}, name: "RemoteContent")
 		
 		// Add a message processor for requests to allow and disallow the execution of JavaScript
 		addMessageProcessor({ message in

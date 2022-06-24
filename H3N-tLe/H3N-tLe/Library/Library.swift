@@ -53,7 +53,7 @@ class Library {
 		
 		// Prepare
 		runner.view.disallowJS()
-		runner.view.disallowContent()
+		runner.view.disallowRemoteContent()
 		
 		// If for some reason there is no JavaScript even though the PlugIn was listed we don't want to do anything to prevent crashes (shouldn't ever happen
 		if let js = plugInManager.getPlugInJSForHost(host: url.host!, plugInName: pluginName) {
