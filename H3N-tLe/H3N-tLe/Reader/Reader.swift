@@ -109,6 +109,7 @@ struct Reader: View {
             }
             
         })
+		.navigationTitle(series.getChapterList()[chapterIndex])
         /*
          if there is no chapter afterwards, you can't use the next chapter button to check if the user read the chapter
          so you need to check if it was opened

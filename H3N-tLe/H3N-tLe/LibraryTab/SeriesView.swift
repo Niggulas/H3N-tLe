@@ -15,12 +15,14 @@ struct SeriesView: View {
 		ScrollView (.vertical, showsIndicators: false, content:{
 			// Series Information
 			// Title
-			Text(series.title)
-				.font(.title)
-				.bold()
-				.padding()
-				.frame(alignment: .center)
-			
+			HStack {
+				Text(series.title)
+					.font(.title)
+					.bold()
+					.padding()
+					.frame(alignment: .leading)
+				Spacer()
+			}
 			HStack {
 				// Cover
 				if series.getCoverUrl() != nil {
@@ -184,6 +186,7 @@ struct SeriesView: View {
 			
 			
 		})
-		
+		.navigationTitle("")
+		.navigationBarTitleDisplayMode(.inline)
 	}
 }
