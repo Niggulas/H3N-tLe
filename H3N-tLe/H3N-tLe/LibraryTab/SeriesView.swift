@@ -172,6 +172,7 @@ struct SeriesView: View {
 							
 							Button {
 								// TODO: Wait for a markChapterAsUnread funtion
+								series.markChapterAsUnread(chapter: chapter.value as! String)
 								refresh()
 							} label: {
 								Image(systemName: "eye")
