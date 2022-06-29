@@ -9,10 +9,29 @@ import SwiftUI
 
 struct SeriesView: View {
 	
+	@State var isDescriptionSheetVisible = false
 	@State var series: Series
+	@State var seriesBackup: Series
+	/*
+	 @State var refresh = false
+	 @State private var eye = "eye.slash"
+	 
+	 func chooseEye (index: String) {
+	 if series.didReadChapter(index) {
+	 eye = "eye"
+	 } else {
+	 eye = "eye.slash"
+	 }
+	 }
+	 */
+	func refresh() {
+		series = library.getSeriesList()[0]
+		series = library.getSeriesList()[1]
+		series = seriesBackup
+	}
 	
 	var body: some View {
-		ScrollView (.vertical, showsIndicators: false, content:{
+		ScrollView (.vertical, /*showsIndicators: false,*/ content:{
 			// Series Information
 			// Title
 			HStack {
@@ -23,6 +42,7 @@ struct SeriesView: View {
 					.frame(alignment: .leading)
 				Spacer()
 			}
+			// Cover & Description
 			HStack {
 				// Cover
 				if series.getCoverUrl() != nil {
@@ -42,9 +62,15 @@ struct SeriesView: View {
 				}
 				
 				// Description
-				Text(series.description)
-					.font(.body)
-					.lineLimit(9)
+				Button {
+					isDescriptionSheetVisible = true
+				} label: {
+					Text(series.description)
+						.font(.body)
+						.lineLimit(9)
+						.multilineTextAlignment(.leading)
+				}
+				.foregroundColor(.primary)
 				
 			}
 			
@@ -92,6 +118,7 @@ struct SeriesView: View {
 					// Mark as read button
 					Button {
 						series.markAllChaptersAsRead()
+						refresh()
 					} label: {
 						Text("Mark as read")
 							.font(.headline)
@@ -141,6 +168,34 @@ struct SeriesView: View {
 						 .foregroundColor(Color.red)
 						 */
 						
+						if series.didReadChapter(chapter.value as! String) {
+							
+							Button {
+								// TODO: Wait for a markChapterAsUnread funtion
+								refresh()
+							} label: {
+								Image(systemName: "eye")
+									.frame(minWidth: 50, maxWidth: 50, minHeight: 20)
+									.padding()
+									.background(Color(.systemGray6))
+									.foregroundColor(Color.red)
+								
+							}
+						} else {
+							Button  {
+								series.markChapterAsRead(chapter: chapter.value as! String)
+								refresh()
+							} label: {
+								Image(systemName: "eye.slash")
+									.frame(minWidth: 50, maxWidth: 50, minHeight: 20)
+									.padding()
+									.background(Color(.systemGray6))
+									.foregroundColor(Color.red)
+							}
+							
+						}
+						
+						
 						// Chapter element
 						NavigationLink(destination: Reader(series: series, chapter: chapter.value as! String), label: {
 							HStack {
@@ -173,6 +228,7 @@ struct SeriesView: View {
 			Button {
 				series.clearReadChapters()
 				series.clearLastReadChapter()
+				refresh()
 			} label: {
 				Text("Mark as unread")
 					.font(.headline)
@@ -188,5 +244,55 @@ struct SeriesView: View {
 		})
 		.navigationTitle("")
 		.navigationBarTitleDisplayMode(.inline)
+		.sheet(isPresented: $isDescriptionSheetVisible) {
+			// TODO: Warning not to get your passwords stolen here
+			// TODO: Melde nich nicht an wenn du dem pluginautor nicht vertraust
+			// die TODO darüber wurde erledigt
+			
+			VStack (spacing: 0) {
+				
+				HStack {
+					
+					Button {
+						isDescriptionSheetVisible = false
+					} label: {
+						Text("Hide")
+							.font(.headline)
+					}
+					.padding()
+					//.background(Color(.systemGray4))
+					.foregroundColor(Color.red)
+					
+					Spacer()
+				}
+				
+				Divider()
+				
+				Text("Description:")
+					.font(.title)
+					.bold()
+					.padding()
+					.multilineTextAlignment(.leading)
+				
+				Text(series.description)
+				
+				Spacer()
+				
+			}
+			.ignoresSafeArea()
+			
+		}
+		.toolbar {
+			Button {
+				series = library.getSeriesList()[0]
+				series = library.getSeriesList()[1]
+				series = seriesBackup
+				print("refresh button pressed")
+			} label: {
+				Text("Refresh")
+					.foregroundColor(.red)
+			}
+			
+		}
 	}
 }

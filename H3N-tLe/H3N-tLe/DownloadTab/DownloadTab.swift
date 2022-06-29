@@ -56,10 +56,19 @@ struct DownloadTab: View {
 								.font(.headline)
 						}
 						.padding()
-						//.background(Color(.systemGray4))
 						.foregroundColor(Color.red)
 						
 						Spacer()
+						
+						Button {
+							// TODO: Write code
+						} label: {
+							Text("Stop")
+								.font(.headline)
+						}
+						.padding()
+						.foregroundColor(Color.red)
+						
 					}
 					
 					library.runner.view
