@@ -9,15 +9,14 @@ import SwiftUI
 
 struct SeriesView: View {
 	
-	@State var isDescriptionSheetVisible = false
-	@State var series: Series
-	@State var seriesBackup: Series
+	@State var isSheetVisible = false
+	@State var series: Series?  
 	/*
 	 @State var refresh = false
 	 @State private var eye = "eye.slash"
 	 
 	 func chooseEye (index: String) {
-	 if series.didReadChapter(index) {
+	 if series!.didReadChapter(index) {
 	 eye = "eye"
 	 } else {
 	 eye = "eye.slash"
@@ -25,9 +24,11 @@ struct SeriesView: View {
 	 }
 	 */
 	func refresh() {
-		series = library.getSeriesList()[0]
-		series = library.getSeriesList()[1]
-		series = seriesBackup
+		//series = library.getSeriesList()[0]
+		//series = library.getSeriesList()[1]
+		let tmp = series
+		series = nil
+		series = tmp
 	}
 	
 	var body: some View {
@@ -35,7 +36,7 @@ struct SeriesView: View {
 			// Series Information
 			// Title
 			HStack {
-				Text(series.title)
+				Text(series!.title)
 					.font(.title)
 					.bold()
 					.padding()
@@ -45,8 +46,8 @@ struct SeriesView: View {
 			// Cover & Description
 			HStack {
 				// Cover
-				if series.getCoverUrl() != nil {
-					AsyncImage(url: series.getCoverUrl()) { phase in
+				if series!.getCoverUrl() != nil {
+					AsyncImage(url: series!.getCoverUrl()) { phase in
 						if let image = phase.image {
 							image
 								.resizable()
@@ -63,9 +64,9 @@ struct SeriesView: View {
 				
 				// Description
 				Button {
-					isDescriptionSheetVisible = true
+					isSheetVisible = true
 				} label: {
-					Text(series.description)
+					Text(series!.description)
 						.font(.body)
 						.lineLimit(9)
 						.multilineTextAlignment(.leading)
@@ -89,7 +90,7 @@ struct SeriesView: View {
 			VStack {
 				
 				// Continue button: open the first unread chapter
-				NavigationLink (destination: Reader(series: series, chapter: series.getNextUnreadChapter() ), label: {
+				NavigationLink (destination: Reader(series: series!, chapter: series!.getNextUnreadChapter() ), label: {
 					Text("Continue")
 						.font(.headline)
 						.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
@@ -104,7 +105,7 @@ struct SeriesView: View {
 					
 					// Update button
 					Button {
-						series.updateChapters()
+						series!.updateChapters()
 					} label: {
 						Text("Update")
 							.font(.headline)
@@ -117,7 +118,7 @@ struct SeriesView: View {
 					
 					// Mark as read button
 					Button {
-						series.markAllChaptersAsRead()
+						series!.markAllChaptersAsRead()
 						refresh()
 					} label: {
 						Text("Mark as read")
@@ -139,7 +140,7 @@ struct SeriesView: View {
 			// Chapter List
 			VStack (spacing: 0) {
 				
-				ForEach(series.getChapterList().map { IdentifieableAny(value: $0) } ) { chapter in
+				ForEach(series!.getChapterList().map { IdentifieableAny(value: $0) } ) { chapter in
 					
 					// Chapter element
 					HStack (spacing: 0){
@@ -168,11 +169,11 @@ struct SeriesView: View {
 						 .foregroundColor(Color.red)
 						 */
 						
-						if series.didReadChapter(chapter.value as! String) {
+						if series!.didReadChapter(chapter.value as! String) {
 							
 							Button {
 								// TODO: Wait for a markChapterAsUnread funtion
-								series.markChapterAsUnread(chapter: chapter.value as! String)
+								series!.markChapterAsUnread(chapter: chapter.value as! String)
 								refresh()
 							} label: {
 								Image(systemName: "eye")
@@ -184,7 +185,7 @@ struct SeriesView: View {
 							}
 						} else {
 							Button  {
-								series.markChapterAsRead(chapter: chapter.value as! String)
+								series!.markChapterAsRead(chapter: chapter.value as! String)
 								refresh()
 							} label: {
 								Image(systemName: "eye.slash")
@@ -198,7 +199,7 @@ struct SeriesView: View {
 						
 						
 						// Chapter element
-						NavigationLink(destination: Reader(series: series, chapter: chapter.value as! String), label: {
+						NavigationLink(destination: Reader(series: series!, chapter: chapter.value as! String), label: {
 							HStack {
 								Text(chapter.value as! String)
 								Spacer()
@@ -227,8 +228,8 @@ struct SeriesView: View {
 			
 			// Mark as unread
 			Button {
-				series.clearReadChapters()
-				series.clearLastReadChapter()
+				series!.clearReadChapters()
+				series!.clearLastReadChapter()
 				refresh()
 			} label: {
 				Text("Mark as unread")
@@ -245,7 +246,7 @@ struct SeriesView: View {
 		})
 		.navigationTitle("")
 		.navigationBarTitleDisplayMode(.inline)
-		.sheet(isPresented: $isDescriptionSheetVisible) {
+		.sheet(isPresented: $isSheetVisible) {
 			// TODO: Warning not to get your passwords stolen here
 			// TODO: Melde nich nicht an wenn du dem pluginautor nicht vertraust
 			// die TODO darüber wurde erledigt
@@ -255,7 +256,7 @@ struct SeriesView: View {
 				HStack {
 					
 					Button {
-						isDescriptionSheetVisible = false
+						isSheetVisible = false
 					} label: {
 						Text("Hide")
 							.font(.headline)
@@ -275,7 +276,7 @@ struct SeriesView: View {
 					.padding()
 					.multilineTextAlignment(.leading)
 				
-				Text(series.description)
+				Text(series!.description)
 				
 				Spacer()
 				
@@ -283,17 +284,19 @@ struct SeriesView: View {
 			.ignoresSafeArea()
 			
 		}
-		.toolbar {
+		.onAppear {
+			refresh()
+		}
+		.toolbar{
 			Button {
-				series = library.getSeriesList()[0]
-				series = library.getSeriesList()[1]
-				series = seriesBackup
-				print("refresh button pressed")
+				isSheetVisible = true
 			} label: {
-				Text("Refresh")
-					.foregroundColor(.red)
+				Label("Tags", systemImage: "tag")
+				
+				//Text("Tags")
 			}
-			
+
 		}
 	}
+
 }
