@@ -61,7 +61,7 @@ struct DownloadTab: View {
 						Spacer()
 						
 						Button {
-							// TODO: Write code
+							library.runner.stop()
 						} label: {
 							Text("Stop")
 								.font(.headline)
