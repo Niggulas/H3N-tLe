@@ -19,7 +19,7 @@ struct LibraryTab: View {
 				Form{
 					ForEach(seriesList) { series in
 						// Series Element
-						NavigationLink(destination: SeriesView(series: series, seriesBackup: series), label: {
+						NavigationLink(destination: SeriesView(series: series), label: {
 							
 							// Cover image with option to 
 							HStack{
@@ -154,6 +154,10 @@ struct LibraryTab: View {
 			library.updateSeriesList()
 			seriesList = library.getSeriesList()
 		})
+		.onAppear{
+			library.updateSeriesList()
+			seriesList = library.getSeriesList()
+		}
 		
 	}
 	
