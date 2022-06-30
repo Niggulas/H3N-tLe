@@ -46,8 +46,8 @@ struct Reader: View {
                 // Check if it is the last chapter, if not, then show a next chapter button
                 if !isLastChapter() {
                     Button {
+						series.markChapterAsRead(chapter: series.getChapterList()[chapterIndex])
                         chapterIndex += 1
-                        series.markChapterAsRead(chapter: series.getChapterList()[chapterIndex])
                     } label: {
                         Image(systemName: "arrow.right")
                             .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
@@ -94,8 +94,8 @@ struct Reader: View {
                 // Check if it is the last chapter, if not, then show a next chapter button
                 if !isLastChapter() {
                     Button {
+						series.markChapterAsRead(chapter: series.getChapterList()[chapterIndex])
                         chapterIndex += 1
-                        series.markChapterAsRead(chapter: series.getChapterList()[chapterIndex])
                     } label: {
                         Image(systemName: "arrow.right")
                             .frame(minWidth: 1, maxWidth: .infinity, minHeight: 20)
