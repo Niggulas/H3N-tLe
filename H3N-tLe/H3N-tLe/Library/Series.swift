@@ -214,6 +214,7 @@ class Series: Identifiable {
 		
 		if let index = readChapterList!.firstIndex(of: chapter) {
 			readChapterList!.remove(at: index)
+			writeInfo()
 		}
 	}
     
