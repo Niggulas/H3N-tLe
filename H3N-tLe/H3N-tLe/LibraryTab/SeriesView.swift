@@ -10,7 +10,7 @@ import SwiftUI
 struct SeriesView: View {
 	
 	@State var isSheetVisible = false
-	@State var series: Series?  
+	@State var series: Series?
 	/*
 	 @State var refresh = false
 	 @State private var eye = "eye.slash"
@@ -80,168 +80,175 @@ struct SeriesView: View {
 			 Can't use .padding() on the Divider() because we need .padding() on the buttons so they don't go edge to edge
 			 Can't use .padding() on the HStack because we don't want it to be pushed in on the sides
 			 */
-			Text("")
-			Text("")
+			//Text("")
 			
 			// Seperator
 			Divider()
 			
 			// Upper Buttons
-			VStack {
+			HStack {
+				
+				Spacer()
 				
 				// Continue button: open the first unread chapter
 				NavigationLink (destination: Reader(series: series!, chapter: series!.getNextUnreadChapter() ), label: {
 					Text("Continue")
 						.font(.headline)
-						.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+						.frame(minWidth: 100, maxWidth: 120, minHeight: 10)
 				})
-				.padding()
+				.padding(12)
 				.background(Color(.systemGray6))
 				.foregroundColor(Color.red)
 				.cornerRadius(15)
 				
-				// Update & mark as read buttons
-				HStack {
-					
-					// Update button
-					Button {
-						series!.updateChapters()
-					} label: {
-						Text("Update")
-							.font(.headline)
-							.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-					}
-					.padding()
-					.background(Color(.systemGray6))
-					.foregroundColor(Color.red)
-					.cornerRadius(15)
-					
-					// Mark as read button
-					Button {
-						series!.markAllChaptersAsRead()
-						refresh()
-					} label: {
-						Text("Mark as read")
-							.font(.headline)
-							.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-					}
-					.padding()
-					.background(Color(.systemGray6))
-					.foregroundColor(Color.red)
-					.cornerRadius(15)
-					
+				Spacer()
+				
+				// Update button
+				Button {
+					series!.updateChapters()
+				} label: {
+					Text("Update")
+						.font(.headline)
+						.frame(minWidth: 100, maxWidth: 120, minHeight: 20)
 				}
+				.padding(12)
+				.background(Color(.systemGray6))
+				.foregroundColor(Color.red)
+				.cornerRadius(15)
+				
+				Spacer()
+				
+				// Mark as read button
+				/*
+				 Button {
+				 series!.markAllChaptersAsRead()
+				 refresh()
+				 } label: {
+				 Text("Mark as read")
+				 .font(.headline)
+				 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+				 }
+				 .padding()
+				 .background(Color(.systemGray6))
+				 .foregroundColor(Color.red)
+				 .cornerRadius(15)
+				 */
+				
+				
 			}
-			.padding()
 			
 			// Seperator
 			Divider()
 			
 			// Chapter List
-			VStack (spacing: 0) {
-				
-				ForEach(series!.getChapterList().map { IdentifieableAny(value: $0) } ) { chapter in
+			HStack {
+				Spacer()
+				VStack (spacing: 0) {
 					
-					// Chapter element
-					HStack (spacing: 0){
-						
-						// Eye Button
-						/*
-						 Button {
-						 // Code
-						 // toggle chapterStatus
-						 } label: {
-						 /*  Changing of eye pseudo code
-						  if chapterStatus = read
-						  Image(systemName: "eye")
-						  .frame(...)
-						  else
-						  Image(systemName: "eye.slash")
-						  .frame(...)
-						  
-						  propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
-						  */
-						 Image(systemName: "eye")
-						 .frame(minWidth: 50, maxWidth: 50, minHeight: 20)
-						 }
-						 .padding()
-						 .background(Color(.systemGray6))
-						 .foregroundColor(Color.red)
-						 */
-						
-						if series!.didReadChapter(chapter.value as! String) {
-							
-							Button {
-								// TODO: Wait for a markChapterAsUnread funtion
-								series!.markChapterAsUnread(chapter: chapter.value as! String)
-								refresh()
-							} label: {
-								Image(systemName: "eye")
-									.frame(minWidth: 50, maxWidth: 50, minHeight: 20)
-									.padding()
-									.background(Color(.systemGray6))
-									.foregroundColor(Color.red)
-								
-							}
-						} else {
-							Button  {
-								series!.markChapterAsRead(chapter: chapter.value as! String)
-								refresh()
-							} label: {
-								Image(systemName: "eye.slash")
-									.frame(minWidth: 50, maxWidth: 50, minHeight: 20)
-									.padding()
-									.background(Color(.systemGray6))
-									.foregroundColor(Color.red)
-							}
-							
-						}
-						
+					ForEach(series!.getChapterList().map { IdentifieableAny(value: $0) } ) { chapter in
 						
 						// Chapter element
-						NavigationLink(destination: Reader(series: series!, chapter: chapter.value as! String), label: {
-							HStack {
-								Text(chapter.value as! String)
-								Spacer()
-								Image(systemName: "chevron.right")
+						HStack (spacing: 0){
+							
+							// Eye Button
+							/*
+							 Button {
+							 // Code
+							 // toggle chapterStatus
+							 } label: {
+							 /*  Changing of eye pseudo code
+							  if chapterStatus = read
+							  Image(systemName: "eye")
+							  .frame(...)
+							  else
+							  Image(systemName: "eye.slash")
+							  .frame(...)
+							  
+							  propably need the functions "getChapterStatus" and "setChapterStatus" somewhere
+							  */
+							 Image(systemName: "eye")
+							 .frame(minWidth: 50, maxWidth: 50, minHeight: 20)
+							 }
+							 .padding()
+							 .background(Color(.systemGray6))
+							 .foregroundColor(Color.red)
+							 */
+							
+							if series!.didReadChapter(chapter.value as! String) {
+								
+								Button {
+									// TODO: Wait for a markChapterAsUnread funtion
+									series!.markChapterAsUnread(chapter: chapter.value as! String)
+									refresh()
+								} label: {
+									Image(systemName: "eye")
+										.frame(minWidth: 50, maxWidth: 50, minHeight: 20)
+										.padding()
+										.background(Color(.systemGray6))
+										.foregroundColor(Color.red)
+									
+								}
+							} else {
+								Button  {
+									series!.markChapterAsRead(chapter: chapter.value as! String)
+									refresh()
+								} label: {
+									Image(systemName: "eye.slash")
+										.frame(minWidth: 50, maxWidth: 50, minHeight: 20)
+										.padding()
+										.background(Color(.systemGray6))
+										.foregroundColor(Color.red)
+								}
+								
 							}
-							//Label("Chapter \(chapter + 1)", systemImage: "book")
-							.font(.headline)
-							.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-							.padding()
-							.foregroundColor(.red)
-							.background(Color(.systemGray6))
-							//.cornerRadius(15)
-							// set frame after background
-						})
-						
-						
+							
+							
+							// Chapter element
+							NavigationLink(destination: Reader(series: series!, chapter: chapter.value as! String), label: {
+								HStack {
+									Text(chapter.value as! String)
+									Spacer()
+									Image(systemName: "chevron.right")
+								}
+								//Label("Chapter \(chapter + 1)", systemImage: "book")
+								.font(.headline)
+								.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+								.padding()
+								.foregroundColor(.red)
+								.background(Color(.systemGray6))
+								//.cornerRadius(15)
+								// set frame after background
+							})
+							
+							
+						}
+						Divider()
 					}
-					Divider()
 				}
+				.cornerRadius(15)
+				Spacer()
 			}
-			.cornerRadius(15)
-			.padding()
-			
-			// Seperator
-			Divider()
-			
-			// Mark as unread
-			Button {
-				series!.clearReadChapters()
-				series!.clearLastReadChapter()
-				refresh()
-			} label: {
-				Text("Mark as unread")
-					.font(.headline)
-					.frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
-			}
-			.padding()
-			.background(Color(.systemGray6))
-			.foregroundColor(Color.red)
-			.cornerRadius(15)
-			.padding()
-			
+			//Mark as unread button
+			/*
+			 // Seperator
+			 Divider()
+			 
+			 // Mark as unread
+			 Button {
+			 series!.clearReadChapters()
+			 series!.clearLastReadChapter()
+			 refresh()
+			 } label: {
+			 Text("Mark as unread")
+			 .font(.headline)
+			 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 20)
+			 }
+			 .padding()
+			 .background(Color(.systemGray6))
+			 .foregroundColor(Color.red)
+			 .cornerRadius(15)
+			 .padding()
+			 */
 			
 		})
 		.navigationTitle("")
@@ -287,16 +294,18 @@ struct SeriesView: View {
 		.onAppear {
 			refresh()
 		}
-		.toolbar{
-			Button {
-				isSheetVisible = true
-			} label: {
-				Label("Tags", systemImage: "tag")
-				
-				//Text("Tags")
-			}
-
-		}
+		/*.toolbar{
+		 Button {
+		 isSheetVisible = true
+		 } label: {
+		 Label("Tags", systemImage: "tag")
+		 
+		 //Text("Tags")
+		 }
+		 
+		 }
+		 
+		 */
 	}
-
+	
 }
