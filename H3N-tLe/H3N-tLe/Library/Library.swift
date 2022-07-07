@@ -24,6 +24,7 @@ class Library {
 	
 	private var isRunnerSet = false
 	private var seriesList = [Series]()
+	private var tagList = [String]()
 	private var whiteList = [String]()
 	private var blackList = ["hidden"]
 	
@@ -31,6 +32,18 @@ class Library {
 	private var currentDownloadPluginName: String?
 	
 	var runner = JSRunner(showView: {}, hideView: {}, isViewVisible: {false})
+	
+	func addTagToTagList(name: String) {
+		if !tagList.contains(name) {
+			tagList.append(name)
+		}
+	}
+	
+	func removeTagFromTagList(name: String) {
+		if let index = tagList.firstIndex(of: name) {
+			tagList.remove(at: index)
+		}
+	}
 	
 	// Returns a filtered list of all series
 	func getSeriesList() -> [Series] {
