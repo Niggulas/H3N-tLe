@@ -239,7 +239,7 @@ class Series: Identifiable {
 		let chapterList = getChapterList()
         if let lastReadChapter = getLastReadChapter() {
 			let index = chapterList.firstIndex(of: lastReadChapter) ?? -1
-			return chapterList[index + 1]
+			return chapterList[chapterList.count > index + 1 ? index : 0]
         } else {
             return chapterList[0]
         }
