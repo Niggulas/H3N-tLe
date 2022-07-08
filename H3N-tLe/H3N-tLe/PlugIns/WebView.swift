@@ -45,8 +45,8 @@ final class WebView: NSObject, UIViewRepresentable {
 	
 	let wkWebView = WKWebView()
 	
-	private var contentAllowed = true
-	private var contentBlockerRuleList = WKContentRuleList()
+	private var remoteContentAllowed = true
+	private var remoteContentBlockerRuleList = WKContentRuleList()
 	
 	var url: URL?
 	var html: String?
@@ -59,7 +59,7 @@ final class WebView: NSObject, UIViewRepresentable {
 		
 		// Create the content blocker
 		WKContentRuleListStore.default().compileContentRuleList(
-			forIdentifier: "ContentBlocker",
+			forIdentifier: "RemoteContentBlocker",
 			// The actual ruels in JSON
 			// first part blocks all (no exception for PlugIns) requests, second part adds an exception for the document of the main frame
 			encodedContentRuleList: """
@@ -92,10 +92,10 @@ final class WebView: NSObject, UIViewRepresentable {
 				}
 				
 				// Write rule to variable
-				self.contentBlockerRuleList = ruleList!
+				self.remoteContentBlockerRuleList = ruleList!
 				
 				// Apply the rule list
-				self.disallowContent()
+				self.disallowRemoteContent()
 			}
 		)
 	}
@@ -125,33 +125,33 @@ final class WebView: NSObject, UIViewRepresentable {
 	}
 	
 	/*
-	 Allow/Disallow Content (loading of images, videos, frames, styles, scripts, XHR, ...)
+	 Allow/Disallow Remote Content (loading of images, videos, frames, styles, scripts, XHR, ...)
 	 */
 	
-	func isContentAllowed() -> Bool {
-		return contentAllowed
+	func isRemoteContentAllowed() -> Bool {
+		return remoteContentAllowed
 	}
 	
-	func allowContent() {
-		if isContentAllowed() {
+	func allowRemoteContent() {
+		if isRemoteContentAllowed() {
 			return
 		}
 		
-		contentAllowed = true
+		remoteContentAllowed = true
 		
 		// Stop blocking of all requests
-		wkWebView.configuration.userContentController.remove(contentBlockerRuleList)
+		wkWebView.configuration.userContentController.remove(remoteContentBlockerRuleList)
 	}
 	
-	func disallowContent() {
-		if !isContentAllowed() {
+	func disallowRemoteContent() {
+		if !isRemoteContentAllowed() {
 			return
 		}
 		
-		contentAllowed = false
+		remoteContentAllowed = false
 		
 		// Start blocking of all requests
-		wkWebView.configuration.userContentController.add(contentBlockerRuleList)
+		wkWebView.configuration.userContentController.add(remoteContentBlockerRuleList)
 		
 		wkWebView.stopLoading()
 	}

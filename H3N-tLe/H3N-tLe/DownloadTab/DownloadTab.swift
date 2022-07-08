@@ -85,9 +85,9 @@ struct DownloadTab: View {
 				VStack(spacing: 0){
 					ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
 						Button (action: {
-							library.runner.addMessageHandler({print("JS: "+$0)}, name: "print")
+							library.runner.addMessageProcessor({print("JS: "+$0)}, name: "print")
 							library.runner.view.disallowJS()
-							library.runner.view.disallowContent()
+							library.runner.view.disallowRemoteContent()
 							
 							if let url = URL(string: searchBarContent) {
 								library.download(url: url, with: plugInName.value as! String)

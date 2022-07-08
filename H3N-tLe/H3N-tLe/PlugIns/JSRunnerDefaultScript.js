@@ -11,6 +11,7 @@ Object.defineProperty(window, 'postWebKitMessage', {
 		} else if (typeof message[0] !== 'string' || typeof message[1] !== 'string') {
 			throw new Error('Message must be an array of strings');
 		}
+		// Depending on if we expect a reply we have to send the message to a diffrent message handler
 		if (expectReply) {
 			return webkit.messageHandlers.reply.postMessage(message);
 		}
@@ -64,31 +65,31 @@ Object.defineProperty(window, 'isViewVisible', {
  Define functions to manage content blocking
  */
 
-Object.defineProperty(window, 'allowContent', {
+Object.defineProperty(window, 'allowRemoteContent', {
 	configurable: false,
 	enumerable: true,
 	writable: false,
 	value: () => {
-		window.postWebKitMessage(['Content', 'allow']);
+		window.postWebKitMessage(['RemoteContent', 'allow']);
 	}
 });
 
-Object.defineProperty(window, 'disallowContent', {
+Object.defineProperty(window, 'disallowRemoteContent', {
 	configurable: false,
 	enumerable: true,
 	writable: false,
 	value: () => {
-		window.postWebKitMessage(['Content', 'disallow']);
+		window.postWebKitMessage(['RemoteContent', 'disallow']);
 	}
 });
 
-Object.defineProperty(window, 'isContentAllowed', {
+Object.defineProperty(window, 'isRemoteContentAllowed', {
 	configurable: false,
 	enumerable: true,
 	writable: false,
 	value: () => {
 		return new Promise((resolve, reject) => {
-			window.postWebKitMessage(['Content', 'state'], true).then((state) => {
+			window.postWebKitMessage(['RemoteContent', 'state'], true).then((state) => {
 				if (state === 'allowed') {
 					resolve(true);
 					return

@@ -69,7 +69,7 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		 */
 		
 		// Add a message handler for requests to show and hide the view
-		addMessageHandler({ message in
+		addMessageProcessor({ message in
 			if message == "show" {
 				self.showPage()
 			} else if message == "hide" {
@@ -78,32 +78,32 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		}, name: "View")
 		
 		// Add a message handler that answers requests for the current state of the view ("hidden" or "visisble")
-		addMessageHandlerThatReplies({message in
+		addMessageProcessorThatReplies({message in
 			if message == "state" {
 				return self.isViewVisible() ? "visible" : "hidden"
 			}
 			return ""
 		}, name: "View")
 		
-		// Add a message handler for requests to allow and disallow the loading of content such as images or styles
-		addMessageHandler({ message in
+		// Add a message handler for requests to allow and disallow the loading of remote content such as images or styles
+		addMessageProcessor({ message in
 			if message == "allow" {
-				self.view.allowContent()
+				self.view.allowRemoteContent()
 			} else if message == "disallow" {
-				self.view.disallowContent()
+				self.view.disallowRemoteContent()
 			}
-		}, name: "Content")
+		}, name: "RemoteContent")
 		
-		// Add a message handler that answers requests for the current state of content blocking ("allowed" or "forbidden")
-		addMessageHandlerThatReplies({message in
+		// Add a message handler that answers requests for the current state of remote content blocking ("allowed" or "forbidden")
+		addMessageProcessorThatReplies({message in
 			if message == "state" {
-				return self.view.isContentAllowed() ? "allowed" : "forbidden"
+				return self.view.isRemoteContentAllowed() ? "allowed" : "forbidden"
 			}
 			return ""
-		}, name: "Content")
+		}, name: "RemoteContent")
 		
 		// Add a message handler for requests to allow and disallow the execution of JavaScript
-		addMessageHandler({ message in
+		addMessageProcessor({ message in
 			if message == "allow" {
 				self.view.allowJS()
 			} else if message == "disallow" {
@@ -112,7 +112,7 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		}, name: "JavaScript")
 		
 		// Add a message handler that answers requests for the current state of JavaScript blocking ("allowed" or "forbidden")
-		addMessageHandlerThatReplies({message in
+		addMessageProcessorThatReplies({message in
 			if message == "state" {
 				return self.view.isJSAllowed() ? "allowed" : "forbidden"
 			}
@@ -141,8 +141,8 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 	private var hideView: () -> Void
 	private var isViewVisible: () -> Bool
 	private var defaultScripts = [WKUserScript]()
-	private var messageHandlers = [String: (String) -> Void]()
-	private var messageHandlersThatReply = [String: (String) -> String?]()
+	private var messageProcessors = [String: (String) -> Void]()
+	private var messageProcessorsThatReply = [String: (String) -> String?]()
 	
 	/*
 	 Handle the visibility of the WebView
@@ -195,21 +195,21 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 	 */
 	
 	// Add message handlers
-	func addMessageHandler(_ handler: @escaping (String) -> Void, name: String) {
-		messageHandlers.updateValue(handler, forKey: name)
+	func addMessageProcessor(_ handler: @escaping (String) -> Void, name: String) {
+		messageProcessors.updateValue(handler, forKey: name)
 	}
 	
-	func addMessageHandlerThatReplies(_ handler: @escaping (String) -> String?, name: String) {
-		messageHandlersThatReply.updateValue(handler, forKey: name)
+	func addMessageProcessorThatReplies(_ handler: @escaping (String) -> String?, name: String) {
+		messageProcessorsThatReply.updateValue(handler, forKey: name)
 	}
 	
 	// Remove message handlers
 	func removeMessageHandler(name: String) {
-		messageHandlers.removeValue(forKey: name)
+		messageProcessors.removeValue(forKey: name)
 	}
 	
 	func removeMessageHandlerThatReplies(name: String) {
-		messageHandlersThatReply.removeValue(forKey: name)
+		messageProcessorsThatReply.removeValue(forKey: name)
 	}
 	
 	// Handle messages from JS
@@ -234,12 +234,12 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		let stringMessage = messageBody.last!
 		
 		// Do nothing if the message handler doesn't exist
-		if !messageHandlers.keys.contains(handlerName) {
+		if !messageProcessors.keys.contains(handlerName) {
 			return
 		}
 		
 		// Execute the message handler
-		messageHandlers[handlerName]!(stringMessage)
+		messageProcessors[handlerName]!(stringMessage)
 	}
 	
 	func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
@@ -265,12 +265,12 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		let stringMessage = messageBody.last!
 		
 		// Send an error back if the message handler doesn't exist
-		if !messageHandlersThatReply.keys.contains(handlerName) {
+		if !messageProcessorsThatReply.keys.contains(handlerName) {
 			replyHandler(nil, "No handler with that name: \(handlerName)")
 			return
 		}
 		
 		// Execute the message handler and send back the reply
-		replyHandler(messageHandlersThatReply[handlerName]!(stringMessage) ?? false, nil)
+		replyHandler(messageProcessorsThatReply[handlerName]!(stringMessage) ?? false, nil)
 	}
 }

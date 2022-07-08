@@ -95,7 +95,7 @@ class Library {
 	func download(url: URL, with pluginName: String) {
 		runner.stop()
 		runner.view.disallowJS()
-		runner.view.disallowContent()
+		runner.view.disallowRemoteContent()
 		
 		if let js = plugInManager.getPlugInJSForDomain(domain: url.host!, plugInName: pluginName) {
 			currentDownloadUrl = url
@@ -108,7 +108,7 @@ class Library {
 		getSeriesList().forEach { $0.updateChapters() }
 	}
 	
-	private func downloadMessageHandler(json: String) {
+	private func saveChapterMessageProcessor(json: String) {
 		runner.stop()
 		
 		let info = try? JSONSerialization.jsonObject(with: json.data(using: String.Encoding.utf8, allowLossyConversion: false) ?? Data(), options: []) as? [String: Any]
@@ -193,13 +193,13 @@ class Library {
 		
 		self.runner = JSRunner(showView: showView, hideView: hideView, isViewVisible: isViewVisible, contentWorld: .world(name: "PlugIn"), defaultScripts: [libraryDefaultScript])
 		
-		self.runner.addMessageHandlerThatReplies({ seriesTitle in
+		self.runner.addMessageProcessorThatReplies({ seriesTitle in
 			return self.seriesList.contains(where: { $0.title == seriesTitle }) ? "present" : "absent"
 		}, name: "DoesSeriesExist")
 		
-		self.runner.addMessageHandler(downloadMessageHandler, name: "DownlaodChapter")
+		self.runner.addMessageProcessor(saveChapterMessageProcessor, name: "SaveChapter")
 		
-		self.runner.addMessageHandler({ error in
+		self.runner.addMessageProcessor({ error in
 			print(error)
 			self.runner.stop()
 		}, name: "Failed")
