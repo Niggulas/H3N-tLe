@@ -21,33 +21,39 @@ struct LibraryTab: View {
 						// Series Element
 						NavigationLink(destination: SeriesView(series: series), label: {
 							
-							// Cover image with option to 
+							// Cover image with option to
 							HStack{
-								if series.getCoverUrl() != nil {
-									AsyncImage(url: series.getCoverUrl()) { phase in
-										if let image = phase.image {
-											image
-												.resizable()
-												.aspectRatio(contentMode: .fit)
-												.frame(width: 85)
-												.cornerRadius(5)
-										} else if phase.error != nil {
-											Image("Cover")
-												.resizable()
-												.aspectRatio(contentMode: .fit)
-												.frame(width: 85)
-												.cornerRadius(5)
-										} else {
-											Color(.systemGray6)
-												.frame(width: 85, height: 128) // to keep the correct sizing when you delete an item
+								AsyncImage(url: series.getCoverUrl()) { phase in
+									
+									if let image = phase.image {
+										image
+											.resizable()
+											.aspectRatio(contentMode: .fit)
+											.frame(width: 85)
+											.cornerRadius(5)
+									} else if phase.error != nil {
+										AsyncImage(url: series.getCoverUrl()) { phase in
+											if let image = phase.image {
+												image
+													.resizable()
+													.aspectRatio(contentMode: .fit)
+													.frame(width: 85)
+													.cornerRadius(5)
+											} else if phase.error != nil {
+												Image("Cover")
+													.resizable()
+													.aspectRatio(contentMode: .fit)
+													.frame(width: 85)
+													.cornerRadius(5)
+											} else {
+												Color(.systemGray6)
+													.frame(width: 85, height: 128)
+											}
 										}
+									} else {
+										Color(.systemGray6)
+											.frame(width: 85, height: 128)
 									}
-								} else {
-									Image("Cover")
-										.resizable()
-										.aspectRatio(contentMode: .fit)
-										.frame(width: 85)
-										.cornerRadius(5)
 								}
 							}
 							
