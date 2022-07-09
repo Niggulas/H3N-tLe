@@ -49,9 +49,6 @@ Object.defineProperty(window, 'fail', {
 	enumerable: true,
 	writable: false,
 	value: (error = 'Unknown error in JS') => {
-		if (typeof error !== 'string') {
-			throw new Error('Error must be a string');
-		}
-		window.postWebKitMessage(['Failed', error]);
+		window.postWebKitMessage(['Failed', ''+error]);
 	}
 });
