@@ -39,20 +39,20 @@ struct LibraryTab: View {
 													.aspectRatio(contentMode: .fit)
 													.frame(width: 85)
 													.cornerRadius(5)
-											} else if phase.error != nil {
+											} else {
 												Image("Cover")
 													.resizable()
 													.aspectRatio(contentMode: .fit)
 													.frame(width: 85)
 													.cornerRadius(5)
-											} else {
-												Color(.systemGray6)
-													.frame(width: 85, height: 128)
 											}
 										}
 									} else {
-										Color(.systemGray6)
-											.frame(width: 85, height: 128)
+										Image("Cover")
+											.resizable()
+											.aspectRatio(contentMode: .fit)
+											.frame(width: 85)
+											.cornerRadius(5)
 									}
 								}
 							}
@@ -76,45 +76,45 @@ struct LibraryTab: View {
 								
 								// Show the status of the series in a color corralating to the status
 								switch series.getStatus() {
-									case "dropped" :
-										Text(series.getStatus())
-											.font(.body)
-											.lineLimit(1)
-											.foregroundColor(.red)
-											.background(Color(.systemGray5))
-											.cornerRadius(5)
+								case "dropped" :
+									Text(series.getStatus())
+										.font(.body)
+										.lineLimit(1)
+										.foregroundColor(.red)
+										.background(Color(.systemGray5))
+										.cornerRadius(5)
 									
-									case "ongoing" :
-										Text(series.getStatus())
-											.font(.body)
-											.lineLimit(1)
-											.foregroundColor(.green)
-											.background(Color(.systemGray5))
-											.cornerRadius(5)
+								case "ongoing" :
+									Text(series.getStatus())
+										.font(.body)
+										.lineLimit(1)
+										.foregroundColor(.green)
+										.background(Color(.systemGray5))
+										.cornerRadius(5)
 									
-									case "hiatus" :
-										Text(series.getStatus())
-											.font(.body)
-											.lineLimit(1)
-											.foregroundColor(.yellow)
-											.background(Color(.systemGray5))
-											.cornerRadius(5)
-										
-									case "finished" :
-										Text(series.getStatus())
-											.font(.body)
-											.lineLimit(1)
-											.foregroundColor(.cyan)
-											.background(Color(.systemGray5))
-											.cornerRadius(5)
+								case "hiatus" :
+									Text(series.getStatus())
+										.font(.body)
+										.lineLimit(1)
+										.foregroundColor(.yellow)
+										.background(Color(.systemGray5))
+										.cornerRadius(5)
 									
-									default :
-										Text(series.getStatus())
-											.font(.body)
-											.lineLimit(1)
-											.foregroundColor(.red)
-											.background(Color(.systemGray5))
-											.cornerRadius(5)
+								case "finished" :
+									Text(series.getStatus())
+										.font(.body)
+										.lineLimit(1)
+										.foregroundColor(.cyan)
+										.background(Color(.systemGray5))
+										.cornerRadius(5)
+									
+								default :
+									Text(series.getStatus())
+										.font(.body)
+										.lineLimit(1)
+										.foregroundColor(.red)
+										.background(Color(.systemGray5))
+										.cornerRadius(5)
 								}
 								
 							}
