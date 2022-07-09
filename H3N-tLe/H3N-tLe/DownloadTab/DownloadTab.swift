@@ -41,9 +41,6 @@ struct DownloadTab: View {
 			.cornerRadius(15)
 			.padding()
 			.sheet(isPresented: $isWebViewSheetVisible) {
-				// TODO: Warning not to get your passwords stolen here
-				// TODO: Melde nich nicht an wenn du dem pluginautor nicht vertraust
-				// die TODO darüber wurde erledigt
 				
 				VStack (spacing: 0) {
 					
