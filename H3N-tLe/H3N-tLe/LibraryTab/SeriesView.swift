@@ -207,6 +207,7 @@ struct SeriesView: View {
 							NavigationLink(destination: Reader(series: series!, chapter: chapter.value as! String), label: {
 								HStack {
 									Text(chapter.value as! String)
+										.lineLimit(1)
 									Spacer()
 									Image(systemName: "chevron.right")
 								}
