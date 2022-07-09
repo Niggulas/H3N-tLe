@@ -91,7 +91,7 @@ struct SeriesView: View {
 				Spacer()
 				
 				// Continue button: open the first unread chapter
-				NavigationLink (destination: Reader(series: series!, chapter: series!.getNextUnreadChapter() ), label: {
+				NavigationLink (destination: Reader(series: series!, chapter: series!.getNextChapterToRead() ), label: {
 					Text("Continue")
 						.font(.headline)
 						.frame(minWidth: 100, maxWidth: 120, minHeight: 10)

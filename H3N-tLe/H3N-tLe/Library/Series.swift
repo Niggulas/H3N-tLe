@@ -235,7 +235,7 @@ class Series: Identifiable {
         return lastReadChapter
     }
     
-    func getNextUnreadChapter() -> String {
+    func getNextChapterToRead() -> String {
 		let chapterList = getChapterList()
         if let lastReadChapter = getLastReadChapter() {
 			let index = chapterList.firstIndex(of: lastReadChapter) ?? -1
