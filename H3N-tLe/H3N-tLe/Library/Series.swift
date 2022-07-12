@@ -242,7 +242,7 @@ class Series: Identifiable {
 			if chapterList.count > index + 1 {
 				return chapterList[index + 1]
 			} else {
-				return chapterList[0]
+				return chapterList[index]
 			}
         } else {
             return chapterList[0]
