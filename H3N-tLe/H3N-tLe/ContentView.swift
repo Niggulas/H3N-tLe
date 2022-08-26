@@ -8,32 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    let steelGray = Color.init(white: 0.15)
-    
-    @State var selectedTab: Int = 1
-    
-    var body: some View {
-        
-        TabView(selection: $selectedTab) {
-            DownloadTab()
-            
-            LibraryTab()
-            
-            SettingsTab()
-            
-        }
-        .accentColor(.red)
-        
-    }
+	
+	let steelGray = Color.init(white: 0.15)
+	
+	@State var selectedTab: Int = 1
+	
+	var body: some View {
+		
+		NavigationView {
+			TabView(selection: $selectedTab) {
+				DownloadTab()
+				
+				LibraryTab()
+				
+				SettingsTab()
+				
+			}
+		}
+		.accentColor(.red)
+		
+	}
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-            .preferredColorScheme(.dark)
-            .previewDevice("iPhone 12")
-            .previewLayout(.sizeThatFits)
-            
-    }
+	static var previews: some View {
+		ContentView()
+			.preferredColorScheme(.dark)
+			.previewDevice("iPhone 12")
+			.previewLayout(.sizeThatFits)
+		
+	}
 }
