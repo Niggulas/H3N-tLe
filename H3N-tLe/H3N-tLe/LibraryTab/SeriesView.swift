@@ -254,6 +254,7 @@ struct SeriesView: View {
 		})
 		.navigationTitle("")
 		.navigationBarTitleDisplayMode(.inline)
+		.navigationBarHidden(false)
 		.sheet(isPresented: $isSheetVisible) {
 			// TODO: Warning not to get your passwords stolen here
 			// TODO: Melde nich nicht an wenn du dem pluginautor nicht vertraust

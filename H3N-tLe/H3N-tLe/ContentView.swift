@@ -24,6 +24,7 @@ struct ContentView: View {
 				SettingsTab()
 				
 			}
+			.navigationBarHidden(true)
 		}
 		.accentColor(.red)
 		

@@ -114,7 +114,7 @@ struct DownloadTab: View {
 				
 			})
 		}
-		
+		.navigationTitle("Downloads")
 		.tabItem {
 			Image(systemName: "square.and.arrow.down.on.square.fill")
 			Text("Download")

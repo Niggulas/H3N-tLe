@@ -127,7 +127,6 @@ struct LibraryTab: View {
 					seriesList = library.getSeriesList()
 				})
 			}
-			.navigationTitle("Library")
 			.toolbar {
 				Button {
 					// Refresh PlugIns
@@ -144,8 +143,7 @@ struct LibraryTab: View {
 			}
 			
 		}
-		
-		// define symbol and text for the library element in the tab bar
+		.navigationBarTitle("Library")
 		.tabItem {
 			Image(systemName: "books.vertical")
 			Text("Library")

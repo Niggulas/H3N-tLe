@@ -46,6 +46,7 @@ struct PluginList: View {
 			}
 			
 		}
+		.navigationTitle("Plugin List")
 		
 	}
 	
