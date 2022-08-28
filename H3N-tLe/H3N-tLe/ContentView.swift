@@ -15,16 +15,12 @@ struct ContentView: View {
 	
 	var body: some View {
 		
-		NavigationView {
-			TabView(selection: $selectedTab) {
-				DownloadTab()
-				
-				LibraryTab()
-				
-				SettingsTab()
-				
-			}
-			.navigationBarHidden(true)
+		TabView(selection: $selectedTab) {
+			DownloadTab()
+			
+			LibraryTab()
+			
+			SettingsTab()
 		}
 		.accentColor(.red)
 		

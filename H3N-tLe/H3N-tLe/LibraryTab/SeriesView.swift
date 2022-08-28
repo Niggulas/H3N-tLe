@@ -32,7 +32,7 @@ struct SeriesView: View {
 	}
 	
 	var body: some View {
-		ScrollView (.vertical, /*showsIndicators: false,*/ content:{
+		ScrollView (.vertical, /*showsIndicators: false,*/ content: {
 			// Series Information
 			// Title
 			HStack {
