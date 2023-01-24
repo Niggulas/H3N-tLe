@@ -79,7 +79,7 @@ struct DownloadTab: View {
 			
 			// List of Plugins that are compatible with the site
 			ScrollView(.vertical, showsIndicators: false, content: {
-				VStack(spacing: 0){
+				VStack(spacing: 0) {
 					ForEach(plugInList.map { IdentifieableAny(value: $0) } ) { plugInName in
 						Button (action: {
 							library.runner.addMessageProcessor({print("JS: "+$0)}, name: "print")
@@ -94,7 +94,9 @@ struct DownloadTab: View {
 								Text(plugInName.value as! String)//\(plugInList[plugin])")
 									.font(.headline)
 								Spacer()
-								Image(systemName: "square.and.arrow.down")
+								if !searchBarContent.isEmpty {
+									Image(systemName: "square.and.arrow.down")
+								}
 							}
 						})
 						.font(.headline)
