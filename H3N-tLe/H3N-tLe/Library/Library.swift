@@ -93,6 +93,7 @@ class Library {
 	}
 	
 	func download(url: URL, with pluginName: String) {
+		print("Downloading \"\(url.absoluteString)\" with \"\(pluginName)\"")
 		runner.stop()
 		runner.view.disallowJS()
 		runner.view.disallowRemoteContent()
@@ -101,6 +102,8 @@ class Library {
 			currentDownloadUrl = url
 			currentDownloadPluginName = pluginName
 			runner.run(source: js, on: url)
+		} else {
+			fatalError("Didn't get JS for PlugIn: \(pluginName)")
 		}
 	}
 	

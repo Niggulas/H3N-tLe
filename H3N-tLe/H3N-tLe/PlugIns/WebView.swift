@@ -10,56 +10,16 @@ import WebKit
 import SwiftUI
 
 // Because WKWebView isn't SwiftUI compatible we need to wrap it with UIViewRepresentable to be able to show it
-final class WebView: NSObject, UIViewRepresentable {
-	override init() {
-		super.init()
-		
-		initConfig()
-	}
-	
-	init(url: URL?) {
-		super.init()
-		
-		initConfig()
-		
-		if url != nil {
-			load(url: url!)
-		}
-	}
-	
-	init(html: String, baseUrl: URL?) {
-		super.init()
-		
-		initConfig()
-		
-		load(html: html, baseUrl: baseUrl)
-	}
-	
-	init(html: String) {
-		super.init()
-		
-		initConfig()
-		
-		load(html: html)
-	}
-	
-	let wkWebView = WKWebView()
-	
-	private var remoteContentAllowed = true
-	private var remoteContentBlockerRuleList = WKContentRuleList()
-	
-	var url: URL?
-	var html: String?
-	
-	// Configurations that have to run in all inits
-	private func initConfig() {
+struct WebView: UIViewRepresentable {
+	init() {
 		wkWebView.configuration.limitsNavigationsToAppBoundDomains = false
 		
 		disallowJS()
 		
-		// Create the content blocker
+		var instance = self
+		
 		WKContentRuleListStore.default().compileContentRuleList(
-			forIdentifier: "RemoteContentBlocker",
+			forIdentifier: contentRuleListIdentifier,
 			// The actual ruels in JSON
 			// first part blocks all (no exception for PlugIns) requests, second part adds an exception for the document of the main frame
 			encodedContentRuleList: """
@@ -86,37 +46,60 @@ final class WebView: NSObject, UIViewRepresentable {
 				]
 			""",
 			completionHandler: { ruleList, error in
-				// Handle error
 				if ruleList == nil {
 					return
 				}
 				
-				// Write rule to variable
-				self.remoteContentBlockerRuleList = ruleList!
-				
-				// Apply the rule list
-				self.disallowRemoteContent()
+				instance.disallowRemoteContent()
 			}
 		)
 	}
+		
+	init(url: URL?) {
+			self.init()
+			
+			if url != nil {
+				load(url: url!)
+		}
+	}
+	
+	init(html: String, baseUrl: URL?) {
+		self.init()
+		
+		load(html: html, baseUrl: baseUrl)
+	}
+	
+	init(html: String) {
+		self.init()
+		
+		load(html: html)
+	}
+	
+	let wkWebView = WKWebView()
+	
+	private var remoteContentAllowed = true
+	private var contentRuleListIdentifier = "RemoteContentBlocker"
+	
+	var url: URL?
+	var html: String?
 	
 	/*
 	 (Re)Load a page
 	 */
 	
-	func load(url: URL) {
+	mutating func load(url: URL) {
 		self.url = url
 		self.html = nil
 		wkWebView.load(URLRequest(url: url))
 	}
 	
-	func load(html: String, baseUrl: URL?) {
+	mutating func load(html: String, baseUrl: URL?) {
 		self.url = baseUrl
 		self.html = html
 		wkWebView.loadHTMLString(html, baseURL: baseUrl)
 	}
 	
-	func load(html: String) {
+	mutating func load(html: String) {
 		load(html: html, baseUrl: nil)
 	}
 	
@@ -132,28 +115,43 @@ final class WebView: NSObject, UIViewRepresentable {
 		return remoteContentAllowed
 	}
 	
-	func allowRemoteContent() {
+	mutating func allowRemoteContent() {
 		if isRemoteContentAllowed() {
 			return
 		}
 		
 		remoteContentAllowed = true
 		
-		// Stop blocking of all requests
-		wkWebView.configuration.userContentController.remove(remoteContentBlockerRuleList)
+		let wkWebView = self.wkWebView
+		
+		WKContentRuleListStore.default().lookUpContentRuleList(forIdentifier: contentRuleListIdentifier) { list, error in
+			if list == nil {
+				fatalError("Didn't get RemoteContentBlockerList")
+			}
+			
+			// Stop blocking of all requests
+			wkWebView.configuration.userContentController.remove(list!)
+		}
 	}
 	
-	func disallowRemoteContent() {
+	mutating func disallowRemoteContent() {
 		if !isRemoteContentAllowed() {
 			return
 		}
 		
 		remoteContentAllowed = false
 		
-		// Start blocking of all requests
-		wkWebView.configuration.userContentController.add(remoteContentBlockerRuleList)
+		let wkWebView = self.wkWebView
 		
-		wkWebView.stopLoading()
+		WKContentRuleListStore.default().lookUpContentRuleList(forIdentifier: contentRuleListIdentifier) { list, error in
+			if list == nil {
+				fatalError("Didn't get RemoteContentBlockerList")
+			}
+			
+			// Start blocking of all requests
+			wkWebView.configuration.userContentController.add(list!)
+			wkWebView.stopLoading()
+		}
 	}
 	
 	/*

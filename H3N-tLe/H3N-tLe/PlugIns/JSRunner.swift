@@ -134,7 +134,7 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 		}
 	}
 	
-	let view = WebView()
+	var view = WebView()
 	let contentWorld: WKContentWorld
 	
 	private var showView: () -> Void
@@ -184,6 +184,7 @@ class JSRunner: NSObject, WKScriptMessageHandler, WKScriptMessageHandlerWithRepl
 	}
 	
 	func stop() {
+		view.wkWebView.stopLoading()
 		// Remove all scripts that would get loaded when the page loads
 		view.wkWebView.configuration.userContentController.removeAllUserScripts()
 		// Load an empty website that doesn't do anything to overwrite the current website and what it does
