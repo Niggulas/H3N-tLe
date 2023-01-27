@@ -57,7 +57,7 @@ class Library {
 			// White list filter
 			if !whiteList.isEmpty {
 				for tag in whiteList {
-					if !series.hasTag(tag) {
+					if !series.hasTag(tag) {   
 						return false
 					}
 				}
